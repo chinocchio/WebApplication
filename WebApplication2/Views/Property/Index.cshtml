@@ -1,0 +1,45 @@
+﻿@model WebApplication2.ViewModels.PropertyListViewModel
+
+@{
+    ViewData["Title"] = "Property List";
+    Layout = "_Layout";
+}
+
+<h2>Properties</h2>
+
+<form method="get">
+    <input type="text" name="searchTerm" value="@Model.SearchTerm" placeholder="Search Unit Code" />
+    <button type="submit">Search</button>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+{
+    if (Model.Properties != null && Model.Properties.Any())
+    {
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Property Type</th>
+                    <th>Project Name</th>
+                    <th>Building/Phase</th>
+                    <th>Unit Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var property in Model.Properties)
+                {
+                    <tr>
+                        <td>@property.PropertyType</td>
+                        <td>@property.ProjectName</td>
+                        <td>@property.BuildingPhase</td>
+                        <td>@property.UnitCode</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-danger mt-4">No results found.</p>
+    }
+}
