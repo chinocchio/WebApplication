@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication2.Data;
 
@@ -10,9 +11,11 @@ using WebApplication2.Data;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250423014203_ChangeIntToLongBPCusCode")]
+    partial class ChangeIntToLongBPCusCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,8 +113,8 @@ namespace WebApplication2.Migrations
                     b.Property<int?>("BusinessPartnerId")
                         .HasColumnType("int");
 
-                    b.Property<long>("ContractNumber")
-                        .HasColumnType("bigint");
+                    b.Property<int>("ContractNumber")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PropertyId")
                         .HasColumnType("int");
