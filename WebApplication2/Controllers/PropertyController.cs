@@ -19,17 +19,45 @@ namespace WebApplication2.Controllers
         // Displays the list of data of a property if searched.
         public async Task<IActionResult> Index(string? searchTerm)
         {
-            var query = _context.Properties.AsNoTracking().AsQueryable();
+            /*
+             * Pinalitan ko from Properties to SalesTransactions bale sa SalesTransaction table tayo nagselect
+             * Eto yung query: Select ka sa SalesTransaction table tapos Include yung mga related tables
+             */
+            var query = _context.SalesTransactions.AsNoTracking()
+                        .Include(st => st.Properties)
+                        .Include(st => st.BusinessPartner)
+                        .Include(st => st.SalesProponent)
+                        .AsQueryable();
 
+
+            // Eto yung search functionality, check pag may laman yung searchTerm
             if (!string.IsNullOrEmpty(searchTerm))
-                query = query.Where(p => p.UnitCode.ToLower().Contains(searchTerm.ToLower()));
+            {
+                searchTerm = searchTerm.ToLower(); // Convert to lowercase for case-insensitive search
 
+                /*
+                 * Yung "st" galing yan sa query sa taas base sa mga yan dun tayo magsearch bale yung records galing sa 
+                 * SalesTransaction table dun hahanapin yung mga i-eenter the search bar
+                 */
+                query = query.Where(st =>
+                    st.ContractNumber.ToString().Contains(searchTerm) ||
+                    st.BusinessPartner.Fullname.ToLower().Contains(searchTerm) ||
+                    st.BusinessPartner.CustomerCode.ToString().Contains(searchTerm) ||
+                    st.Properties.UnitCode.ToLower().Contains(searchTerm)
+                );
+            }
+
+            /*
+             * Tapos pasa nating sa PropertyListViewModel yung mga nakuha nating data
+             * na gagamitin natin sa view
+             */
             var model = new PropertyListViewModel
             {
-                Properties = await query.ToListAsync(),
+                SalesTransactions = await query.ToListAsync(),
                 SearchTerm = searchTerm
             };
 
+            // Tapos papasa natin sa ModelView yung result nung controller na to
             return View(model);
         }
     }
