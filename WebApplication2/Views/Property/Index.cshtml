@@ -32,20 +32,84 @@
         </ul>
 
         <div class="tab-content border p-3" id="transactionTabsContent">
+            @section Scripts {
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.querySelectorAll(".clickable-row").forEach(row => {
+                            row.addEventListener("click", function () {
+                                const targetId = this.getAttribute("data-bs-target");
+                                const contentRow = document.getElementById(targetId);
+                                if (contentRow) {
+                                    contentRow.classList.toggle("d-none");
+                                }
+                            });
+                        });
+                    });
+                </script>
+    }
+
             <div class="tab-pane fade show active" id="sales" role="tabpanel">
                 <table class="table mt-3">
                     <thead>
                         <tr>
                             <th>Contract Number</th>
                             <th>Type of Sale</th>
+                            <th>Holding Date</th>
+                            <th>Promo Discount</th>
+                            <th>Transaction Type</th>
+                            <th>Milestone</th>
+                            <th>Status Color</th>
+                            <th>Status In General</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var transaction in Model.SalesTransactions)
                         {
-                            <tr>
+                            var targetId = $"details_{transaction.SalesTransactionId}";
+
+                            <tr class="clickable-row table-primary" style="cursor:pointer;" data-bs-target="@targetId">
                                 <td>@transaction.ContractNumber</td>
                                 <td>@transaction.TypeOfSale</td>
+                                <td>@transaction.HoldingDate</td>
+                                <td>@transaction.PromoDiscount</td>
+                                <td>@transaction.TransactionType</td>
+                                <td>@transaction.Milestone</td>
+                                <td>@transaction.NewColorStatus</td>
+                                <td>@transaction.StatusInGeneral</td>
+                            </tr>
+
+                            <tr id="@targetId" class="d-none bg-light">
+                                <td colspan="8">
+                                    @if (transaction.ReservationFee != null)
+                                    {
+                                        <dl class="row p-3">
+                                            <dt class="col-sm-3">Rf Date Paid:</dt>
+                                            <dd class="col-sm-9">@transaction.ReservationFee.RfDatePaid</dd>
+
+                                            <dt class="col-sm-3">Proof Of RF Used Upon Holding:</dt>
+                                            <dd class="col-sm-9">@transaction.ReservationFee.RfProofUsedUponHolding</dd>
+
+                                            <dt class="col-sm-3">RF Amount Paid To Unit:</dt>
+                                            <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToUnit</dd>
+
+                                            <dt class="col-sm-3">RF Amount Paid To GMTOE:</dt>
+                                            <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToGMTOE</dd>
+
+                                            <dt class="col-sm-3">RF Amount (UNIT+GMTOE) Total:</dt>
+                                            <dd class="col-sm-9">@transaction.ReservationFee.RfAmountGMTOE_Unit</dd>
+
+                                            <dt class="col-sm-3">Date RF Credited:</dt>
+                                            <dd class="col-sm-9">@transaction.ReservationFee.RfDateCredited</dd>
+
+                                            <dt class="col-sm-3">RF OR Number:</dt>
+                                            <dd class="col-sm-9">@transaction.ReservationFee.RfOrNumber</dd>
+                                        </dl>
+                                    }
+                                    else
+                                    {
+                                        <em class="text-muted">No reservation fee data available.</em>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -56,9 +120,14 @@
                 <table class="table mt-3">
                     <thead>
                         <tr>
-                            <th>Full Name</th>
+                            <th>Client's Name</th>
                             <th>Role</th>
                             <th>Customer Code</th>
+                            <th>Client Base</th>
+                            <th>Contact Number</th>
+                            <th>Email Address</th>
+                            <th>ID Sbmitted</th>
+                            <th>Date ID Submitted</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,6 +137,11 @@
                                 <td>@transaction.BusinessPartner?.Fullname</td>
                                 <td>@transaction.BusinessPartner?.Role</td>
                                 <td>@transaction.BusinessPartner?.CustomerCode</td>
+                                <td>@transaction.BusinessPartner?.ClientBase</td>
+                                <td>@transaction.BusinessPartner?.ContactNumber</td>
+                                <td>@transaction.BusinessPartner?.EmailAddress</td>
+                                <td>@transaction.BusinessPartner?.IdSubmitted</td>
+                                <td>@transaction.BusinessPartner?.IdDateSubmitted</td>
                             </tr>
                         }
                     </tbody>

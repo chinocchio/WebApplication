@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication2.Data;
 
@@ -11,9 +12,11 @@ using WebApplication2.Data;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250423041038_LipatColumns")]
+    partial class LipatColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,42 +87,6 @@ namespace WebApplication2.Migrations
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.ReservationFee", b =>
-                {
-                    b.Property<int>("ReservationFeeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationFeeId"));
-
-                    b.Property<double>("RfAmountGMTOE_Unit")
-                        .HasColumnType("float");
-
-                    b.Property<double>("RfAmountPaidToGMTOE")
-                        .HasColumnType("float");
-
-                    b.Property<double>("RfAmountPaidToUnit")
-                        .HasColumnType("float");
-
-                    b.Property<DateOnly>("RfDateCredited")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("RfDatePaid")
-                        .HasColumnType("date");
-
-                    b.Property<string>("RfOrNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RfProofUsedUponHolding")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ReservationFeeId");
-
-                    b.ToTable("ReservationFees");
-                });
-
             modelBuilder.Entity("WebApplication2.Models.SalesProponent", b =>
                 {
                     b.Property<int>("SalesProponentId")
@@ -180,9 +147,6 @@ namespace WebApplication2.Migrations
                     b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReservationFeeId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("SalesProponentsId")
                         .HasColumnType("int");
 
@@ -201,10 +165,6 @@ namespace WebApplication2.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.HasIndex("ReservationFeeId")
-                        .IsUnique()
-                        .HasFilter("[ReservationFeeId] IS NOT NULL");
-
                     b.HasIndex("SalesProponentsId");
 
                     b.ToTable("SalesTransactions");
@@ -220,10 +180,6 @@ namespace WebApplication2.Migrations
                         .WithMany("SalesTransaction")
                         .HasForeignKey("PropertyId");
 
-                    b.HasOne("WebApplication2.Models.ReservationFee", "ReservationFee")
-                        .WithOne("SalesTransaction")
-                        .HasForeignKey("WebApplication2.Models.SalesTransaction", "ReservationFeeId");
-
                     b.HasOne("WebApplication2.Models.SalesProponent", "SalesProponent")
                         .WithMany("SalesTransaction")
                         .HasForeignKey("SalesProponentsId");
@@ -231,8 +187,6 @@ namespace WebApplication2.Migrations
                     b.Navigation("BusinessPartner");
 
                     b.Navigation("Properties");
-
-                    b.Navigation("ReservationFee");
 
                     b.Navigation("SalesProponent");
                 });
@@ -245,12 +199,6 @@ namespace WebApplication2.Migrations
             modelBuilder.Entity("WebApplication2.Models.Property", b =>
                 {
                     b.Navigation("SalesTransaction");
-                });
-
-            modelBuilder.Entity("WebApplication2.Models.ReservationFee", b =>
-                {
-                    b.Navigation("SalesTransaction")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("WebApplication2.Models.SalesProponent", b =>
