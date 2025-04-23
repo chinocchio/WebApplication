@@ -27,6 +27,7 @@ namespace WebApplication2.Controllers
                         .Include(st => st.Properties)
                         .Include(st => st.BusinessPartner)
                         .Include(st => st.SalesProponent)
+                        .Include(st => st.ReservationFee)
                         .AsQueryable();
 
 
@@ -46,6 +47,12 @@ namespace WebApplication2.Controllers
                     st.Properties.UnitCode.ToLower().Contains(searchTerm)
                 );
             }
+
+            /*
+             * Tapos para mas madali makita yung mga recent na transaction, nag order by tayo
+             * sa HoldingDate in descending order
+             */
+            query = query.OrderByDescending(st => st.HoldingDate);
 
             /*
              * Tapos pasa nating sa PropertyListViewModel yung mga nakuha nating data
