@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 using WebApplication2.Data;
+using WebApplication2.Models;
 using WebApplication2.ViewModels;
 
 namespace WebApplication2.Controllers
@@ -88,5 +89,36 @@ namespace WebApplication2.Controllers
             // Tapos papasa natin sa ModelView yung result nung controller na to
             return View(model);
         }
+
+        // GET: Property/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Property property)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                // Log errors here to see what validation failed
+                Console.WriteLine("ModelState Invalid:");
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error);
+                }
+                return View(property);
+            }
+
+            Console.WriteLine("Property Received:");
+            Console.WriteLine($"Type: {property.PropertyType}, Project: {property.ProjectName}, Phase: {property.BuildingPhase}, Unit: {property.UnitCode}");
+
+            _context.Add(property);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
