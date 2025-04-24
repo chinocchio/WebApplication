@@ -1,4 +1,5 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication2.Models
@@ -13,5 +14,7 @@ namespace WebApplication2.Models
         public string? DeputyMarketingDirector { get; set; }
         public string? MarketingDirector { get; set; }
         public List<SalesTransaction>? SalesTransaction { get; set; }
+        [NotMapped]
+        public string DisplayText { get; set; } = string.Empty;
     }
 }

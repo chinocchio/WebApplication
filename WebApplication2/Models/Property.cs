@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication2.Models
 {
@@ -16,6 +17,8 @@ namespace WebApplication2.Models
 
         [Required(ErrorMessage = "Unit Code is required.")]
         public string UnitCode { get; set; } = string.Empty;
-        public List<SalesTransaction>? SalesTransaction { get; set; } 
+        public List<SalesTransaction>? SalesTransaction { get; set; }
+        [NotMapped]
+        public string DisplayText { get; set; } = string.Empty;
     }
 }
