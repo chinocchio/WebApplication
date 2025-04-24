@@ -1,4 +1,6 @@
-﻿namespace WebApplication2.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebApplication2.Models
 {
     public class BusinessPartner
     {
@@ -12,5 +14,8 @@
         public string? EmailAddress { get; set; } = string.Empty;
         public string? ContactNumber { get; set; } = string.Empty;
         public List<SalesTransaction>? SalesTransaction { get; set; }
+        
+        [NotMapped] // Prevent EF from mapping to DB
+        public List<BusinessPartner>? OtherBuyers { get; set; }
     }
 }

@@ -13,7 +13,6 @@ namespace WebApplication2.Models
         public string? StatusInGeneral { get; set; } = string.Empty;
         public string? Milestone { get; set; } = string.Empty;
         public string? NewColorStatus { get; set; } = string.Empty;
-        
         public int? BusinessPartnerId { get; set; }
         public int? PropertyId { get; set; }
         public int? SalesProponentsId { get; set; }
