@@ -15,11 +15,6 @@ namespace WebApplication2.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<SalesProponent>()
-            //    .HasMany(sp => sp.Subordinates)  ------------>  Deleted Migration
-            //    .WithOne(sp => sp.Boss)
-            //    .HasForeignKey(sp => sp.ReportingTo)
-            //    .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<SalesTransaction>()
                 .HasOne(st => st.Properties)
                 .WithMany(p => p.SalesTransaction)

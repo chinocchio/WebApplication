@@ -23,7 +23,8 @@ namespace WebApplication2.Controllers
              * Pinalitan ko from Properties to SalesTransactions bale sa SalesTransaction table tayo nagselect
              * Eto yung query: Select ka sa SalesTransaction table tapos Include yung mga related tables
              */
-            var query = _context.SalesTransactions.AsNoTracking()
+            var query = _context.SalesTransactions
+                        .AsNoTracking()
                         .Include(st => st.Properties)
                         .Include(st => st.BusinessPartner)
                         .Include(st => st.SalesProponent)
@@ -49,20 +50,40 @@ namespace WebApplication2.Controllers
             }
 
             /*
-             * Tapos para mas madali makita yung mga recent na transaction, nag order by tayo
+             * Para mas madali makita yung mga recent na transaction, nag order by tayo
              * sa HoldingDate in descending order
              */
             query = query.OrderByDescending(st => st.HoldingDate);
+
+            var salesTransactions = await query.ToListAsync();
+
+            // For each transaction, load all buyers with the same customer code
+            foreach (var transaction in salesTransactions)
+            {
+                if (transaction.BusinessPartner?.CustomerCode != null)
+                {
+                    transaction.BusinessPartner.OtherBuyers = await _context.BusinessPartners
+                        .Where(bp => bp.CustomerCode == transaction.BusinessPartner.CustomerCode)
+                        .ToListAsync();
+                }
+            }
+
+            var model = new PropertyListViewModel
+            {
+                SalesTransactions = salesTransactions,
+                SearchTerm = searchTerm
+            };
+
 
             /*
              * Tapos pasa nating sa PropertyListViewModel yung mga nakuha nating data
              * na gagamitin natin sa view
              */
-            var model = new PropertyListViewModel
-            {
-                SalesTransactions = await query.ToListAsync(),
-                SearchTerm = searchTerm
-            };
+            //var model = new PropertyListViewModel
+            //{
+            //    SalesTransactions = await query.ToListAsync(),
+            //    SearchTerm = searchTerm
+            //};
 
             // Tapos papasa natin sa ModelView yung result nung controller na to
             return View(model);

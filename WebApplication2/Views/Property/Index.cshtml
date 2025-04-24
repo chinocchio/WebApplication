@@ -133,16 +133,22 @@
                     <tbody>
                         @foreach (var transaction in Model.SalesTransactions)
                         {
-                            <tr>
-                                <td>@transaction.BusinessPartner?.Fullname</td>
-                                <td>@transaction.BusinessPartner?.Role</td>
-                                <td>@transaction.BusinessPartner?.CustomerCode</td>
-                                <td>@transaction.BusinessPartner?.ClientBase</td>
-                                <td>@transaction.BusinessPartner?.ContactNumber</td>
-                                <td>@transaction.BusinessPartner?.EmailAddress</td>
-                                <td>@transaction.BusinessPartner?.IdSubmitted</td>
-                                <td>@transaction.BusinessPartner?.IdDateSubmitted</td>
-                            </tr>
+                            if (transaction.BusinessPartner?.OtherBuyers != null)
+                            {
+                                foreach (var buyer in transaction.BusinessPartner.OtherBuyers)
+                                {
+                                    <tr>
+                                        <td>@buyer.Fullname</td>
+                                        <td>@buyer.Role</td>
+                                        <td>@buyer.CustomerCode</td>
+                                        <td>@buyer.ClientBase</td>
+                                        <td>@buyer.ContactNumber</td>
+                                        <td>@buyer.EmailAddress</td>
+                                        <td>@buyer.IdSubmitted</td>
+                                        <td>@buyer.IdDateSubmitted</td>
+                                    </tr>
+                                }
+                            }
                         }
                     </tbody>
                 </table>
