@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
 using WebApplication2.Models;
@@ -16,35 +17,22 @@ namespace WebApplication2.Controllers
         }
 
         // GET: SalesTransaction/Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             var model = new SalesTransactionCreateViewModel
             {
-                AvailableBusinessPartners = await _context.BusinessPartners.ToListAsync(),
-                AvailableProperties = await _context.Properties
-                                        .Select(p => new Property
-                                        {
-                                            PropertyId = p.PropertyId,
-                                            UnitCode = p.UnitCode,
-                                            ProjectName = p.ProjectName,
-                                            PropertyType = p.PropertyType,
-                                            BuildingPhase = p.BuildingPhase,
-                                            // computed display text for dropdown
-                                            DisplayText = $"{p.UnitCode} - {p.ProjectName} / {p.PropertyType} / {p.BuildingPhase}"
-                                        }).ToListAsync(),
-                AvailableReservationFees = await _context.ReservationFees.ToListAsync(),
-                AvailableSalesProponents = await _context.SalesProponents
-                                        .Select(sp => new SalesProponent
-                                        {
-                                            SalesProponentId = sp.SalesProponentId,
-                                            Broker = sp.Broker,
-                                            PS_QC_ISM = sp.PS_QC_ISM,
-                                            MarketingOfficer = sp.MarketingOfficer,
-                                            MarketingManager = sp.MarketingManager,
-                                            DeputyMarketingDirector = sp.DeputyMarketingDirector,
-                                            MarketingDirector = sp.MarketingDirector,
-                                            DisplayText = $"{sp.Broker} | {sp.PS_QC_ISM} | {sp.MarketingOfficer} | {sp.MarketingManager} | {sp.DeputyMarketingDirector} | {sp.MarketingDirector}"
-                                        }).ToListAsync()
+                Properties = _context.Properties
+                .Select(p => new SelectListItem
+                {
+                    Value = p.PropertyId.ToString(),
+                    Text = $"{p.ProjectName} - {p.BuildingPhase} - {p.UnitCode}"
+                }).ToList(),
+
+                ExistingBusinessPartners = _context.BusinessPartners.Select(bp => new SelectListItem
+                {
+                    Value = bp.BusinessPartnerId.ToString(),
+                    Text = $"{bp.Role } - {bp.Fullname} - {bp.CustomerCode}"
+                }).ToList()
             };
 
             return View(model);
@@ -53,111 +41,76 @@ namespace WebApplication2.Controllers
         // POST: SalesTransaction/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SalesTransactionCreateViewModel vm)
+        public IActionResult Create(SalesTransactionCreateViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                // Reload dropdown lists
-                vm.AvailableBusinessPartners = await _context.BusinessPartners.ToListAsync();
-                vm.AvailableProperties = await _context.Properties.ToListAsync();
-                vm.AvailableReservationFees = await _context.ReservationFees.ToListAsync();
-                vm.AvailableSalesProponents = await _context.SalesProponents.ToListAsync();
-                return View(vm);
-            }
+                BusinessPartner businessPartner;
 
-            // Create new related entities if needed
-            BusinessPartner? newPartner = null;
-            if (!string.IsNullOrWhiteSpace(vm.NewBusinessPartnerFullName))
-            {
-                newPartner = new BusinessPartner
+                if (model.SelectedBusinessPartnerId.HasValue)
                 {
-                    Fullname = vm.NewBusinessPartnerFullName,
-                    CustomerCode = vm.NewCustomerCode,
-                    EmailAddress = vm.NewEmailAddress,
-                    ContactNumber = vm.NewContactNumber
-                };
-                _context.BusinessPartners.Add(newPartner);
-                await _context.SaveChangesAsync(); // Save to get ID
-            }
-
-            ReservationFee? newFee = null;
-            if (vm.NewReservationFeeDatePaid.HasValue && vm.NewReservationFeeAmountPaid.HasValue)
-            {
-                newFee = new ReservationFee
-                {
-                    RfDatePaid = vm.NewReservationFeeDatePaid.Value,
-                    RfAmountPaidToUnit = vm.NewReservationFeeAmountPaid.Value,
-                    RfOrNumber = vm.NewReservationFeeOrNumber
-                };
-                _context.ReservationFees.Add(newFee);
-                await _context.SaveChangesAsync();
-            }
-
-            // Enhanced logic: Reuse existing SalesProponent if matching full team already exists
-            SalesProponent? newProponent = null;
-            if (!string.IsNullOrWhiteSpace(vm.NewSalesProponentBroker))
-            {
-                // Check if a matching team already exists
-                var existingTeam = await _context.SalesProponents.FirstOrDefaultAsync(sp =>
-                    sp.Broker == vm.NewSalesProponentBroker &&
-                    sp.PS_QC_ISM == vm.NewSalesProponentPSQCISM &&
-                    sp.MarketingOfficer == vm.NewSalesProponentMarketingOfficer &&
-                    sp.MarketingManager == vm.NewSalesProponentMarketingManager &&
-                    sp.DeputyMarketingDirector == vm.NewSalesProponentDeputyMarketingDirector &&
-                    sp.MarketingDirector == vm.NewSalesProponentMarketingDirector); // 👈 Check all fields
-
-                if (existingTeam != null)
-                {
-                    newProponent = existingTeam; // 👈 Use existing if found
+                    // Use selected existing partner
+                    businessPartner = _context.BusinessPartners
+                        .First(bp => bp.BusinessPartnerId == model.SelectedBusinessPartnerId.Value);
                 }
                 else
                 {
-                    newProponent = new SalesProponent // 👈 Else create new
+                    // Create new one
+                    businessPartner = new BusinessPartner
                     {
-                        Broker = vm.NewSalesProponentBroker,
-                        PS_QC_ISM = vm.NewSalesProponentPSQCISM,
-                        MarketingOfficer = vm.NewSalesProponentMarketingOfficer,
-                        MarketingManager = vm.NewSalesProponentMarketingManager,
-                        DeputyMarketingDirector = vm.NewSalesProponentDeputyMarketingDirector,
-                        MarketingDirector = vm.NewSalesProponentMarketingDirector
+                        Role = model.Role,
+                        Fullname = model.Fullname,
+                        CustomerCode = model.CustomerCode,
+                        ClientBase = model.ClientBase,
+                        IdSubmitted = model.IdSubmitted,
+                        IdDateSubmitted = model.IdDateSubmitted,
+                        EmailAddress = model.EmailAddress,
+                        ContactNumber = model.ContactNumber
                     };
-                    _context.SalesProponents.Add(newProponent);
-                    await _context.SaveChangesAsync(); // Save to get ID
+
+                    _context.BusinessPartners.Add(businessPartner);
+                    _context.SaveChanges();
                 }
+
+                // Optionally: Create a new SalesTransaction to link to the selected property
+                if (model.SelectedPropertyId.HasValue)
+                {
+                    var transaction = new SalesTransaction
+                    {
+                        ContractNumber = model.ContractNumber,
+                        TypeOfSale = model.TypeOfSale,
+                        TransactionType = model.TransactionType,
+                        PromoDiscount = model.PromoDiscount,
+                        StatusInGeneral = model.StatusInGeneral,
+                        Milestone = model.Milestone,
+                        NewColorStatus = model.NewColorStatus,
+                        BusinessPartnerId = businessPartner.BusinessPartnerId,
+                        PropertyId = model.SelectedPropertyId.Value,
+                        HoldingDate = DateOnly.FromDateTime(DateTime.Now)
+                    };
+
+                    _context.SalesTransactions.Add(transaction);
+                    _context.SaveChanges();
+                }
+
+                return RedirectToAction("Create");
             }
 
-            //SalesProponent? newProponent = null;
-            //if (!string.IsNullOrWhiteSpace(vm.NewSalesProponentBroker))
-            //{
-            //    newProponent = new SalesProponent
-            //    {
-            //        Broker = vm.NewSalesProponentBroker,
-            //        MarketingOfficer = vm.NewSalesProponentMarketingOfficer
-            //    };
-            //    _context.SalesProponents.Add(newProponent);
-            //    await _context.SaveChangesAsync();
-            //}
+            // Repopulate Properties if ModelState failed
+            model.Properties = _context.Properties
+                .Select(p => new SelectListItem
+                {
+                    Value = p.PropertyId.ToString(),
+                    Text = $"{p.ProjectName} - {p.BuildingPhase} - {p.UnitCode}"
+                }).ToList();
 
-            var transaction = new SalesTransaction
+            model.ExistingBusinessPartners = _context.BusinessPartners.Select(bp => new SelectListItem
             {
-                ContractNumber = vm.ContractNumber,
-                TypeOfSale = vm.TypeOfSale,
-                HoldingDate = vm.HoldingDate,
-                TransactionType = vm.TransactionType,
-                PromoDiscount = vm.PromoDiscount,
-                StatusInGeneral = vm.StatusInGeneral,
-                Milestone = vm.Milestone,
-                NewColorStatus = vm.NewColorStatus,
-                BusinessPartnerId = newPartner?.BusinessPartnerId ?? vm.BusinessPartnerId,
-                PropertyId = vm.PropertyId,
-                ReservationFeeId = newFee?.ReservationFeeId ?? vm.ReservationFeeId,
-                SalesProponentsId = newProponent?.SalesProponentId ?? vm.SalesProponentsId
-            };
+                Value = bp.BusinessPartnerId.ToString(),
+                Text = $"{bp.Fullname} - {bp.CustomerCode}"
+            }).ToList();
 
-            _context.SalesTransactions.Add(transaction);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index");
+            return View(model);
         }
     }
 }

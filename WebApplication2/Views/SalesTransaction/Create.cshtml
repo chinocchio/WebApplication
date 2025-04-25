@@ -7,128 +7,117 @@
 <h2>Create Sales Transaction</h2>
 
 <form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <div class="form-group">
+    <h4>Sales Transaction Info</h4>
+    <div>
         <label asp-for="ContractNumber"></label>
         <input asp-for="ContractNumber" class="form-control" />
-        <span asp-validation-for="ContractNumber" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div>
         <label asp-for="TypeOfSale"></label>
         <input asp-for="TypeOfSale" class="form-control" />
-        <span asp-validation-for="TypeOfSale" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div>
         <label asp-for="HoldingDate"></label>
-        <input asp-for="HoldingDate" type="date" class="form-control" />
-        <span asp-validation-for="HoldingDate" class="text-danger"></span>
+        <input asp-for="HoldingDate" class="form-control" type="date" />
     </div>
 
-    <div class="form-group">
+    <div>
         <label asp-for="TransactionType"></label>
         <input asp-for="TransactionType" class="form-control" />
-        <span asp-validation-for="TransactionType" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div>
         <label asp-for="PromoDiscount"></label>
         <input asp-for="PromoDiscount" class="form-control" />
     </div>
 
-    <div class="form-group">
+    <div>
         <label asp-for="StatusInGeneral"></label>
         <input asp-for="StatusInGeneral" class="form-control" />
     </div>
 
-    <div class="form-group">
+    <div>
         <label asp-for="Milestone"></label>
         <input asp-for="Milestone" class="form-control" />
     </div>
 
-    <div class="form-group">
+    <div>
         <label asp-for="NewColorStatus"></label>
         <input asp-for="NewColorStatus" class="form-control" />
     </div>
 
-    <!-- Property Dropdown -->
-    <div class="form-group">
-        <label asp-for="PropertyId">Property</label>
-        <select asp-for="PropertyId" class="form-select" asp-items="@(new SelectList(Model.AvailableProperties, "PropertyId", "DisplayText"))">
-            <option value="">-- Select Property --</option>
+    <h4>Select Existing Business Partner</h4>
+    <div>
+        <label asp-for="SelectedBusinessPartnerId"></label>
+        <select id="bpDropdown" asp-for="SelectedBusinessPartnerId" asp-items="Model.ExistingBusinessPartners" class="form-control">
+            <option value="">-- Create New Business Partner --</option>
         </select>
     </div>
-
-    <!-- SalesProponent Dropdown + New -->
-    <div class="form-group">
-        <label asp-for="SalesProponentsId">Sales Team</label>
-        <select asp-for="SalesProponentsId" class="form-select" asp-items="@(new SelectList(Model.AvailableSalesProponents, "SalesProponentId", "DisplayText"))">
-            <option value="">-- Select Existing Team --</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Or Create New Team</label>
-        <div class="row g-2">
-            <div class="col">
-                <input asp-for="NewSalesProponentBroker" class="form-control" placeholder="Broker" />
-            </div>
-            <div class="col">
-                <input asp-for="NewSalesProponentPSQCISM" class="form-control" placeholder="PS/QC/ISM" />
-            </div>
-            <div class="col">
-                <input asp-for="NewSalesProponentMarketingOfficer" class="form-control" placeholder="Marketing Officer" />
-            </div>
-            <div class="col">
-                <input asp-for="NewSalesProponentMarketingManager" class="form-control" placeholder="Marketing Manager" />
-            </div>
-            <div class="col">
-                <input asp-for="NewSalesProponentDeputyMarketingDirector" class="form-control" placeholder="Deputy Marketing Director" />
-            </div>
-            <div class="col">
-                <input asp-for="NewSalesProponentMarketingDirector" class="form-control" placeholder="Marketing Director" />
-            </div>
+    <div id="newBpFields">
+        <div>
+            <label asp-for="Fullname"></label>
+            <input asp-for="Fullname" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="Role"></label>
+            <input asp-for="Role" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="CustomerCode"></label>
+            <input asp-for="CustomerCode" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="ClientBase"></label>
+            <input asp-for="ClientBase" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="IdSubmitted"></label>
+            <input asp-for="IdSubmitted" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="IdDateSubmitted"></label>
+            <input asp-for="IdDateSubmitted" class="form-control" type="date" />
+        </div>
+        <div>
+            <label asp-for="EmailAddress"></label>
+            <input asp-for="EmailAddress" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="ContactNumber"></label>
+            <input asp-for="ContactNumber" class="form-control" />
         </div>
     </div>
-
-    <!-- Reservation Fee Dropdown + New -->
-    <div class="form-group">
-        <label asp-for="ReservationFeeId">Reservation Fee</label>
-        <select asp-for="ReservationFeeId" class="form-control" asp-items="@(new SelectList(Model.AvailableReservationFees, "ReservationFeeId", "RfOrNumber"))">
-            <option value="">-- Select Existing --</option>
+    <div>
+        <label asp-for="SelectedPropertyId">Select Property</label>
+        <select asp-for="SelectedPropertyId" asp-items="Model.Properties" class="form-control">
+            <option value="">-- Select a Property --</option>
         </select>
     </div>
-
-    <div class="form-group">
-        <label>Or Create New Reservation Fee</label>
-        <input asp-for="NewReservationFeeDatePaid" type="date" class="form-control mb-1" placeholder="Date Paid" />
-        <input asp-for="NewReservationFeeAmountPaid" class="form-control mb-1" placeholder="Amount Paid" />
-        <input asp-for="NewReservationFeeOrNumber" class="form-control" placeholder="OR Number" />
-    </div>
-
-    <!-- BusinessPartner Dropdown + New -->
-    <div class="form-group">
-        <label asp-for="BusinessPartnerId">Buyer</label>
-        <select asp-for="BusinessPartnerId" class="form-control" asp-items="@(new SelectList(Model.AvailableBusinessPartners, "BusinessPartnerId", "Fullname"))">
-            <option value="">-- Select Existing Buyer --</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Or Create New Buyer</label>
-        <input asp-for="NewBusinessPartnerFullName" class="form-control mb-1" placeholder="Fullname" />
-        <input asp-for="NewCustomerCode" class="form-control mb-1" placeholder="Customer Code" />
-        <input asp-for="NewEmailAddress" class="form-control mb-1" placeholder="Email Address" />
-        <input asp-for="NewContactNumber" class="form-control" placeholder="Contact Number" />
-    </div>
-
-    <button type="submit" class="btn btn-primary mt-3">Create</button>
-    <a asp-action="Property/Index" class="btn btn-secondary mt-3">Back to List</a>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 @section Scripts {
+    <script>
+        const dropdown = document.getElementById("bpDropdown");
+        const newFields = document.getElementById("newBpFields");
+
+        function toggleNewFields() {
+            if (dropdown.value) {
+                newFields.style.display = "none";
+            } else {
+                newFields.style.display = "block";
+            }
+        }
+
+        // Run on load and on change
+        toggleNewFields();
+        dropdown.addEventListener("change", toggleNewFields);
+    </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
