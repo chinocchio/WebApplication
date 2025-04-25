@@ -12,6 +12,7 @@ namespace WebApplication2.Data
         public DbSet<BusinessPartner> BusinessPartners { get; set; }
         public DbSet<SalesProponent> SalesProponents { get; set; }
         public DbSet<ReservationFee> ReservationFees { get; set; }
+        public DbSet<CreditReview> CreditReviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,7 +32,10 @@ namespace WebApplication2.Data
                 .HasOne(st => st.ReservationFee)
                 .WithOne(rf => rf.SalesTransaction)
                 .HasForeignKey<SalesTransaction>(st => st.ReservationFeeId);
-
+            modelBuilder.Entity<SalesTransaction>()
+                .HasOne(st => st.CreditReview)
+                .WithMany(cr => cr.SalesTransaction)
+                .HasForeignKey(bp => bp.CreditReviewId);
         }
     }
     }

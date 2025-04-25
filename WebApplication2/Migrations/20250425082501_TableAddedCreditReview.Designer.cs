@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication2.Data;
 
@@ -11,9 +12,11 @@ using WebApplication2.Data;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250425082501_TableAddedCreditReview")]
+    partial class TableAddedCreditReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +39,9 @@ namespace WebApplication2.Migrations
                     b.Property<string>("ContactNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CreditReviewId")
+                        .HasColumnType("int");
+
                     b.Property<long?>("CustomerCode")
                         .HasColumnType("bigint");
 
@@ -55,6 +61,8 @@ namespace WebApplication2.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BusinessPartnerId");
+
+                    b.HasIndex("CreditReviewId");
 
                     b.ToTable("BusinessPartners");
                 });
@@ -236,9 +244,6 @@ namespace WebApplication2.Migrations
                     b.Property<long>("ContractNumber")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("CreditReviewId")
-                        .HasColumnType("int");
-
                     b.Property<DateOnly>("HoldingDate")
                         .HasColumnType("date");
 
@@ -273,8 +278,6 @@ namespace WebApplication2.Migrations
 
                     b.HasIndex("BusinessPartnerId");
 
-                    b.HasIndex("CreditReviewId");
-
                     b.HasIndex("PropertyId");
 
                     b.HasIndex("ReservationFeeId")
@@ -286,15 +289,20 @@ namespace WebApplication2.Migrations
                     b.ToTable("SalesTransactions");
                 });
 
+            modelBuilder.Entity("WebApplication2.Models.BusinessPartner", b =>
+                {
+                    b.HasOne("WebApplication2.Models.CreditReview", "CreditReview")
+                        .WithMany("BusinessPartner")
+                        .HasForeignKey("CreditReviewId");
+
+                    b.Navigation("CreditReview");
+                });
+
             modelBuilder.Entity("WebApplication2.Models.SalesTransaction", b =>
                 {
                     b.HasOne("WebApplication2.Models.BusinessPartner", "BusinessPartner")
                         .WithMany("SalesTransaction")
                         .HasForeignKey("BusinessPartnerId");
-
-                    b.HasOne("WebApplication2.Models.CreditReview", "CreditReview")
-                        .WithMany("SalesTransaction")
-                        .HasForeignKey("CreditReviewId");
 
                     b.HasOne("WebApplication2.Models.Property", "Properties")
                         .WithMany("SalesTransaction")
@@ -310,8 +318,6 @@ namespace WebApplication2.Migrations
 
                     b.Navigation("BusinessPartner");
 
-                    b.Navigation("CreditReview");
-
                     b.Navigation("Properties");
 
                     b.Navigation("ReservationFee");
@@ -326,7 +332,7 @@ namespace WebApplication2.Migrations
 
             modelBuilder.Entity("WebApplication2.Models.CreditReview", b =>
                 {
-                    b.Navigation("SalesTransaction");
+                    b.Navigation("BusinessPartner");
                 });
 
             modelBuilder.Entity("WebApplication2.Models.Property", b =>
