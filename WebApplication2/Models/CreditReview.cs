@@ -21,6 +21,6 @@
         public string? NdiCategory { get; set; }
         public int MaxTerm { get; set; }
         public string? EstimatedMaxTerm { get; set; }
-        
+        public List<SalesTransaction>? SalesTransaction { get; set; }
     }
 }

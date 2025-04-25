@@ -17,6 +17,8 @@ namespace WebApplication2.Models
         public int? PropertyId { get; set; }
         public int? SalesProponentsId { get; set; }
         public int? ReservationFeeId { get; set; }
+        public int? CreditReviewId { get; set; }
+        public CreditReview? CreditReview { get; set; } // Navigation property to CreditReview
         public Property? Properties { get; set; }
         public BusinessPartner? BusinessPartner { get; set; }
         public SalesProponent? SalesProponent { get; set; }
