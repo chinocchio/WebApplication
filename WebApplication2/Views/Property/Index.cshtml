@@ -152,6 +152,87 @@
                         }
                     </tbody>
                 </table>
+                <!-- AFTER buyers table, Credit Review tab system -->
+
+                <ul class="nav nav-tabs" id="creditReviewTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="credit-tab" data-bs-toggle="tab" data-bs-target="#credit" type="button" role="tab" aria-controls="credit" aria-selected="true">
+                            Credit Review
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content border p-3" id="creditReviewTabsContent">
+                    <div class="tab-pane fade show active" id="credit" role="tabpanel" aria-labelledby="credit-tab">
+                        @foreach (var transaction in Model.SalesTransactions)
+                        {
+                            if (transaction.CreditReview != null)
+                            {
+                                <div class="mb-4">
+                                    <dl class="row">
+                                        <dt class="col-sm-3">Credit Review Result:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.CreditReviewResult</dd>
+
+                                        <dt class="col-sm-3">CMAP Result:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.CMAPResult</dd>
+
+                                        <dt class="col-sm-3">Credit Review Remarks:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.CreditReviewRemarks</dd>
+
+                                        <dt class="col-sm-3">NDI Status:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.NDIStatus</dd>
+
+                                        <dt class="col-sm-3">Is Bank Approvable:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.IsBankApporvable</dd>
+
+                                        <dt class="col-sm-3">Red Tag:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.RedTag</dd>
+
+                                        <dt class="col-sm-3">Red Tag Reason:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.RedTagReason</dd>
+
+                                        <dt class="col-sm-3">CI Completion Date:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.CiCompletionDate.ToString("MM/dd/yyyy")</dd>
+
+                                        <dt class="col-sm-3">Type of Income:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.TypeOfIncome</dd>
+
+                                        <dt class="col-sm-3">NDI Rate:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.NdiRate</dd>
+
+                                        <dt class="col-sm-3">Net Disposable Income:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.NetDisposableIncome</dd>
+
+                                        <dt class="col-sm-3">Other Loans:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.OtherLoans</dd>
+
+                                        <dt class="col-sm-3">Net NDI:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.NetNdi</dd>
+
+                                        <dt class="col-sm-3">NDI vs Bank MA To Be Amount:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.NdiVsBankMaTobAmt</dd>
+
+                                        <dt class="col-sm-3">Percent of NDI vs MA:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.PercentOfNdiVsMa</dd>
+
+                                        <dt class="col-sm-3">NDI Category:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.NdiCategory</dd>
+
+                                        <dt class="col-sm-3">Max Term:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.MaxTerm</dd>
+
+                                        <dt class="col-sm-3">Estimated Max Term:</dt>
+                                        <dd class="col-sm-9">@transaction.CreditReview.EstimatedMaxTerm</dd>
+                                    </dl>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No Credit Review information available for this transaction.</p>
+                            }
+                        }
+                    </div>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="property" role="tabpanel">
