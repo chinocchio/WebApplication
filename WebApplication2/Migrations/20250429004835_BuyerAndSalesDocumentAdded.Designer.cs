@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication2.Data;
 
@@ -11,9 +12,11 @@ using WebApplication2.Data;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250429004835_BuyerAndSalesDocumentAdded")]
+    partial class BuyerAndSalesDocumentAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,11 +182,11 @@ namespace WebApplication2.Migrations
                     b.Property<string>("ImmigrantOrNonImmigrant")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("IncomeDeclaredCb")
-                        .HasColumnType("float");
+                    b.Property<int?>("IncomeDeclaredCb")
+                        .HasColumnType("int");
 
-                    b.Property<double?>("IncomeDeclaredPb")
-                        .HasColumnType("float");
+                    b.Property<int?>("IncomeDeclaredPb")
+                        .HasColumnType("int");
 
                     b.Property<string>("IsBankApporvable")
                         .HasColumnType("nvarchar(max)");
@@ -200,20 +203,20 @@ namespace WebApplication2.Migrations
                     b.Property<string>("NdiRate")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("NdiVsBankMaTobAmt")
-                        .HasColumnType("float");
+                    b.Property<int>("NdiVsBankMaTobAmt")
+                        .HasColumnType("int");
 
-                    b.Property<double?>("NetDisposableIncome")
-                        .HasColumnType("float");
+                    b.Property<int>("NetDisposableIncome")
+                        .HasColumnType("int");
 
-                    b.Property<double?>("NetNdi")
-                        .HasColumnType("float");
+                    b.Property<int>("NetNdi")
+                        .HasColumnType("int");
 
                     b.Property<int?>("NumberOfHomesInPH")
                         .HasColumnType("int");
 
-                    b.Property<double?>("OtherLoans")
-                        .HasColumnType("float");
+                    b.Property<int>("OtherLoans")
+                        .HasColumnType("int");
 
                     b.Property<string>("PercentOfNdiVsMa")
                         .HasColumnType("nvarchar(max)");
@@ -233,8 +236,8 @@ namespace WebApplication2.Migrations
                     b.Property<string>("RedTagReason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("TotalIncomeCombined")
-                        .HasColumnType("float");
+                    b.Property<int?>("TotalIncomeCombined")
+                        .HasColumnType("int");
 
                     b.Property<string>("TypeOfIncome")
                         .HasColumnType("nvarchar(max)");

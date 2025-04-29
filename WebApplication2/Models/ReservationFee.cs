@@ -6,7 +6,7 @@ namespace WebApplication2.Models
     {
         public int ReservationFeeId { get; set; }
         public DateOnly RfDatePaid { get; set; }
-        public string RfProofUsedUponHolding { get; set; } = null!;
+        //public string RfProofUsedUponHolding { get; set; } = null!; // Ilipat sa SalesDocument
         public double RfAmountPaidToUnit { get; set; }
         public double RfAmountPaidToGMTOE { get; set; }
         public double RfAmountGMTOE_Unit { get; set; }
