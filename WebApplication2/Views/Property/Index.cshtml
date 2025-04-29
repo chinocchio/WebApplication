@@ -96,21 +96,115 @@
 
                                     <div class="tab-content p-3 border" id="salesDocTabsContent_@transaction.SalesTransactionId">
                                         <div class="tab-pane fade show active" id="salesDocContent-@transaction.SalesTransactionId" role="tabpanel">
-                                            @* Sales Document content goes here *@
                                             @if (transaction.SalesDocument != null)
                                             {
-                                                <dl class="row">
-                                                    <dt class="col-sm-3">Proof Used Upon Holding:</dt>
-                                                    <dd class="col-sm-9">@transaction.SalesDocument.RfProofUsedUponHolding</dd>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>Proof Used Upon Holding:</strong>
+                                                        <div>@transaction.SalesDocument.RfProofUsedUponHolding</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>SA1/SA2 Completion Date:</strong>
+                                                        <div>@transaction.SalesDocument.Sa1Sa2CompletionDate</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>PROOF OF INCOME SUBMITTED:</strong>
+                                                        <div>@transaction.SalesDocument.ProofOfIncomeSubmitted</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>SUBMISSION OF DOCS FOR CI ENDORSEMENT:</strong>
+                                                        <div>@transaction.SalesDocument.DocsSubmissionForCiEndorsement</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>TOTAL PDCS REQUIRED:</strong>
+                                                        <div>@transaction.SalesDocument.TotalPDCSRequired</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>BANK PDC ISSUED:</strong>
+                                                        <div>@transaction.SalesDocument.BankPDCIssued</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>TOTAL ADA/PDCS SUBMITTED:</strong>
+                                                        <div>@transaction.SalesDocument.TotalAdaPdcsSubmitted</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>DATE SUBMITTED:</strong>
+                                                        <div>@transaction.SalesDocument.DateSubmitted</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>PDC COMPLETION DATE:</strong>
+                                                        <div>@transaction.SalesDocument.PDCCompletionDate</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>CTS TO DATE:</strong>
+                                                        <div>@transaction.SalesDocument.CTSToDate</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>CTS STATUS:</strong>
+                                                        <div>@transaction.SalesDocument.CTSStatus</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>TYPE OF CTS:</strong>
+                                                        <div>@transaction.SalesDocument.TypeOfCTS</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>SIGNED BY BROKER (YES/NO):</strong>
+                                                        <div>@transaction.SalesDocument.SignedByBroker</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>CTS APOSTILLED/CONSULARIZED/NOTARIZED:</strong>
+                                                        <div>@transaction.SalesDocument.CtsACN</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>DATE RECEIVED FROM SALES ADMIN:</strong>
+                                                        <div>@transaction.SalesDocument.DateRecievedFromSalesAdmin</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>DATE NOTARY (CLIENT/AMG):</strong>
+                                                        <div>@transaction.SalesDocument.DateNotary</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>SET B DOCS COMPLETION DATE:</strong>
+                                                        <div>@transaction.SalesDocument.SetBDocsCompletionDate</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>MONTH CONTRACTED:</strong>
+                                                        <div>@transaction.SalesDocument.MonthContracted</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>MONTH BOOKED:</strong>
+                                                        <div>@transaction.SalesDocument.MonthBooked</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>P1/OLD COLOR STATUS:</strong>
+                                                        <div>@transaction.SalesDocument.P1OldColorStatus</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>AGEING CATEGORY:</strong>
+                                                        <div>@transaction.SalesDocument.AegingCategory</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>LACKING DOCS:</strong>
+                                                        <div>@transaction.SalesDocument.LackingDocs</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>CTS, SPA, AND DOR OUT DATE:</strong>
+                                                        <div>@transaction.SalesDocument.CtsSpaAndDOROutDate</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>COMPLIANCE DUE:</strong>
+                                                        <div>@transaction.SalesDocument.ComplianceDUe</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>START DATE:</strong>
+                                                        <div>@transaction.SalesDocument.StartDate</div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <strong>END DATE:</strong>
+                                                        <div>@transaction.SalesDocument.EndDate</div>
+                                                    </div>
+                                                </div>
 
-                                                    <dt class="col-sm-3">SA1/SA2 Completion Date:</dt>
-                                                    <dd class="col-sm-9">@transaction.SalesDocument.Sa1Sa2CompletionDate</dd>
-
-                                                    <dt class="col-sm-3">PROOF OF INCOME SUBMITTED:</dt>
-                                                    <dd class="col-sm-9">@transaction.SalesDocument.ProofOfIncomeSubmitted</dd>
-
-                                                    @* Add more SalesDocument fields here as needed *@
-                                                </dl>
                                             }
                                             else
                                             {
