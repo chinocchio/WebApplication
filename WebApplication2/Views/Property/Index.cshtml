@@ -86,9 +86,6 @@
                                             <dt class="col-sm-3">Rf Date Paid:</dt>
                                             <dd class="col-sm-9">@transaction.ReservationFee.RfDatePaid</dd>
 
-                                            <dt class="col-sm-3">Proof Of RF Used Upon Holding:</dt>
-                                            <dd class="col-sm-9">@transaction.ReservationFee.RfProofUsedUponHolding</dd>
-
                                             <dt class="col-sm-3">RF Amount Paid To Unit:</dt>
                                             <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToUnit</dd>
 
@@ -168,62 +165,108 @@
                         {
                             if (transaction.CreditReview != null)
                             {
-                                <div class="mb-4">
-                                    <dl class="row">
-                                        <dt class="col-sm-3">Credit Review Result:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.CreditReviewResult</dd>
+                                <div class="mb-4" style="max-height: 600px; overflow-y: auto; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <strong>CI Result:</strong> @transaction.CreditReview.CreditReviewResult
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>CMAP Result:</strong> @transaction.CreditReview.CMAPResult
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>CI Remarks:</strong> @transaction.CreditReview.CreditReviewRemarks
+                                        </div>
 
-                                        <dt class="col-sm-3">CMAP Result:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.CMAPResult</dd>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>NDI Status:</strong> @transaction.CreditReview.NDIStatus
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Is Bank Approvable:</strong> @transaction.CreditReview.IsBankApporvable
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Red Tag:</strong> @transaction.CreditReview.RedTag
+                                        </div>
 
-                                        <dt class="col-sm-3">Credit Review Remarks:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.CreditReviewRemarks</dd>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Red Tag Reason:</strong> @transaction.CreditReview.RedTagReason
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>CI Completion Date:</strong> @(transaction.CreditReview.CiCompletionDate.ToString("MM/dd/yyyy"))
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Reason For Purchase:</strong> @transaction.CreditReview.ReasonForPurchase
+                                        </div>
 
-                                        <dt class="col-sm-3">NDI Status:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.NDIStatus</dd>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>1st Home In PH:</strong> @transaction.CreditReview.FirstHomeInPH
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Number of home in PH:</strong> @transaction.CreditReview.NumberOfHomesInPH
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>With Other CPGI Units:</strong> @transaction.CreditReview.WithOtherCPGIUnits
+                                        </div>
 
-                                        <dt class="col-sm-3">Is Bank Approvable:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.IsBankApporvable</dd>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>PROJECT/UNIT NO. OF OTHER CPGI UNIT:</strong> @transaction.CreditReview.ProjectOrUnitCodeOfOtherCPGIUnit
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>INCOME DECLARED PRINCIPAL (PHP):</strong> @transaction.CreditReview.IncomeDeclaredPb
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>INCOME DECLARED CO-BORROWER:</strong> @transaction.CreditReview.IncomeDeclaredCb
+                                        </div>
 
-                                        <dt class="col-sm-3">Red Tag:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.RedTag</dd>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>TOTAL INCOME (COMBINED):</strong> @transaction.CreditReview.TotalIncomeCombined
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Type of Income:</strong> @transaction.CreditReview.TypeOfIncome
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>NDI Rate:</strong> @transaction.CreditReview.NdiRate
+                                        </div>
 
-                                        <dt class="col-sm-3">Red Tag Reason:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.RedTagReason</dd>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Net Disposable Income:</strong> @transaction.CreditReview.NetDisposableIncome
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Other Loans:</strong> @transaction.CreditReview.OtherLoans
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Net NDI:</strong> @transaction.CreditReview.NetNdi
+                                        </div>
 
-                                        <dt class="col-sm-3">CI Completion Date:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.CiCompletionDate.ToString("MM/dd/yyyy")</dd>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>NDI vs Bank MA TOB Amount:</strong> @transaction.CreditReview.NdiVsBankMaTobAmt
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Percent of NDI vs MA:</strong> @transaction.CreditReview.PercentOfNdiVsMa
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>NDI Category:</strong> @transaction.CreditReview.NdiCategory
+                                        </div>
 
-                                        <dt class="col-sm-3">Type of Income:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.TypeOfIncome</dd>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Max Term:</strong> @transaction.CreditReview.MaxTerm
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Estimated Max Term:</strong> @transaction.CreditReview.EstimatedMaxTerm
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>Persona Category:</strong> @transaction.CreditReview.PersonaCategory
+                                        </div>
 
-                                        <dt class="col-sm-3">NDI Rate:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.NdiRate</dd>
-
-                                        <dt class="col-sm-3">Net Disposable Income:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.NetDisposableIncome</dd>
-
-                                        <dt class="col-sm-3">Other Loans:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.OtherLoans</dd>
-
-                                        <dt class="col-sm-3">Net NDI:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.NetNdi</dd>
-
-                                        <dt class="col-sm-3">NDI vs Bank MA To Be Amount:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.NdiVsBankMaTobAmt</dd>
-
-                                        <dt class="col-sm-3">Percent of NDI vs MA:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.PercentOfNdiVsMa</dd>
-
-                                        <dt class="col-sm-3">NDI Category:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.NdiCategory</dd>
-
-                                        <dt class="col-sm-3">Max Term:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.MaxTerm</dd>
-
-                                        <dt class="col-sm-3">Estimated Max Term:</dt>
-                                        <dd class="col-sm-9">@transaction.CreditReview.EstimatedMaxTerm</dd>
-                                    </dl>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>IMMIGRANT/NON-IMMIGRANT:</strong> @transaction.CreditReview.ImmigrantOrNonImmigrant
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>HIGH RISK (Y/N):</strong> @transaction.CreditReview.HighRishk
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>HIGH RISK FACTOR/S:</strong> @transaction.CreditReview.HighRiskFactors
+                                        </div>
+                                    </div>
                                 </div>
                             }
                             else
@@ -233,6 +276,7 @@
                         }
                     </div>
                 </div>
+
             </div>
 
             <div class="tab-pane fade" id="property" role="tabpanel">

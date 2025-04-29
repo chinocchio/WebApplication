@@ -18,10 +18,14 @@ namespace WebApplication2.Models
         public int? SalesProponentsId { get; set; }
         public int? ReservationFeeId { get; set; }
         public int? CreditReviewId { get; set; }
-        public CreditReview? CreditReview { get; set; } // Navigation property to CreditReview
+        public int? SalesDocumentId { get; set; }
+        public int? BuyerDocumentId { get; set; }
+        public CreditReview? CreditReview { get; set; } 
         public Property? Properties { get; set; }
         public BusinessPartner? BusinessPartner { get; set; }
         public SalesProponent? SalesProponent { get; set; }
         public ReservationFee? ReservationFee { get; set; }
+        public SalesDocument? SalesDocument { get; set; }
+        public BuyerDocument? BuyerDocument { get; set; }
     }
 }
