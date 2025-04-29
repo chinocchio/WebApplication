@@ -80,32 +80,67 @@
 
                             <tr id="@targetId" class="d-none bg-light">
                                 <td colspan="8">
-                                    @if (transaction.ReservationFee != null)
-                                    {
-                                        <dl class="row p-3">
-                                            <dt class="col-sm-3">Rf Date Paid:</dt>
-                                            <dd class="col-sm-9">@transaction.ReservationFee.RfDatePaid</dd>
+                                    <!-- Sales Document and Credit Review Tabs -->
+                                    <ul class="nav nav-tabs mt-3" id="salesDocTabs_@transaction.SalesTransactionId" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="salesDoc-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#salesDocContent-@transaction.SalesTransactionId" type="button" role="tab">
+                                                Sales Document
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="resarvationFee-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#resarvationFeeContent-@transaction.SalesTransactionId" type="button" role="tab">
+                                                Payment Term 
+                                            </button>
+                                        </li>
+                                    </ul>
 
-                                            <dt class="col-sm-3">RF Amount Paid To Unit:</dt>
-                                            <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToUnit</dd>
+                                    <div class="tab-content p-3 border" id="salesDocTabsContent_@transaction.SalesTransactionId">
+                                        <div class="tab-pane fade show active" id="salesDocContent-@transaction.SalesTransactionId" role="tabpanel">
+                                            @* Sales Document content goes here *@
+                                            @if (transaction.SalesDocument != null)
+                                            {
+                                                <dl class="row">
+                                                    <dt class="col-sm-3">Proof Used Upon Holding:</dt>
+                                                    <dd class="col-sm-9">@transaction.SalesDocument.RfProofUsedUponHolding</dd>
 
-                                            <dt class="col-sm-3">RF Amount Paid To GMTOE:</dt>
-                                            <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToGMTOE</dd>
+                                                    <dt class="col-sm-3">SA1/SA2 Completion Date:</dt>
+                                                    <dd class="col-sm-9">@transaction.SalesDocument.Sa1Sa2CompletionDate</dd>
 
-                                            <dt class="col-sm-3">RF Amount (UNIT+GMTOE) Total:</dt>
-                                            <dd class="col-sm-9">@transaction.ReservationFee.RfAmountGMTOE_Unit</dd>
+                                                    <dt class="col-sm-3">PROOF OF INCOME SUBMITTED:</dt>
+                                                    <dd class="col-sm-9">@transaction.SalesDocument.ProofOfIncomeSubmitted</dd>
 
-                                            <dt class="col-sm-3">Date RF Credited:</dt>
-                                            <dd class="col-sm-9">@transaction.ReservationFee.RfDateCredited</dd>
+                                                    @* Add more SalesDocument fields here as needed *@
+                                                </dl>
+                                            }
+                                            else
+                                            {
+                                                <em class="text-muted">No sales document data available.</em>
+                                            }
+                                        </div>
 
-                                            <dt class="col-sm-3">RF OR Number:</dt>
-                                            <dd class="col-sm-9">@transaction.ReservationFee.RfOrNumber</dd>
-                                        </dl>
-                                    }
-                                    else
-                                    {
-                                        <em class="text-muted">No reservation fee data available.</em>
-                                    }
+                                        <div class="tab-pane fade" id="resarvationFeeContent-@transaction.SalesTransactionId" role="tabpanel">
+                                            @* Credit Review content goes here *@
+                                            @if (transaction.ReservationFee != null)
+                                            {
+                                                <dl class="row">
+                                                    <dt class="col-sm-3">RF AMOUNT (UNIT+GMTOE):</dt>
+                                                    <dd class="col-sm-9">@transaction.ReservationFee.RfAmountGMTOE_Unit</dd>
+
+                                                    <dt class="col-sm-3">RF AMOUNT PAID TO UNIT:</dt>
+                                                    <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToUnit</dd>
+
+                                                    <dt class="col-sm-3">RF AMOUNT PAID TO GMTOE:</dt>
+                                                    <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToGMTOE</dd>
+
+                                                    @* Add more CreditReview fields here *@
+                                                </dl>
+                                            }
+                                            else
+                                            {
+                                                <em class="text-muted">No credit review data available.</em>
+                                            }
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         }
