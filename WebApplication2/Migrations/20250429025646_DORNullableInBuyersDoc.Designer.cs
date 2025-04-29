@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication2.Data;
 
@@ -11,9 +12,11 @@ using WebApplication2.Data;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250429025646_DORNullableInBuyersDoc")]
+    partial class DORNullableInBuyersDoc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -325,34 +328,34 @@ namespace WebApplication2.Migrations
                     b.Property<string>("CTSStatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("CTSToDate")
+                    b.Property<DateOnly>("CTSToDate")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("ComplianceDUe")
+                    b.Property<DateOnly>("ComplianceDUe")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("ContractedSaleDate")
+                    b.Property<DateOnly>("ContractedSaleDate")
                         .HasColumnType("date");
 
                     b.Property<string>("CtsACN")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("CtsSpaAndDOROutDate")
+                    b.Property<DateOnly>("CtsSpaAndDOROutDate")
                         .HasColumnType("date");
 
                     b.Property<string>("DateNotary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("DateRecievedFromSalesAdmin")
+                    b.Property<DateOnly>("DateRecievedFromSalesAdmin")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("DateSubmitted")
+                    b.Property<DateOnly>("DateSubmitted")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("DocsSubmissionForCiEndorsement")
+                    b.Property<DateOnly>("DocsSubmissionForCiEndorsement")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("EndDate")
+                    b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
                     b.Property<string>("LackingDocs")
@@ -367,25 +370,26 @@ namespace WebApplication2.Migrations
                     b.Property<string>("P1OldColorStatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("PDCCompletionDate")
+                    b.Property<DateOnly>("PDCCompletionDate")
                         .HasColumnType("date");
 
                     b.Property<string>("ProofOfIncomeSubmitted")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RfProofUsedUponHolding")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("Sa1Sa2CompletionDate")
+                    b.Property<DateOnly>("Sa1Sa2CompletionDate")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("SetBDocsCompletionDate")
+                    b.Property<DateOnly>("SetBDocsCompletionDate")
                         .HasColumnType("date");
 
                     b.Property<string>("SignedByBroker")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("StartDate")
+                    b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
                     b.Property<string>("TotalAdaPdcsSubmitted")

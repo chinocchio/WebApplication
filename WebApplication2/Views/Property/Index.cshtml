@@ -157,6 +157,11 @@
                             Credit Review
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="buyerdocs-tab" data-bs-toggle="tab" data-bs-target="#buyerdocs" type="button" role="tab" aria-controls="buyerdocs" aria-selected="false">
+                            Buyer Documents
+                        </button>
+                    </li>
                 </ul>
 
                 <div class="tab-content border p-3" id="creditReviewTabsContent">
@@ -275,8 +280,97 @@
                             }
                         }
                     </div>
-                </div>
 
+                    <div class="tab-pane fade" id="buyerdocs" role="tabpanel" aria-labelledby="buyerdocs-tab">
+                        @foreach (var transaction in Model.SalesTransactions)
+                        {
+                            if (transaction.BuyerDocument != null)
+                            {
+                                <div class="mb-4">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <strong>SPA:</strong> @transaction.BuyerDocument.SPA
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>SPA APOSTILLED/CONSULARIZED/NOTARIZED:</strong> @transaction.BuyerDocument.SPA_ACN
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>DOR:</strong> @transaction.BuyerDocument.DOR
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>BIRTH CERTIFICATE:</strong> @transaction.BuyerDocument.BirthCertificate
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>CENOMAR:</strong> @transaction.BuyerDocument.Cenomar
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>MARRIAGE CERTIFICATE:</strong> @transaction.BuyerDocument.MarriageCertificate
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>DEATH CERTIFICATE:</strong> @transaction.BuyerDocument.DeathCertificate
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>PROOF OF BILLING 1:</strong> @transaction.BuyerDocument.ProofOfBilling1
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>VERIFIED TIN:</strong> @transaction.BuyerDocument.VerifiedTin
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>TIN AUTHO LETTER:</strong> @transaction.BuyerDocument.TinAuthoLetter
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>PRIMARY - 1904 FORM:</strong> @transaction.BuyerDocument.Pb1904Form
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>COBORROWER - 1904 FORM:</strong> @transaction.BuyerDocument.Cb1904Form
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>TIN NUMBER:</strong> @transaction.BuyerDocument.TinNumber
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>PRINCIPAL BUYER ID TYPE:</strong> @transaction.BuyerDocument.PbIDType
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>EXPIRATION DATE 1:</strong> @transaction.BuyerDocument.ExpirationDate1
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>SPOUSE/CO BORROWER ID:</strong> @transaction.BuyerDocument.SpsCbId
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>EXPIRATION DATE 2:</strong> @transaction.BuyerDocument.ExpirationDate2
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>SPECIFIC INCOME DOCS SUBMITTED:</strong> @transaction.BuyerDocument.SpecificIncomeDocsSubmitted
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>AIF ID:</strong> @transaction.BuyerDocument.AIFId
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>NAME OF AIF:</strong> @transaction.BuyerDocument.NameOfAif
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>CONTACT NUMBER OF AIF:</strong> @transaction.BuyerDocument.ContactNumberOfAIF
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>PROOF OF BILLING 2:</strong> @transaction.BuyerDocument.ProofOfBilling2
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>ADDITIONAL POI:</strong> @transaction.BuyerDocument.AdditionalPOI
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <strong>OATH OF ALLEGIANCE:</strong> @transaction.BuyerDocument.AdditionalPOI
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No Buyer Document information available for this transaction.</p>
+                            }
+                        }
+                    </div>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="property" role="tabpanel">

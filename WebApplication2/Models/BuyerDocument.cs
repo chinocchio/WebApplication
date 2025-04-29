@@ -5,7 +5,7 @@
         public int BuyerDocumentId { get; set; }
         public string? SPA { get; set; }
         public string? SPA_ACN { get; set; }
-        public DateOnly DOR { get; set; }
+        public DateOnly? DOR { get; set; } 
         public string? BirthCertificate { get; set; }
         public string? Cenomar { get; set; }
         public string? MarriageCertificate { get; set; }
