@@ -11,7 +11,7 @@ namespace WebApplication2.Data
         public DbSet<SalesTransaction> SalesTransactions { get; set; }
         public DbSet<BusinessPartner> BusinessPartners { get; set; }
         public DbSet<SalesProponent> SalesProponents { get; set; }
-        public DbSet<ReservationFee> ReservationFees { get; set; }
+        public DbSet<PaymentTerm> PaymentTerms { get; set; }
         public DbSet<CreditReview> CreditReviews { get; set; }
         public DbSet<SalesDocument> SalesDocuments { get; set; }
         public DbSet<BuyerDocument> BuyerDocuments { get; set; }
@@ -31,9 +31,9 @@ namespace WebApplication2.Data
                 .WithMany(sp => sp.SalesTransaction)
                 .HasForeignKey(st => st.SalesProponentsId);
             modelBuilder.Entity<SalesTransaction>()
-                .HasOne(st => st.ReservationFee)
-                .WithOne(rf => rf.SalesTransaction)
-                .HasForeignKey<SalesTransaction>(st => st.ReservationFeeId);
+                .HasOne(st => st.PaymentTerm)
+                .WithMany(rf => rf.SalesTransaction)
+                .HasForeignKey(st => st.PaymentTermId);
             modelBuilder.Entity<SalesTransaction>()
                 .HasOne(st => st.CreditReview)
                 .WithMany(cr => cr.SalesTransaction)

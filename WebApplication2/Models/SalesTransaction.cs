@@ -16,7 +16,7 @@ namespace WebApplication2.Models
         public int? BusinessPartnerId { get; set; }
         public int? PropertyId { get; set; }
         public int? SalesProponentsId { get; set; }
-        public int? ReservationFeeId { get; set; }
+        public int? PaymentTermId { get; set; }
         public int? CreditReviewId { get; set; }
         public int? SalesDocumentId { get; set; }
         public int? BuyerDocumentId { get; set; }
@@ -24,7 +24,7 @@ namespace WebApplication2.Models
         public Property? Properties { get; set; }
         public BusinessPartner? BusinessPartner { get; set; }
         public SalesProponent? SalesProponent { get; set; }
-        public ReservationFee? ReservationFee { get; set; }
+        public PaymentTerm? PaymentTerm { get; set; }
         public SalesDocument? SalesDocument { get; set; }
         public BuyerDocument? BuyerDocument { get; set; }
     }

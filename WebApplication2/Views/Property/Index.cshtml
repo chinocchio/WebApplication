@@ -214,18 +214,62 @@
 
                                         <div class="tab-pane fade" id="resarvationFeeContent-@transaction.SalesTransactionId" role="tabpanel">
                                             @* Credit Review content goes here *@
-                                            @if (transaction.ReservationFee != null)
+                                            @if (transaction.PaymentTerm != null)
                                             {
                                                 <dl class="row">
-                                                    <dt class="col-sm-3">RF AMOUNT (UNIT+GMTOE):</dt>
-                                                    <dd class="col-sm-9">@transaction.ReservationFee.RfAmountGMTOE_Unit</dd>
-
                                                     <dt class="col-sm-3">RF AMOUNT PAID TO UNIT:</dt>
-                                                    <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToUnit</dd>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountPaidToUnit</dd>
 
                                                     <dt class="col-sm-3">RF AMOUNT PAID TO GMTOE:</dt>
-                                                    <dd class="col-sm-9">@transaction.ReservationFee.RfAmountPaidToGMTOE</dd>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountPaidToGMTOE</dd>
 
+                                                    <dt class="col-sm-3">TOTAL:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountGMTOE_Unit</dd>
+
+                                                    <dt class="col-sm-3">RF CREDITED:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfDateCredited</dd>
+
+                                                    <dt class="col-sm-3">RF OR NUMBER:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfOrNumber</dd>
+
+                                                    <dt class="col-sm-3">PAYMENT TERM:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.Paymentterm</dd>
+
+                                                    <dt class="col-sm-3">% TOB:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.PercentTOB</dd>
+
+                                                    <dt class="col-sm-3">TOB MODE OF PAYMENT BANK/CASH:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TOBModeOfPayment</dd>
+
+                                                    <dt class="col-sm-3">TOB:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TOB</dd>
+
+                                                    <dt class="col-sm-3">ESTIMATED BANK MA at 7.5%:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.EstimatedBankMAFor7Point5Percent</dd>
+
+                                                    <dt class="col-sm-3">START DATE ( 1st MA):</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.StartDate1stMA</dd>
+
+                                                    <dt class="col-sm-3">UNIT/PARKING:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.UnitParking</dd>
+
+                                                    <dt class="col-sm-3">TRANSFER FEE:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TransferFee</dd>
+
+                                                    <dt class="col-sm-3">AMOUNT PAID TO UNIT:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.AmountPaidToUnit</dd>
+
+                                                    <dt class="col-sm-3">AMOUNT PAID TO TRANSFER FEE:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.AmountPaidToTF</dd>
+
+                                                    <dt class="col-sm-3">DATE PAID:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.DatePaid</dd>
+
+                                                    <dt class="col-sm-3">FIRST MA OR NUMBER:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.FirstMAOrNumber</dd>
+
+                                                    <dt class="col-sm-3">PAYMENT DUE DATE:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.PaymentDueDate</dd>
                                                     @* Add more CreditReview fields here *@
                                                 </dl>
                                             }
