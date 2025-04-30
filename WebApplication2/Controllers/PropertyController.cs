@@ -29,7 +29,7 @@ namespace WebApplication2.Controllers
                         .Include(st => st.Properties)
                         .Include(st => st.BusinessPartner)
                         .Include(st => st.SalesProponent)
-                        .Include(st => st.ReservationFee)
+                        .Include(st => st.PaymentTerm)
                         .Include(st => st.CreditReview)
                         .Include(st => st.BuyerDocument)
                         .Include(st => st.SalesDocument)
