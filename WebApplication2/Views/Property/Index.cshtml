@@ -140,8 +140,6 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td>SA1/SA2</td>
-                                                                            @* <td>@(DateTime.TryParse(transaction.SalesDocument.Sa1Sa2CompletionDate?.ToString(), out _) ? "" : transaction.SalesDocument.Sa1Sa2CompletionDate)</td> *@
-                                                                            @* <td>@(DateTime.TryParse(transaction.SalesDocument.Sa1Sa2CompletionDate?.ToString(), out var date2) ? date2.ToShortDateString() : "")</td> *@
                                                                             <td> </td>
                                                                             <td>@transaction.SalesDocument.Sa1Sa2CompletionDate</td>
                                                                         </tr>
@@ -152,8 +150,6 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Submission of Docs for CI Endorsement</td>
-                                                                            @* <td>@(DateTime.TryParse(transaction.SalesDocument.DocsSubmissionForCiEndorsement?.ToString(), out _) ? "" : transaction.SalesDocument.DocsSubmissionForCiEndorsement)</td> *@
-                                                                            @* <td>@(DateTime.TryParse(transaction.SalesDocument.DocsSubmissionForCiEndorsement?.ToString(), out var date4) ? date4.ToShortDateString() : "")</td> *@
                                                                             <td> </td>
                                                                             <td> @transaction.SalesDocument.DocsSubmissionForCiEndorsement </td>
                                                                         </tr>
