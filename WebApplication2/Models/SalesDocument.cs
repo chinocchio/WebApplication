@@ -30,6 +30,7 @@
         public DateOnly? ComplianceDUe { get; set; }
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
+        public DateOnly? HoldingDate { get; set; }
 
         public List<SalesTransaction>? SalesTransaction { get; set; }
     }
