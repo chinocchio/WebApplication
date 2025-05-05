@@ -18,8 +18,15 @@ namespace WebApplication2.Controllers
 
         //GET: Property/Index
         // Displays the list of data of a property if searched.
-        public async Task<IActionResult> Index(string? searchTerm)
+        public IActionResult Index()
         {
+            return View(new PropertyListViewModel());
+        }
+
+        public async Task<IActionResult> Index1(string? searchTerm)
+        {
+
+
             /*
              * Pinalitan ko from Properties to SalesTransactions bale sa SalesTransaction table tayo nagselect
              * Eto yung query: Select ka sa SalesTransaction table tapos Include yung mga related tables
@@ -72,7 +79,10 @@ namespace WebApplication2.Controllers
                 }
             }
 
+            ViewBag.SearchTerm = searchTerm;
+
             var model = new PropertyListViewModel
+                
             {
                 SalesTransactions = salesTransactions,
                 SearchTerm = searchTerm
@@ -96,8 +106,10 @@ namespace WebApplication2.Controllers
         // GET: Property/Create
         public IActionResult Create()
         {
-            return View();
+            var property = new Property(); // or your actual ViewModel if using one
+            return View(property);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

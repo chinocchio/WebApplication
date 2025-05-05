@@ -56,7 +56,7 @@ namespace WebApplication2.Migrations
 
                     b.HasKey("BusinessPartnerId");
 
-                    b.ToTable("BusinessPartners");
+                    b.ToTable("BusinessPartners", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication2.Models.BuyerDocument", b =>
@@ -141,7 +141,7 @@ namespace WebApplication2.Migrations
 
                     b.HasKey("BuyerDocumentId");
 
-                    b.ToTable("BuyerDocuments");
+                    b.ToTable("BuyerDocuments", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication2.Models.CreditReview", b =>
@@ -244,7 +244,7 @@ namespace WebApplication2.Migrations
 
                     b.HasKey("CreditReviewId");
 
-                    b.ToTable("CreditReviews");
+                    b.ToTable("CreditReviews", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication2.Models.PaymentTerm", b =>
@@ -329,7 +329,7 @@ namespace WebApplication2.Migrations
 
                     b.HasKey("PaymentTermId");
 
-                    b.ToTable("PaymentTerms");
+                    b.ToTable("PaymentTerms", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication2.Models.Property", b =>
@@ -358,7 +358,7 @@ namespace WebApplication2.Migrations
 
                     b.HasKey("PropertyId");
 
-                    b.ToTable("Properties");
+                    b.ToTable("Properties", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication2.Models.SalesDocument", b =>
@@ -452,7 +452,7 @@ namespace WebApplication2.Migrations
 
                     b.HasKey("SalesDocumentId");
 
-                    b.ToTable("SalesDocuments");
+                    b.ToTable("SalesDocuments", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication2.Models.SalesProponent", b =>
@@ -483,7 +483,7 @@ namespace WebApplication2.Migrations
 
                     b.HasKey("SalesProponentId");
 
-                    b.ToTable("SalesProponents");
+                    b.ToTable("SalesProponents", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication2.Models.SalesTransaction", b =>
@@ -555,7 +555,7 @@ namespace WebApplication2.Migrations
 
                     b.HasIndex("SalesProponentsId");
 
-                    b.ToTable("SalesTransactions");
+                    b.ToTable("SalesTransactions", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication2.Models.SalesTransaction", b =>

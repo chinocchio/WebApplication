@@ -2,7 +2,21 @@
 
 @{
     ViewData["Title"] = "Create Property";
+    Layout = "_Layout";
 }
+
+<style>
+    .btn-custom {
+        background-color: #1A4D2E;
+        color: white;
+        border: none;
+    }
+
+        .btn-custom:hover {
+            background-color: #133b23; /* slightly darker for hover effect */
+        }
+</style>
+
 
 <h2>Create Property</h2>
 
@@ -30,12 +44,8 @@
         <span asp-validation-for="UnitCode" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3">Create</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Back to List</a>
+    <button type="submit" class="btn btn-custom mt-3">Create</button>
+    <a asp-action="Index1" class="btn btn-custom mt-3">Back to List</a>
+
 </form>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
