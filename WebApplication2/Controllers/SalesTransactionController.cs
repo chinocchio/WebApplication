@@ -31,7 +31,7 @@ namespace WebApplication2.Controllers
                 ExistingBusinessPartners = _context.BusinessPartners.Select(bp => new SelectListItem
                 {
                     Value = bp.BusinessPartnerId.ToString(),
-                    Text = $"{bp.Role } - {bp.Fullname} - {bp.CustomerCode}"
+                    Text = $"{bp.Role} - {bp.Fullname} - {bp.CustomerCode}"
                 }).ToList()
             };
 
@@ -111,6 +111,55 @@ namespace WebApplication2.Controllers
             }).ToList();
 
             return View(model);
+        }
+
+        // GET: SalesTransaction/Index1
+        public async Task<IActionResult> Index1(string? searchTerm)
+        {
+            var query = _context.SalesTransactions
+                .AsNoTracking()
+                .Include(st => st.Properties)
+                .Include(st => st.BusinessPartner)
+                .Include(st => st.SalesProponent)
+                .Include(st => st.PaymentTerm)
+                .Include(st => st.CreditReview)
+                .Include(st => st.BuyerDocument)
+                .Include(st => st.SalesDocument)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                query = query.Where(st =>
+                    st.ContractNumber.ToString().Contains(searchTerm) ||
+                    st.BusinessPartner.Fullname.ToLower().Contains(searchTerm) ||
+                    st.BusinessPartner.CustomerCode.ToString().Contains(searchTerm) ||
+                    st.Properties.UnitCode.ToLower().Contains(searchTerm)
+                );
+            }
+
+            query = query.OrderByDescending(st => st.HoldingDate);
+            var salesTransactions = await query.ToListAsync();
+
+            foreach (var transaction in salesTransactions)
+            {
+                if (transaction.BusinessPartner?.CustomerCode != null)
+                {
+                    transaction.BusinessPartner.OtherBuyers = await _context.BusinessPartners
+                        .Where(bp => bp.CustomerCode == transaction.BusinessPartner.CustomerCode)
+                        .ToListAsync();
+                }
+            }
+
+            ViewBag.SearchTerm = searchTerm;
+
+            var model = new PropertyListViewModel
+            {
+                SalesTransactions = salesTransactions,
+                SearchTerm = searchTerm
+            };
+
+            return View("/Views/Property/Index1.cshtml", model);
         }
     }
 }
