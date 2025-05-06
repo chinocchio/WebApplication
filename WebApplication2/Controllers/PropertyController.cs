@@ -35,7 +35,6 @@ namespace WebApplication2.Controllers
                         .Include(st => st.SalesDocument)
                         .AsQueryable();
 
-
             // Eto yung search functionality, check pag may laman yung searchTerm
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -61,6 +60,49 @@ namespace WebApplication2.Controllers
 
             var salesTransactions = await query.ToListAsync();
 
+            var submittedDocuments = await _context.SubmittedDocuments
+                .AsNoTracking()
+                .ToListAsync();
+
+            var allDocumentsForSubmission = await _context.DocumentForSubmissions
+                .AsNoTracking()
+                .ToListAsync();
+
+            var result = salesTransactions.Select(st => {
+                // Find all submitted for this contract
+                var submittedForThis = submittedDocuments
+                    .Where(doc => doc.ContractNumber == st.ContractNumber)
+                    .ToList();
+
+                // Extract their DocumentCodes
+                var submittedDocCodes = submittedForThis.Select(doc => doc.DocumentCode).ToHashSet();
+
+                // Filter out the submitted ones from required list based on DocumentCode
+                var remainingRequired = allDocumentsForSubmission
+                    .Where(doc =>!submittedDocCodes.Contains(doc.DocumentCode))
+                    .ToList();
+
+                return new SalesTransactionWithDocumentsViewModel
+                {
+                    SalesTransaction = st,
+                    SubmittedDocuments = submittedForThis,
+                    DocumentsForSubmission = remainingRequired
+                };
+            }).ToList();
+
+
+            // Load OtherBuyers for each transaction
+            foreach (var item in result)
+            {
+                var transaction = item.SalesTransaction;
+
+                if (transaction.BusinessPartner?.CustomerCode != null)
+                {
+                    transaction.BusinessPartner.OtherBuyers = await _context.BusinessPartners
+                        .Where(bp => bp.CustomerCode == transaction.BusinessPartner.CustomerCode)
+                        .ToListAsync();
+                }
+            }
             // For each transaction, load all buyers with the same customer code
             foreach (var transaction in salesTransactions)
             {
@@ -74,9 +116,16 @@ namespace WebApplication2.Controllers
 
             var model = new PropertyListViewModel
             {
-                SalesTransactions = salesTransactions,
+                SalesTransactions = result,
                 SearchTerm = searchTerm
             };
+
+
+            //var model = new PropertyListViewModel
+            //{
+            //    SalesTransactions = salesTransactions,
+            //    SearchTerm = searchTerm
+            //};
 
 
             /*

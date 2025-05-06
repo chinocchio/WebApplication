@@ -9,8 +9,9 @@ namespace WebApplication2.ViewModels
          */
 
         //Eto hawak neton yung result ng query sa sa controller
-        public IEnumerable<SalesTransaction>? SalesTransactions { get; set; } // Changed from Properties to SalesTransactions
-
+        //public IEnumerable<SalesTransaction>? SalesTransactions { get; set; } // Changed from Properties to SalesTransactions
+        public IEnumerable<SalesTransactionWithDocumentsViewModel>? SalesTransactions { get; set; }
+        
         //Eto yung sa search bar
         public string? SearchTerm { get; set; }
     }
