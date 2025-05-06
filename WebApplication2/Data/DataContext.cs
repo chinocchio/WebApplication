@@ -15,6 +15,9 @@ namespace WebApplication2.Data
         public DbSet<CreditReview> CreditReviews { get; set; }
         public DbSet<SalesDocument> SalesDocuments { get; set; }
         public DbSet<BuyerDocument> BuyerDocuments { get; set; }
+        public DbSet<DocumentRegistry> DocumentRegistries { get; set; }
+        public DbSet<DocumentForSubmission> DocumentForSubmissions { get; set; }
+        public DbSet<DocumentSubmitted> SubmittedDocuments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
