@@ -6,46 +6,132 @@
 }
 
 <style>
-    .btn-custom {
-        background-color: #1A4D2E;
-        color: white;
-        border: none;
+    .create-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
     }
 
-        .btn-custom:hover {
-            background-color: #133b23; /* slightly darker for hover effect */
+    .form-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .form-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-light);
+    }
+
+        .form-header h2 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 0;
+        }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        border: 2px solid rgba(0,0,0,0.1);
+        border-radius: var(--border-radius);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all var(--transition-speed) ease;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+            outline: none;
+        }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-custom {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+        .btn-custom i {
+            font-size: 1.1rem;
+        }
+
+    .back-btn {
+        background-color: #6c757d;
+    }
+
+        .back-btn:hover {
+            background-color: #5a6268;
         }
 </style>
 
+<div class="create-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h2>Create New Property</h2>
+        </div>
 
-<h2>Create Property</h2>
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="PropertyType" class="form-label">Property Type</label>
+                <input asp-for="PropertyType" class="form-control" placeholder="Enter property type" />
+                <span asp-validation-for="PropertyType" class="text-danger"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="PropertyType" class="control-label"></label>
-        <input asp-for="PropertyType" class="form-control" />
-        <span asp-validation-for="PropertyType" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="ProjectName" class="form-label">Project Name</label>
+                <input asp-for="ProjectName" class="form-control" placeholder="Enter project name" />
+                <span asp-validation-for="ProjectName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BuildingPhase" class="form-label">Building Phase</label>
+                <input asp-for="BuildingPhase" class="form-control" placeholder="Enter building phase" />
+                <span asp-validation-for="BuildingPhase" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UnitCode" class="form-label">Unit Code</label>
+                <input asp-for="UnitCode" class="form-control" placeholder="Enter unit code" />
+                <span asp-validation-for="UnitCode" class="text-danger"></span>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-custom">
+                    <i class="bi bi-plus-circle"></i>Create Property
+                </button>
+                <a asp-action="Index1" class="btn btn-custom back-btn">
+                    <i class="bi bi-arrow-left"></i>Back to List
+                </a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="ProjectName" class="control-label"></label>
-        <input asp-for="ProjectName" class="form-control" />
-        <span asp-validation-for="ProjectName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="BuildingPhase" class="control-label"></label>
-        <input asp-for="BuildingPhase" class="form-control" />
-        <span asp-validation-for="BuildingPhase" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="UnitCode" class="control-label"></label>
-        <input asp-for="UnitCode" class="form-control" />
-        <span asp-validation-for="UnitCode" class="text-danger"></span>
-    </div>
+</div>
 
-    <button type="submit" class="btn btn-custom mt-3">Create</button>
-    <a asp-action="Index1" class="btn btn-custom mt-3">Back to List</a>
-
-</form>
 
