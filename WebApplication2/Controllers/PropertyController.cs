@@ -82,11 +82,17 @@ namespace WebApplication2.Controllers
                     .Where(doc =>!submittedDocCodes.Contains(doc.DocumentCode))
                     .ToList();
 
+                var matchingLedgers = _context.BuyerLedgers
+                   .AsNoTracking()
+                   .Where(bl => bl.ContractNumber == st.ContractNumber)
+                   .ToList();
+
                 return new SalesTransactionWithDocumentsViewModel
                 {
                     SalesTransaction = st,
                     SubmittedDocuments = submittedForThis,
-                    DocumentsForSubmission = remainingRequired
+                    DocumentsForSubmission = remainingRequired,
+                    BuyerLedgers = matchingLedgers
                 };
             }).ToList();
 
@@ -104,15 +110,15 @@ namespace WebApplication2.Controllers
                 }
             }
             // For each transaction, load all buyers with the same customer code
-            foreach (var transaction in salesTransactions)
-            {
-                if (transaction.BusinessPartner?.CustomerCode != null)
-                {
-                    transaction.BusinessPartner.OtherBuyers = await _context.BusinessPartners
-                        .Where(bp => bp.CustomerCode == transaction.BusinessPartner.CustomerCode)
-                        .ToListAsync();
-                }
-            }
+            //foreach (var transaction in salesTransactions)
+            //{
+            //    if (transaction.BusinessPartner?.CustomerCode != null)
+            //    {
+            //        transaction.BusinessPartner.OtherBuyers = await _context.BusinessPartners
+            //            .Where(bp => bp.CustomerCode == transaction.BusinessPartner.CustomerCode)
+            //            .ToListAsync();
+            //    }
+            //}
 
             var model = new PropertyListViewModel
             {
@@ -120,23 +126,6 @@ namespace WebApplication2.Controllers
                 SearchTerm = searchTerm
             };
 
-
-            //var model = new PropertyListViewModel
-            //{
-            //    SalesTransactions = salesTransactions,
-            //    SearchTerm = searchTerm
-            //};
-
-
-            /*
-             * Tapos pasa nating sa PropertyListViewModel yung mga nakuha nating data
-             * na gagamitin natin sa view
-             */
-            //var model = new PropertyListViewModel
-            //{
-            //    SalesTransactions = await query.ToListAsync(),
-            //    SearchTerm = searchTerm
-            //};
 
             // Tapos papasa natin sa ModelView yung result nung controller na to
             return View(model);
