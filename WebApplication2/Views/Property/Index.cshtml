@@ -94,6 +94,11 @@
                                                 Payment Term 
                                             </button>
                                         </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="buyerLedger-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#buyerLedgerContent-@transaction.SalesTransactionId" type="button" role="tab">
+                                                Buyer's Ledger
+                                            </button>
+                                        </li>
                                     </ul>
 
 
@@ -198,7 +203,6 @@
 
 
                                    
-
                                         <div class="tab-pane fade" id="resarvationFeeContent-@transaction.SalesTransactionId" role="tabpanel">
                                             @* Credit Review content goes here *@
                                             @if (transaction.PaymentTerm != null)
@@ -265,6 +269,40 @@
                                                 <em class="text-muted">No credit review data available.</em>
                                             }
                                         </div>
+
+
+                                        <div class="tab-pane fade" id="buyerLedgerContent-@transaction.SalesTransactionId" role="tabpanel">
+                                            @if (item.BuyerLedgers.Any())
+                                            {
+                                                <h6>Buyer's Ledger Entries</h6>
+                                                <table class="table table-sm table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Contract Code</th>
+                                                            <th>Customer Code</th>
+                                                            <th>Amount Due</th>
+                                                            <th>When Due</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var ledger in item.BuyerLedgers)
+                                                        {
+                                                            <tr>
+                                                                <td>@ledger.ContractNumber</td>
+                                                                <td>@ledger.CustomerCode</td>
+                                                                <td>@ledger.AmountDue</td>
+                                                                <td>@ledger.WhenDue</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            }
+                                            else
+                                            {
+                                                <p>No ledger entries available for this contract.</p>
+                                            }
+                                        </div>
+
                                     </div>
                                 </td>
                             </tr>
