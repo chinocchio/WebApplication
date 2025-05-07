@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication2.Data;
 
@@ -11,9 +12,11 @@ using WebApplication2.Data;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250507055253_AddedNameToDocumentTable")]
+    partial class AddedNameToDocumentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,52 +145,6 @@ namespace WebApplication2.Migrations
                     b.HasKey("BuyerDocumentId");
 
                     b.ToTable("BuyerDocuments");
-                });
-
-            modelBuilder.Entity("WebApplication2.Models.BuyerLedger", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double?>("AmountDue")
-                        .HasColumnType("float");
-
-                    b.Property<long?>("ContractNumber")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CustomerCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentReferenceAmount")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly?>("PaymentReferenceDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("PaymentReferenceDocNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentReferenceDocType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly?>("PaymentTermSchedule")
-                        .HasColumnType("date");
-
-                    b.Property<string>("UnitCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly?>("WhenDue")
-                        .HasColumnType("date");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BuyerLedgers");
                 });
 
             modelBuilder.Entity("WebApplication2.Models.CreditReview", b =>
