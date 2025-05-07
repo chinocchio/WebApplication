@@ -1,10 +1,5 @@
-﻿@model WebApplication2.ViewModels.PropertyListViewModel
-
-@{
-    ViewData["Title"] = "Sales Transactions";
-}
-
 <style>
+    /* Main Card Improvements */
     .main-card {
         background: rgba(26, 77, 46, 0.85);
         border-radius: 24px;
@@ -19,36 +14,16 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        transition: box-shadow 0.3s, background 0.3s, transform 0.3s;
-        animation: fadeInCard 0.7s cubic-bezier(.4,1.4,.6,1) both;
+        transition: box-shadow 0.3s, background 0.3s;
     }
 
-        .main-card:focus-within, .main-card:hover {
-            box-shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.22);
-            transform: translateY(-4px) scale(1.01);
-        }
-    @@keyframes fadeInCard {
-        from
-
-    {
-        opacity: 0;
-        transform: translateY(40px) scale(0.98);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-
-    }
-
+    /* Logo and Welcome */
     .logo-container {
         display: flex;
         flex-direction: column;
         align-items: center;
         margin-bottom: 2.5rem;
     }
-
     .logo {
         width: 140px;
         height: auto;
@@ -56,7 +31,6 @@
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         transition: width 0.3s;
     }
-
     .welcome-text {
         color: #fff;
         font-size: 1.8rem;
@@ -69,6 +43,7 @@
         transition: text-shadow 0.3s;
     }
 
+    /* Search Form */
     .search-form {
         display: flex;
         gap: 0.5rem;
@@ -76,23 +51,7 @@
         justify-content: center;
         width: 100%;
         max-width: 600px;
-        animation: fadeInUp 0.8s 0.2s both;
     }
-    @@keyframes fadeInUp {
-        from
-
-    {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    }
-
     .search-input {
         border: none;
         border-radius: 30px 0 0 30px;
@@ -106,13 +65,11 @@
         min-width: 0;
         transition: all 0.3s;
     }
-
-        .search-input:focus {
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
-            transform: translateY(-1px);
-        }
-
+    .search-input:focus {
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        transform: translateY(-1px);
+    }
     .search-button {
         background: #4CAF50;
         color: #fff;
@@ -127,21 +84,21 @@
         transition: all 0.3s;
         box-shadow: 0 2px 8px rgba(44,62,80,0.08);
         cursor: pointer;
-        animation: fadeInUp 0.8s 0.3s both;
+    }
+    .search-button:hover, .search-button:focus {
+        background: #388e3c;
+        box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+        transform: translateY(-1px) scale(1.03);
     }
 
-        .search-button:hover, .search-button:focus {
-            background: #388e3c;
-            box-shadow: 0 4px 16px rgba(44,62,80,0.12);
-            transform: translateY(-1px) scale(1.03);
-        }
-
+    /* Divider */
     .divider {
         border-top: 1.5px solid rgba(255,255,255,0.2);
         margin: 2.5rem 0;
         width: 100%;
     }
 
+    /* Quick Actions */
     .quick-actions {
         display: flex;
         gap: 2rem;
@@ -149,9 +106,7 @@
         margin-bottom: 2.5rem;
         width: 100%;
         flex-wrap: wrap;
-        animation: fadeInUp 0.8s 0.4s both;
     }
-
     .action-button {
         background: rgba(255,255,255,0.15);
         color: #fff;
@@ -169,26 +124,62 @@
         cursor: pointer;
         min-width: 180px;
         justify-content: center;
-        animation: fadeInUp 0.8s 0.5s both;
+    }
+    .action-button:hover, .action-button:focus {
+        background: #4CAF50;
+        color: #fff;
+        border-color: #388e3c;
+        box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+        transform: translateY(-2px) scale(1.03);
+    }
+    .action-button i {
+        font-size: 1.4rem;
     }
 
-        .action-button:hover, .action-button:focus {
-            background: #4CAF50;
-            color: #fff;
-            border-color: #388e3c;
-            box-shadow: 0 4px 16px rgba(44,62,80,0.12);
-            transform: translateY(-2px) scale(1.03);
-        }
+    /* Feature Highlights */
+    .feature-highlights {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    .feature-item {
+        color: #e0ffe0;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        background: rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 0.7rem 1.2rem;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        transition: all 0.3s;
+    }
+    .feature-item:hover, .feature-item:focus {
+        background: rgba(255,255,255,0.15);
+        transform: translateY(-2px) scale(1.03);
+    }
+    .feature-item i {
+        color: #4CAF50;
+        font-size: 1.3rem;
+    }
 
-        .action-button i {
-            font-size: 1.4rem;
-        }
+    /* Subtext */
+    .subtext {
+        color: rgba(255,255,255,0.9);
+        font-size: 1.05rem;
+        text-align: center;
+        line-height: 1.6;
+        margin-top: 2rem;
+    }
 
-        /* Accessibility: Focus States */
-        .search-input:focus, .search-button:focus, .action-button:focus {
-            outline: 2px solid #4CAF50;
-            outline-offset: 2px;
-        }
+    /* Accessibility: Focus States */
+    .search-input:focus, .search-button:focus, .action-button:focus, .feature-item:focus {
+        outline: 2px solid #4CAF50;
+        outline-offset: 2px;
+    }
 
     /* Responsive Design */
     @@media (max-width: 900px) {
@@ -196,66 +187,62 @@
             padding: 2rem 1.5rem;
             max-width: 90%;
         }
-
         .welcome-text {
             font-size: 1.6rem;
         }
-
         .search-input, .search-button {
             font-size: 1rem;
         }
     }
-
     @@media (max-width: 700px) {
         .main-card {
             padding: 1.5rem 1rem;
             max-width: 95%;
         }
-
         .search-form {
             flex-direction: column;
             gap: 1rem;
             max-width: 100%;
         }
-
         .search-input, .search-button {
             width: 100%;
             border-radius: 30px;
             text-align: center;
         }
-
         .quick-actions {
             flex-direction: column;
             gap: 1rem;
         }
-
+        .feature-highlights {
+            flex-direction: column;
+            gap: 1rem;
+        }
         .action-button {
             justify-content: center;
         }
     }
-
     @@media (max-width: 480px) {
         .main-card {
             padding: 1.5rem 0.8rem;
         }
-
         .welcome-text {
             font-size: 1.4rem;
         }
-
         .logo {
             width: 120px;
         }
-
         .action-button {
             padding: 1rem 1.5rem;
             font-size: 1rem;
         }
+        .feature-item {
+            font-size: 1rem;
+            padding: 0.6rem 1rem;
+        }
     }
 </style>
 
-<div class="main-card" role="main" aria-label="Sales Transactions" tabindex="0">
-    <h1 class="visually-hidden">Sales Transactions</h1>
+<div class="main-card" role="main" aria-label="Sales Transactions">
     <div class="logo-container">
         <img src="@Url.Content("~/src/full-logo-1.png")" class="logo" alt="Company Logo" />
         <div class="welcome-text">Welcome to Sales Transactions</div>
@@ -276,7 +263,7 @@
 
     <div class="divider" aria-hidden="true"></div>
 
-    <nav class="quick-actions" aria-label="Quick Actions">
+    <div class="quick-actions">
         <a asp-controller="Property" asp-action="Create" class="action-button" aria-label="Create New Property">
             <i class="bi bi-plus-circle"></i>
             <span>New Property</span>
@@ -285,15 +272,5 @@
             <i class="bi bi-cart-plus"></i>
             <span>New Sale</span>
         </a>
-    </nav>
-</div>
-<style>
-    .visually-hidden {
-        position: absolute !important;
-        height: 1px;
-        width: 1px;
-        overflow: hidden;
-        clip: rect(1px, 1px, 1px, 1px);
-        white-space: nowrap;
-    }
-</style>
+    </div>
+</div> 

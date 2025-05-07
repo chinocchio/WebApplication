@@ -19,6 +19,31 @@
             --text-secondary: #666666;
             --border-radius: 12px;
             --transition-speed: 0.3s;
+            --bg-color: #f8f9fa;
+            --text-color: #2E3338;
+            --text-muted: #6c757d;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+            --hover-bg: #f8f9fa;
+            --header-bg: #f8f9fa;
+            --table-header-bg: #f8f9fa;
+            --table-row-hover: #f8f9fa;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --navbar-bg: #ffffff;
+            --navbar-text: #2E3338;
+            --dropdown-bg: #ffffff;
+            --dropdown-text: #2E3338;
+            --dropdown-hover: #f8f9fa;
+            --content-bg: rgba(255, 255, 255, 0.9);
+            --offcanvas-bg: #2E7D32;
+            --offcanvas-text: #ffffff;
+            --input-bg: #ffffff;
+            --input-text: #2E3338;
+            --input-border: #ced4da;
+            --input-focus-border: #4CAF50;
+            --input-focus-shadow: rgba(76, 175, 80, 0.25);
+            --table-border: #dee2e6;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         html, body {
@@ -36,6 +61,9 @@
             background-color: var(--secondary-color);
             position: relative;
             min-height: 100vh;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
 
         /* Animated Background */
@@ -56,9 +84,11 @@
             0% {
                 background-position: 0% 50%;
             }
+
             50% {
                 background-position: 100% 50%;
             }
+
             100% {
                 background-position: 0% 50%;
             }
@@ -68,7 +98,7 @@
         .content-wrapper {
             position: relative;
             z-index: 1;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--content-bg);
             min-height: 100vh;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -93,8 +123,8 @@
             }
 
         .offcanvas {
-            background-color: var(--primary-color) !important;
-            color: white;
+            background-color: var(--offcanvas-bg) !important;
+            color: var(--offcanvas-text) !important;
             width: 320px !important;
         }
 
@@ -213,9 +243,986 @@
                 left: 0.5rem;
             }
         }
+
+        /* Dark Mode Styles */
+        html[data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --card-bg: #2d2d2d;
+            --border-color: #404040;
+            --hover-bg: #3d3d3d;
+            --header-bg: #2d2d2d;
+            --table-header-bg: #2d2d2d;
+            --table-row-hover: #3d3d3d;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --navbar-bg: #2d2d2d;
+            --navbar-text: #e0e0e0;
+            --dropdown-bg: #2d2d2d;
+            --dropdown-text: #e0e0e0;
+            --dropdown-hover: #3d3d3d;
+            --content-bg: rgba(45, 45, 45, 0.9);
+            --offcanvas-bg: #1B5E20;
+            --offcanvas-text: #ffffff;
+            --input-bg: #3d3d3d;
+            --input-text: #e0e0e0;
+            --input-border: #505050;
+            --input-focus-border: #4CAF50;
+            --input-focus-shadow: rgba(76, 175, 80, 0.15);
+            --table-border: #404040;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .navbar {
+            background: var(--navbar-bg) !important;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .navbar-brand, .nav-link {
+            color: var(--navbar-text) !important;
+        }
+
+        .dropdown-menu {
+            background: var(--dropdown-bg);
+            border-color: var(--border-color);
+        }
+
+        .dropdown-item {
+            color: var(--dropdown-text);
+        }
+
+            .dropdown-item:hover {
+                background: var(--dropdown-hover);
+            }
+
+        /* Dark Mode Toggle Switch */
+        .theme-switch-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            background: var(--card-bg);
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 48px;
+        }
+
+            .theme-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+                position: absolute;
+            }
+
+            .theme-switch .slider {
+                background-color: #ccc;
+                bottom: 0;
+                cursor: pointer;
+                left: 0;
+                position: absolute;
+                right: 0;
+                top: 0;
+                transition: .4s;
+                border-radius: 24px;
+            }
+
+                .theme-switch .slider:before {
+                    background-color: #fff;
+                    bottom: 2px;
+                    content: "";
+                    height: 20px;
+                    left: 2px;
+                    position: absolute;
+                    transition: .4s;
+                    width: 20px;
+                    border-radius: 50%;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                }
+
+            .theme-switch input:checked + .slider {
+                background-color: var(--primary-color);
+            }
+
+                .theme-switch input:checked + .slider:before {
+                    transform: translateX(24px);
+                }
+
+        .theme-switch-wrapper .slider-icon {
+            margin-right: 10px;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .theme-switch input:checked ~ .slider-icon {
+            color: var(--primary-color);
+        }
+
+        /* Apply dark mode to common elements */
+        .card, .modal-content, .form-control, .btn-light {
+            background: var(--card-bg) !important;
+            color: var(--text-color) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .table {
+            color: var(--text-color) !important;
+            border-color: var(--table-border) !important;
+        }
+
+            .table thead th {
+                background: var(--table-header-bg) !important;
+                border-color: var(--table-border) !important;
+                color: var(--text-color) !important;
+            }
+
+            .table tbody td {
+                border-color: var(--table-border) !important;
+                color: var(--text-color) !important;
+            }
+
+        .form-control:focus {
+            background-color: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            border-color: var(--input-focus-border) !important;
+            box-shadow: 0 0 0 0.25rem var(--input-focus-shadow) !important;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted) !important;
+        }
+
+        .modal-header, .modal-footer {
+            border-color: var(--border-color) !important;
+        }
+
+        /* User Guide Styles */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+            .help-button:hover {
+                transform: scale(1.1);
+                background: var(--primary-dark);
+            }
+
+        .guide-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .guide-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 2001;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .guide-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+            .guide-step.active {
+                display: block;
+            }
+
+        .guide-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .guide-progress {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+            gap: 0.5rem;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+            .progress-dot.active {
+                background: var(--primary-color);
+                transform: scale(1.2);
+            }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .guide-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        .guide-title {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .guide-content {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+            .guide-content img {
+                max-width: 100%;
+                border-radius: var(--border-radius);
+                margin: 1rem 0;
+            }
+
+            .guide-content .highlight {
+                background: var(--primary-light);
+                color: white;
+                padding: 0.2rem 0.5rem;
+                border-radius: 4px;
+                font-weight: 500;
+            }
+
+        /* Enhanced Guide Styles */
+        .guide-illustration {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .guide-tip {
+            background: var(--primary-light);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+            .guide-tip i {
+                margin-right: 0.5rem;
+            }
+
+        .guide-content ul, .guide-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .guide-content li {
+            margin-bottom: 0.5rem;
+        }
+
+            .guide-content li i {
+                margin-right: 0.5rem;
+                color: var(--primary-color);
+            }
+
+        .guide-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+            .guide-navigation button {
+                min-width: 100px;
+                background: var(--primary-color);
+                color: white;
+            }
+
+                .guide-navigation button:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    background: var(--border-color);
+                    color: var(--text-muted);
+                }
+
+        .guide-progress {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+            gap: 0.5rem;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .progress-dot:hover {
+                transform: scale(1.2);
+            }
+
+            .progress-dot.active {
+                background: var(--primary-color);
+                transform: scale(1.2);
+            }
+
+        /* Labels and Text */
+        label {
+            color: var(--text-color) !important;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Interactive Effects and Animations */
+        @@keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Enhanced Form Controls with Feedback */
+        .form-control {
+            background-color: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            border: 2px solid var(--input-border) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .form-control:focus {
+                background-color: var(--input-bg) !important;
+                color: var(--input-text) !important;
+                border-color: var(--input-focus-border) !important;
+                box-shadow: 0 0 0 0.25rem var(--input-focus-shadow) !important;
+                transform: translateY(-2px);
+                animation: pulse 0.5s ease-in-out;
+            }
+
+            .form-control:hover {
+                border-color: var(--primary-light) !important;
+                transform: translateY(-1px);
+            }
+
+        /* Enhanced Table with Interactive Effects */
+        .table {
+            animation: slideIn 0.5s ease-out;
+        }
+
+            .table tbody tr {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+            }
+
+                .table tbody tr:hover {
+                    background-color: var(--table-row-hover) !important;
+                    transform: scale(1.01) translateX(5px);
+                    box-shadow: 0 4px 8px var(--shadow-color);
+                    z-index: 1;
+                }
+
+                .table tbody tr:active {
+                    transform: scale(0.99);
+                }
+
+        /* Enhanced Card with Dynamic Effects */
+        .card {
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+                transform: translateX(-100%);
+                transition: 0.5s;
+            }
+
+            .card:hover::before {
+                transform: translateX(100%);
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px var(--shadow-color) !important;
+            }
+
+        /* Enhanced Button with Dynamic Effects */
+        .btn-custom {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+            .btn-custom::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+                transform: translateX(-100%);
+                transition: 0.5s;
+                z-index: -1;
+            }
+
+            .btn-custom:hover::before {
+                transform: translateX(100%);
+            }
+
+            .btn-custom:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px var(--shadow-color);
+            }
+
+            .btn-custom:active {
+                transform: translateY(-1px);
+            }
+
+        /* Enhanced Input with Dynamic Effects */
+        .custom-input {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .custom-input:focus {
+                animation: pulse 0.5s ease-in-out;
+            }
+
+            .custom-input:hover {
+                border-color: var(--primary-light) !important;
+                transform: translateY(-2px);
+            }
+
+        /* Enhanced Dropdown with Smooth Effects */
+        .dropdown-menu {
+            animation: slideIn 0.3s ease-out;
+            transform-origin: top;
+        }
+
+        .dropdown-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .dropdown-item::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 3px;
+                background: var(--primary-color);
+                transform: scaleY(0);
+                transition: transform 0.2s;
+            }
+
+            .dropdown-item:hover::before {
+                transform: scaleY(1);
+            }
+
+            .dropdown-item:hover {
+                transform: translateX(8px);
+                background: var(--dropdown-hover);
+            }
+
+        /* Enhanced Modal with Smooth Effects */
+        .modal-content {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .modal-header {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .modal-header::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            }
+
+        /* Enhanced Guide with Interactive Effects */
+        .guide-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .guide-step {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .guide-illustration {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .guide-illustration::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+                transform: translateX(-100%);
+                transition: 0.5s;
+            }
+
+            .guide-illustration:hover::before {
+                transform: translateX(100%);
+            }
+
+        .guide-tip {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .guide-tip::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+                transform: translateX(-100%);
+                transition: 0.5s;
+            }
+
+            .guide-tip:hover::before {
+                transform: translateX(100%);
+            }
+
+        .guide-navigation button {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .guide-navigation button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+                transform: translateX(-100%);
+                transition: 0.5s;
+            }
+
+            .guide-navigation button:hover::before {
+                transform: translateX(100%);
+            }
+
+            .guide-navigation button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px var(--shadow-color);
+            }
+
+        /* Enhanced Focus States */
+        *:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--input-focus-shadow) !important;
+        }
+
+        /* Enhanced Hover States */
+        .interactive-element {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .interactive-element:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px var(--shadow-color);
+            }
+
+        /* Enhanced Animations */
+        @@keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @@keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @@keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @@keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Enhanced Interactive Elements */
+        .btn-custom {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .btn-custom::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+                background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+                background-repeat: no-repeat;
+                background-position: 50%;
+                transform: scale(10, 10);
+                opacity: 0;
+                transition: transform .5s, opacity 1s;
+            }
+
+            .btn-custom:active::after {
+                transform: scale(0, 0);
+                opacity: .3;
+                transition: 0s;
+            }
+
+            .btn-custom:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 8px 16px var(--shadow-color);
+            }
+
+        /* Enhanced Card Effects */
+        .card {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .card::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+                background-size: 200% 200%;
+                animation: shimmer 3s infinite linear;
+                pointer-events: none;
+            }
+
+            .card:hover {
+                transform: translateY(-5px) scale(1.01);
+                box-shadow: 0 12px 24px var(--shadow-color);
+            }
+
+        /* Enhanced Form Controls */
+        .form-control {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+            .form-control:focus {
+                transform: translateY(-2px) scale(1.01);
+                box-shadow: 0 8px 16px var(--shadow-color);
+            }
+
+            .form-control:hover {
+                border-color: var(--primary-light);
+                transform: translateY(-1px);
+            }
+
+        /* Enhanced Table Interactions */
+        .table tbody tr {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+            .table tbody tr:hover {
+                transform: scale(1.01) translateX(5px);
+                box-shadow: 0 4px 12px var(--shadow-color);
+                z-index: 1;
+            }
+
+            .table tbody tr:active {
+                transform: scale(0.99);
+            }
+
+        /* Enhanced Guide Elements */
+        .guide-step {
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .guide-illustration {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .guide-tip {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .guide-tip::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+                background-size: 200% 200%;
+                animation: shimmer 3s infinite linear;
+            }
+
+        /* Enhanced Modal Effects */
+        .modal-content {
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-header {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .modal-header::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+                animation: shimmer 2s infinite linear;
+            }
+
+        /* Enhanced Dropdown Effects */
+        .dropdown-menu {
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top;
+        }
+
+        .dropdown-item {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .dropdown-item::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 3px;
+                background: var(--primary-color);
+                transform: scaleY(0);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .dropdown-item:hover::before {
+                transform: scaleY(1);
+            }
+
+            .dropdown-item:hover {
+                transform: translateX(8px);
+                background: var(--dropdown-hover);
+            }
+
+        /* Enhanced Focus States */
+        *:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--input-focus-shadow) !important;
+            animation: pulse 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Enhanced Hover States */
+        .interactive-element {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .interactive-element:hover {
+                transform: translateY(-2px) scale(1.01);
+                box-shadow: 0 6px 12px var(--shadow-color);
+            }
+
+        /* Loading State Animation */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .loading::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+                background-size: 200% 100%;
+                animation: shimmer 1.5s infinite linear;
+            }
+
+        html[data-theme="dark"] .table tbody tr {
+            background-color: #23272b !important;
+            color: #f5f5f5 !important;
+        }
+
+        html[data-theme="dark"] .table tbody td, html[data-theme="dark"] .table thead th {
+            color: #f5f5f5 !important;
+        }
+
+        html[data-theme="dark"] .table tbody tr:hover {
+            background-color: #2d3238 !important;
+        }
     </style>
 </head>
 <body>
+    <div class="theme-switch-wrapper">
+        <i class="bi bi-moon-fill slider-icon"></i>
+        <div class="theme-switch">
+            <input type="checkbox" id="checkbox" />
+            <span class="slider"></span>
+        </div>
+    </div>
     <div class="animated-background"></div>
     <div class="content-wrapper">
         <!-- Offcanvas -->
@@ -258,6 +1265,276 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
+    <script>
+        // Dark mode toggle functionality
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+            const sliderIcon = document.querySelector('.slider-icon');
+            const currentTheme = localStorage.getItem('theme');
+
+            // Set initial theme
+            if (currentTheme) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                if (currentTheme === 'dark') {
+                    toggleSwitch.checked = true;
+                    sliderIcon.classList.remove('bi-moon-fill');
+                    sliderIcon.classList.add('bi-sun-fill');
+                }
+            }
+
+            function switchTheme(e) {
+                if (e.target.checked) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    sliderIcon.classList.remove('bi-moon-fill');
+                    sliderIcon.classList.add('bi-sun-fill');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                    sliderIcon.classList.remove('bi-sun-fill');
+                    sliderIcon.classList.add('bi-moon-fill');
+                }
+            }
+
+            toggleSwitch.addEventListener('change', switchTheme, false);
+
+            // Add click handler for the icon
+            sliderIcon.addEventListener('click', function() {
+                toggleSwitch.checked = !toggleSwitch.checked;
+                const event = new Event('change');
+                toggleSwitch.dispatchEvent(event);
+            });
+        });
+    </script>
+
+    <!-- Add this before the closing body tag -->
+    <button class="help-button" id="helpButton">
+        <i class="bi bi-question-lg"></i>
+    </button>
+
+    <div class="guide-overlay" id="guideOverlay">
+        <div class="guide-container">
+            <button class="guide-close" id="guideClose">
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+            <div class="guide-step active" data-step="1">
+                <h2 class="guide-title">Welcome to the Property Management System!</h2>
+                <div class="guide-content">
+                    <p>This guide will help you understand how to use the system effectively. Let's get started!</p>
+                    <div class="guide-illustration">
+                        <i class="bi bi-building-check" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                    <p>You can navigate through the guide using the buttons at the bottom or close it anytime.</p>
+                </div>
+            </div>
+
+            <div class="guide-step" data-step="2">
+                <h2 class="guide-title">Navigation</h2>
+                <div class="guide-content">
+                    <p>Use the menu button <span class="highlight"><i class="bi bi-list"></i></span> in the top-left corner to access:</p>
+                    <ul>
+                        <li><i class="bi bi-search"></i> Search functionality</li>
+                        <li><i class="bi bi-plus-circle"></i> New Property creation</li>
+                        <li><i class="bi bi-cart-plus"></i> New Sale registration</li>
+                    </ul>
+                    <div class="guide-illustration">
+                        <i class="bi bi-grid-3x3-gap" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-step" data-step="3">
+                <h2 class="guide-title">Searching Properties</h2>
+                <div class="guide-content">
+                    <p>You can search for properties using:</p>
+                    <ul>
+                        <li><i class="bi bi-file-text"></i> Contract Number</li>
+                        <li><i class="bi bi-person"></i> Full Name</li>
+                        <li><i class="bi bi-house"></i> Unit Code</li>
+                    </ul>
+                    <div class="guide-illustration">
+                        <i class="bi bi-search" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                    <p class="guide-tip"><i class="bi bi-lightbulb"></i> Tip: You can use partial matches for more flexible searching.</p>
+                </div>
+            </div>
+
+            <div class="guide-step" data-step="4">
+                <h2 class="guide-title">Managing Properties</h2>
+                <div class="guide-content">
+                    <p>To add a new property:</p>
+                    <ol>
+                        <li>Click the "New Property" button</li>
+                        <li>
+                            Fill in the required information:
+                            <ul>
+                                <li>Property details</li>
+                                <li>Location information</li>
+                                <li>Price and specifications</li>
+                            </ul>
+                        </li>
+                        <li>Click "Create" to save</li>
+                    </ol>
+                    <div class="guide-illustration">
+                        <i class="bi bi-building-add" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-step" data-step="5">
+                <h2 class="guide-title">Sales Transactions</h2>
+                <div class="guide-content">
+                    <p>To create a new sale:</p>
+                    <ol>
+                        <li>Click the "New Sale" button</li>
+                        <li>Select the property</li>
+                        <li>
+                            Enter the sale details:
+                            <ul>
+                                <li>Buyer information</li>
+                                <li>Sale price</li>
+                                <li>Payment terms</li>
+                            </ul>
+                        </li>
+                        <li>Click "Create" to complete the transaction</li>
+                    </ol>
+                    <div class="guide-illustration">
+                        <i class="bi bi-cart-check" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-step" data-step="6">
+                <h2 class="guide-title">Property Details View</h2>
+                <div class="guide-content">
+                    <p>When viewing a property, you can:</p>
+                    <ul>
+                        <li><i class="bi bi-pencil"></i> Edit property information</li>
+                        <li><i class="bi bi-trash"></i> Delete the property</li>
+                        <li><i class="bi bi-eye"></i> View detailed information</li>
+                    </ul>
+                    <div class="guide-illustration">
+                        <i class="bi bi-info-circle" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                    <p class="guide-tip"><i class="bi bi-lightbulb"></i> Tip: Use the edit button to update property details anytime.</p>
+                </div>
+            </div>
+
+            <div class="guide-step" data-step="7">
+                <h2 class="guide-title">Sales Management</h2>
+                <div class="guide-content">
+                    <p>In the sales section, you can:</p>
+                    <ul>
+                        <li><i class="bi bi-list-check"></i> View all sales transactions</li>
+                        <li><i class="bi bi-file-earmark-text"></i> Generate sales reports</li>
+                        <li><i class="bi bi-graph-up"></i> Track sales performance</li>
+                    </ul>
+                    <div class="guide-illustration">
+                        <i class="bi bi-graph-up-arrow" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-step" data-step="8">
+                <h2 class="guide-title">System Settings</h2>
+                <div class="guide-content">
+                    <p>Customize your experience:</p>
+                    <ul>
+                        <li><i class="bi bi-moon"></i> Toggle dark/light mode</li>
+                        <li><i class="bi bi-gear"></i> Adjust system preferences</li>
+                        <li><i class="bi bi-bell"></i> Set up notifications</li>
+                    </ul>
+                    <div class="guide-illustration">
+                        <i class="bi bi-gear-fill" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                    <p class="guide-tip"><i class="bi bi-lightbulb"></i> Tip: Dark mode is easier on the eyes during night-time use.</p>
+                </div>
+            </div>
+
+            <div class="guide-progress" id="guideProgress">
+                <span class="progress-dot active"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+            </div>
+
+            <div class="guide-navigation">
+                <button class="btn btn-custom" id="prevStep" disabled>Previous</button>
+                <button class="btn btn-custom" id="nextStep">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User Guide Script
+        document.addEventListener('DOMContentLoaded', function() {
+            const helpButton = document.getElementById('helpButton');
+            const guideOverlay = document.getElementById('guideOverlay');
+            const guideClose = document.getElementById('guideClose');
+            const prevStep = document.getElementById('prevStep');
+            const nextStep = document.getElementById('nextStep');
+            const steps = document.querySelectorAll('.guide-step');
+            const progressDots = document.querySelectorAll('.progress-dot');
+            let currentStep = 0;
+
+            // Show guide if it's the first visit
+            if (!localStorage.getItem('guideShown')) {
+                setTimeout(() => {
+                    guideOverlay.style.display = 'block';
+                }, 1000);
+            }
+
+            helpButton.addEventListener('click', () => {
+                guideOverlay.style.display = 'block';
+            });
+
+            guideClose.addEventListener('click', () => {
+                guideOverlay.style.display = 'none';
+                localStorage.setItem('guideShown', 'true');
+            });
+
+            function updateStep() {
+                steps.forEach((step, index) => {
+                    step.classList.toggle('active', index === currentStep);
+                });
+                progressDots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentStep);
+                });
+                prevStep.disabled = currentStep === 0;
+                nextStep.textContent = currentStep === steps.length - 1 ? 'Finish' : 'Next';
+            }
+
+            prevStep.addEventListener('click', () => {
+                if (currentStep > 0) {
+                    currentStep--;
+                    updateStep();
+                }
+            });
+
+            nextStep.addEventListener('click', () => {
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    updateStep();
+                } else {
+                    guideOverlay.style.display = 'none';
+                    localStorage.setItem('guideShown', 'true');
+                }
+            });
+
+            // Close guide when clicking outside
+            guideOverlay.addEventListener('click', (e) => {
+                if (e.target === guideOverlay) {
+                    guideOverlay.style.display = 'none';
+                    localStorage.setItem('guideShown', 'true');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
