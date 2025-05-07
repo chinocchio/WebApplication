@@ -109,61 +109,96 @@
                                             @* { *@
                                                 
                                             @* } *@
+
+                                            <!-- Submitted Documents Section -->
                                             @if (item.SubmittedDocuments.Any())
                                             {
-                                                <h6>Submitted Documents</h6>
-                                                <table class="table table-sm table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Document Name</th>
-                                                            <th>Contract Number</th>
-                                                            <th>Customer Code</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach (var doc in item.SubmittedDocuments)
-                                                        {
-                                                            <tr>
-                                                                <td>@doc.DocumentCode</td>
-                                                                <td>@doc.ContractNumber
-                                                                <td>@doc.CustomerCode</td>
-                                                            </tr>
-                                                        }
-                                                    </tbody>
-                                                </table>
+                                                <div class="card mb-4">
+                                                    <div class="card-header bg-success text-white">
+                                                        <strong>
+                                                            Submitted Documents
+                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
+                                                                @item.SubmittedDocuments.Count()
+                                                            </span>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="card-body p-3">
+                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>Document Code</th>
+                                                                    <th>Document Name</th>
+                                                                    <th>Customer Code</th>
+                                                                    <th>Date Submitted</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var doc in item.SubmittedDocuments)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@doc.DocumentCode</td>
+                                                                        <td>@doc.DocumentName</td>
+                                                                        <td>@doc.CustomerCode</td>
+                                                                        <td>@doc.DateSubmitted</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             }
                                             else
                                             {
                                                 <p>No submitted documents.</p>
                                             }
 
-                                            <!-- Documents for Submission Table -->
-                                            <h6 class="mt-4">Required Documents</h6>
+                                            <!-- Required Documents Section -->
                                             @if (item.DocumentsForSubmission != null && item.DocumentsForSubmission.Any())
                                             {
-                                                <table class="table table-sm table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Document Code</th>
-                                                            <th>Document Name</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach (var reqDoc in item.DocumentsForSubmission)
-                                                        {
-                                                            <tr>
-                                                                <td>@reqDoc.DocumentCode</td>
-                                                                <td>Insert ka na lang ng name sa DB josh</td>
-                                                            </tr>
-                                                        }
-                                                    </tbody>
-                                                </table>
+                                                <div class="card mb-4">
+                                                    <div class="card-header bg-success text-white">
+                                                        <strong>
+                                                            Required Documents
+                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
+                                                                @item.DocumentsForSubmission.Count()
+                                                            </span>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="card-body p-3">
+                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>Document Code</th>
+                                                                    <th>Document Name</th>
+                                                                    <th>Finance Type</th>
+                                                                    <th>Location</th>
+                                                                    <th>Source of Income</th>
+                                                                    <th>Group</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var reqDoc in item.DocumentsForSubmission)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@reqDoc.DocumentCode</td>
+                                                                        <td>@reqDoc.DocumentName</td>
+                                                                        <td>@reqDoc.DocumentFinanceType</td>
+                                                                        <td>@reqDoc.DocumentLocation</td>
+                                                                        <td>@reqDoc.DocumentSourceOfIncome</td>
+                                                                        <td>@reqDoc.DocumentGroup</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             }
                                             else
                                             {
                                                 <p class="text-muted">No required documents listed.</p>
                                             }
-                                        </div>
+                                      </div>
                                     
 
 
