@@ -60,7 +60,7 @@ namespace WebApplication2.Controllers
                     {
                         Role = model.Role,
                         Fullname = model.Fullname,
-                        CustomerCode = model.CustomerCode,
+                        CustomerCode = model.CustomerCode?.ToString(),
                         ClientBase = model.ClientBase,
                         IdSubmitted = model.IdSubmitted,
                         IdDateSubmitted = model.IdDateSubmitted,

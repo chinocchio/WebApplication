@@ -1,3 +1,4 @@
+@model WebApplication2.ViewModels.PropertyListViewModel
 @using System.Linq
 @using Microsoft.AspNetCore.Html
 @functions {
@@ -271,28 +272,63 @@
                                         <div class="tab-pane fade" id="buyerLedgerContent-@transaction.SalesTransactionId" role="tabpanel">
                                             @if (item.BuyerLedgers != null && item.BuyerLedgers.Count > 0)
                                             {
-                                                <h6>Buyer's Ledger Entries</h6>
-                                                <table class="table table-sm table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Contract Code</th>
-                                                            <th>Customer Code</th>
-                                                            <th>Amount Due</th>
-                                                            <th>When Due</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach (var ledger in item.BuyerLedgers)
-                                                        {
-                                                            <tr>
-                                                                <td>@ledger.ContractNumber</td>
-                                                                <td>@ledger.CustomerCode</td>
-                                                                <td>@ledger.AmountDue</td>
-                                                                <td>@ledger.WhenDue</td>
-                                                            </tr>
-                                                        }
-                                                    </tbody>
-                                                </table>
+                                                <div class="card mb-4">
+                                                    <div class="card-header bg-success text-white">
+                                                        <strong>
+                                                            Buyer's Ledger Entries
+                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
+                                                                @item.BuyerLedgers.Count
+                                                            </span>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="card-body p-3">
+                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
+                                                            <thead class="table-light">
+                                                                <tr>
+
+                                                                    <th>Customer Code</th>
+                                                                    <th>Unit Code</th>
+                                                                    <th>Paid FT</th>
+                                                                    <th>INV.NO.</th>
+                                                                    <th>Amount Due</th>
+                                                                    <th>Paid Mode</th>
+                                                                    <th>When Due</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var ledger in item.BuyerLedgers)
+                                                                {
+                                                                    <tr>
+
+                                                                        <td>@ledger.CustomerCode</td>
+                                                                        <td>@ledger.UnitCode</td>
+                                                                        <td>@ledger.PaymentNumber</td>
+                                                                        <td>@ledger.PaymentReferenceDocNumber</td>
+                                                                        <td>@ledger.AmountDue.ToString("N2")</td>
+                                                                        <td>@ledger.PaymentReferenceDocType</td>
+                                                                        <td>@ledger.WhenDue</td>
+
+                                                                    </tr>
+                                                                }
+                                                                <tr class="table-secondary fw-bold">
+                                                                    <td colspan="4" class="text-end">Total Amount Due:</td>
+                                                                    <td>
+                                                                        @{
+                                                                            decimal totalAmountDue = 0m;
+                                                                            foreach (var ledger in item.BuyerLedgers)
+                                                                            {
+                                                                                totalAmountDue += (decimal)(ledger.AmountDue ?? 0);
+                                                                            }
+                                                                        }
+                                                                        @totalAmountDue.ToString("N2")
+
+                                                                    </td>
+                                                                    <td colspan="2"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             }
                                             else
                                             {
