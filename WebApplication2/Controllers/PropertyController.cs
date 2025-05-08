@@ -17,13 +17,16 @@ namespace WebApplication2.Controllers
         }
 
         //GET: Property/Index
-        // Displays the list of data of a property if searched.
-        public async Task<IActionResult> Index(string? searchTerm)
+        public IActionResult Index()
         {
-            /*
-             * Pinalitan ko from Properties to SalesTransactions bale sa SalesTransaction table tayo nagselect
-             * Eto yung query: Select ka sa SalesTransaction table tapos Include yung mga related tables
-             */
+            return View();
+        }
+
+        //GET: Property/SearchResults
+        public async Task<IActionResult> SearchResults(string? searchTerm)
+        {
+            ViewBag.SearchTerm = searchTerm;
+
             var query = _context.SalesTransactions
                         .AsNoTracking()
                         .Include(st => st.Properties)
@@ -35,15 +38,9 @@ namespace WebApplication2.Controllers
                         .Include(st => st.SalesDocument)
                         .AsQueryable();
 
-            // Eto yung search functionality, check pag may laman yung searchTerm
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                searchTerm = searchTerm.ToLower(); // Convert to lowercase for case-insensitive search
-
-                /*
-                 * Yung "st" galing yan sa query sa taas base sa mga yan dun tayo magsearch bale yung records galing sa 
-                 * SalesTransaction table dun hahanapin yung mga i-eenter the search bar
-                 */
+                searchTerm = searchTerm.ToLower();
                 query = query.Where(st =>
                     st.ContractNumber.ToString().Contains(searchTerm) ||
                     st.BusinessPartner.Fullname.ToLower().Contains(searchTerm) ||
@@ -52,10 +49,6 @@ namespace WebApplication2.Controllers
                 );
             }
 
-            /*
-             * Para mas madali makita yung mga recent na transaction, nag order by tayo
-             * sa HoldingDate in descending order
-             */
             query = query.OrderByDescending(st => st.HoldingDate);
 
             var salesTransactions = await query.ToListAsync();
@@ -69,15 +62,12 @@ namespace WebApplication2.Controllers
                 .ToListAsync();
 
             var result = salesTransactions.Select(st => {
-                // Find all submitted for this contract
                 var submittedForThis = submittedDocuments
                     .Where(doc => doc.ContractNumber == st.ContractNumber)
                     .ToList();
 
-                // Extract their DocumentCodes
                 var submittedDocCodes = submittedForThis.Select(doc => doc.DocumentCode).ToHashSet();
 
-                // Filter out the submitted ones from required list based on DocumentCode
                 var remainingRequired = allDocumentsForSubmission
                     .Where(doc =>!submittedDocCodes.Contains(doc.DocumentCode))
                     .ToList();
@@ -96,8 +86,6 @@ namespace WebApplication2.Controllers
                 };
             }).ToList();
 
-
-            // Load OtherBuyers for each transaction
             foreach (var item in result)
             {
                 var transaction = item.SalesTransaction;
@@ -109,26 +97,9 @@ namespace WebApplication2.Controllers
                         .ToListAsync();
                 }
             }
-            // For each transaction, load all buyers with the same customer code
-            //foreach (var transaction in salesTransactions)
-            //{
-            //    if (transaction.BusinessPartner?.CustomerCode != null)
-            //    {
-            //        transaction.BusinessPartner.OtherBuyers = await _context.BusinessPartners
-            //            .Where(bp => bp.CustomerCode == transaction.BusinessPartner.CustomerCode)
-            //            .ToListAsync();
-            //    }
-            //}
 
-            var model = new PropertyListViewModel
-            {
-                SalesTransactions = result,
-                SearchTerm = searchTerm
-            };
-
-
-            // Tapos papasa natin sa ModelView yung result nung controller na to
-            return View(model);
+            ViewBag.SalesTransactions = result;
+            return View();
         }
 
         // GET: Property/Create
@@ -161,5 +132,109 @@ namespace WebApplication2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Property/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var property = await _context.Properties
+                .FirstOrDefaultAsync(m => m.PropertyId == id);
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            return View(property);
+        }
+
+        // GET: Property/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var property = await _context.Properties.FindAsync(id);
+            if (property == null)
+            {
+                return NotFound();
+            }
+            return View(property);
+        }
+
+        // POST: Property/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Property property)
+        {
+            if (id != property.PropertyId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(property);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PropertyExists(property.PropertyId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(property);
+        }
+
+        // GET: Property/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var property = await _context.Properties
+                .FirstOrDefaultAsync(m => m.PropertyId == id);
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            return View(property);
+        }
+
+        // POST: Property/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var property = await _context.Properties.FindAsync(id);
+            if (property != null)
+            {
+                _context.Properties.Remove(property);
+            }
+            
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool PropertyExists(int id)
+        {
+            return _context.Properties.Any(e => e.PropertyId == id);
+        }
     }
 }

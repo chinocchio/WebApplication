@@ -26,6 +26,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapControllers();
+app.UseStaticFiles();
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Property}/{action=Index}/{id?}");
