@@ -1,14 +1,64 @@
-﻿@model WebApplication2.ViewModels.PropertyListViewModel
-
-@{
-    ViewData["Title"] = "Property Search";
-}
-<style>
-    body {
-        background: linear-gradient(135deg, #1A4D2E 0%, #4CAF50 100%);
-        min-height: 100vh;
-        background-attachment: fixed;
+@using System.Linq
+@using Microsoft.AspNetCore.Html
+@functions {
+    public IHtmlContent Highlight(string input, string searchTerm)
+    {
+        if (string.IsNullOrEmpty(searchTerm) || string.IsNullOrEmpty(input))
+            return new HtmlString(input ?? "");
+        var regex = new System.Text.RegularExpressions.Regex(
+            System.Text.RegularExpressions.Regex.Escape(searchTerm),
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        var result = regex.Replace(input, m => $"<mark>{m.Value}</mark>");
+        return new HtmlString(result);
     }
+}
+@{
+    ViewData["Title"] = "Search Results";
+    Layout = "_Layout";
+}
+
+<!-- Spinner Overlay -->
+<div id="spinnerOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(255,255,255,0.7); z-index:2000; align-items:center; justify-content:center;">
+    <div class="spinner-border text-success" style="width: 4rem; height: 4rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div class="container mt-4">
+   
+    <h2>Search Results</h2>
+    
+    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+    {
+        <div class="alert alert-info">
+            Showing results for: <strong>@ViewBag.SearchTerm</strong>
+        </div>
+    }
+
+    @if (ViewBag.SalesTransactions != null && ViewBag.SalesTransactions.Count > 0)
+    {
+        <div class="mb-3">
+            <span class="badge bg-success fs-6">
+                @ViewBag.SalesTransactions.Count result@(ViewBag.SalesTransactions.Count == 1 ? "" : "s") found for:
+                <strong>@ViewBag.SearchTerm</strong>
+            </span>
+        </div>
+        <ul class="nav nav-tabs mt-4" id="transactionTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="sales-tab" data-bs-toggle="tab" href="#sales" role="tab">Sales Info</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="buyer-tab" data-bs-toggle="tab" href="#buyer" role="tab">Buyer Info</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="property-tab" data-bs-toggle="tab" href="#property" role="tab">Property Info</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="proponent-tab" data-bs-toggle="tab" href="#proponent" role="tab">Sales Proponent Info</a>
+            </li>
+        </ul>
+
+        <div class="tab-content border p-3" id="transactionTabsContent">
             <div class="tab-pane fade show active" id="sales" role="tabpanel">
                 <table class="table mt-3">
                     <thead>
@@ -24,14 +74,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.SalesTransactions)
+                        @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
-
                             var targetId = $"details_{transaction.SalesTransactionId}";
 
                             <tr class="clickable-row table-primary" style="cursor:pointer;" data-bs-target="@targetId">
-                                <td>@transaction.ContractNumber</td>
+                                <td>@Highlight(transaction.ContractNumber?.ToString(), ViewBag.SearchTerm as string)</td>
                                 <td>@transaction.TypeOfSale</td>
                                 <td>@transaction.HoldingDate</td>
                                 <td>@transaction.PromoDiscount</td>
@@ -62,24 +111,18 @@
                                         </li>
                                     </ul>
 
-
                                     <!-- Tab content for Document submitted -->
                                     <div class="tab-content p-3 border" id="salesDocTabsContent_@transaction.SalesTransactionId">
                                         <div class="tab-pane fade show active" id="salesDocContent-@transaction.SalesTransactionId" role="tabpanel">
-                                            @* @if (transaction.SalesDocument != null) *@
-                                            @* { *@
-                                                
-                                            @* } *@
-
                                             <!-- Submitted Documents Section -->
-                                            @if (item.SubmittedDocuments.Any())
+                                            @if (item.SubmittedDocuments != null && item.SubmittedDocuments.Count > 0)
                                             {
                                                 <div class="card mb-4">
                                                     <div class="card-header bg-success text-white">
                                                         <strong>
                                                             Submitted Documents
                                                             <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
-                                                                @item.SubmittedDocuments.Count()
+                                                                @item.SubmittedDocuments.Count
                                                             </span>
                                                         </strong>
                                                     </div>
@@ -114,14 +157,14 @@
                                             }
 
                                             <!-- Required Documents Section -->
-                                            @if (item.DocumentsForSubmission != null && item.DocumentsForSubmission.Any())
+                                            @if (item.DocumentsForSubmission != null && item.DocumentsForSubmission.Count > 0)
                                             {
                                                 <div class="card mb-4">
                                                     <div class="card-header bg-success text-white">
                                                         <strong>
                                                             Required Documents
                                                             <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
-                                                                @item.DocumentsForSubmission.Count()
+                                                                @item.DocumentsForSubmission.Count
                                                             </span>
                                                         </strong>
                                                     </div>
@@ -135,7 +178,6 @@
                                                                     <th>Location</th>
                                                                     <th>Source of Income</th>
                                                                     <th>Group</th>
-
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -159,13 +201,9 @@
                                             {
                                                 <p class="text-muted">No required documents listed.</p>
                                             }
-                                      </div>
-                                    
+                                        </div>
 
-
-                                   
                                         <div class="tab-pane fade" id="resarvationFeeContent-@transaction.SalesTransactionId" role="tabpanel">
-                                            @* Credit Review content goes here *@
                                             @if (transaction.PaymentTerm != null)
                                             {
                                                 <dl class="row">
@@ -222,39 +260,24 @@
 
                                                     <dt class="col-sm-3">PAYMENT DUE DATE:</dt>
                                                     <dd class="col-sm-9">@transaction.PaymentTerm.PaymentDueDate</dd>
-                                                    @* Add more CreditReview fields here *@
                                                 </dl>
                                             }
                                             else
                                             {
-                                                <em class="text-muted">No credit review data available.</em>
+                                                <em class="text-muted">No payment term data available.</em>
                                             }
                                         </div>
 
-
                                         <div class="tab-pane fade" id="buyerLedgerContent-@transaction.SalesTransactionId" role="tabpanel">
-                                            @if (item.BuyerLedgers.Any())
+                                            @if (item.BuyerLedgers != null && item.BuyerLedgers.Count > 0)
                                             {
-                                                <div class="card mb-4">
-                                                    <div class="card-header bg-success text-white">
-                                                        <strong>
-                                                            Buyer's Ledger Entries
-                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
-                                                                @item.BuyerLedgers.Count()
-                                                            </span>
-                                                        </strong>
-                                                    </div>
-                                                    <div class="card-body p-3">
-                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                                            <thead class="table-light">
+                                                <h6>Buyer's Ledger Entries</h6>
+                                                <table class="table table-sm table-bordered">
+                                                    <thead>
                                                         <tr>
-                                                           
+                                                            <th>Contract Code</th>
                                                             <th>Customer Code</th>
-                                                            <th>Unit Code</th>
-                                                            <th>Paid FT</th>
-                                                            <th>INV.NO.</th>
                                                             <th>Amount Due</th>
-                                                            <th>Paid Mode</th>
                                                             <th>When Due</th>
                                                         </tr>
                                                     </thead>
@@ -262,37 +285,20 @@
                                                         @foreach (var ledger in item.BuyerLedgers)
                                                         {
                                                             <tr>
-                                                               
+                                                                <td>@ledger.ContractNumber</td>
                                                                 <td>@ledger.CustomerCode</td>
-                                                                <td>@ledger.UnitCode</td>
-                                                                <td>@ledger.PaymentNumber</td>
-                                                                <td>@ledger.PaymentReferenceDocNumber</td>
                                                                 <td>@ledger.AmountDue</td>
-                                                                <td>@ledger.PaymentReferenceDocType</td>
                                                                 <td>@ledger.WhenDue</td>
-
                                                             </tr>
                                                         }
-                                                                <tr class="table-secondary fw-bold">
-                                                                    <td colspan="4" class="text-end">Total Amount Due:</td>
-                                                                    <td>
-                                                                        @((item.BuyerLedgers.Sum(x => x.AmountDue) ?? 0).ToString("N0"))
-
-
-                                                                    </td>
-                                                                    <td colspan="2"></td>
-                                                                </tr>
                                                     </tbody>
                                                 </table>
-                                                    </div>
-                                                </div>
                                             }
                                             else
                                             {
                                                 <p>No ledger entries available for this contract.</p>
                                             }
                                         </div>
-
                                     </div>
                                 </td>
                             </tr>
@@ -311,12 +317,12 @@
                             <th>Client Base</th>
                             <th>Contact Number</th>
                             <th>Email Address</th>
-                            <th>ID Sbmitted</th>
+                            <th>ID Submitted</th>
                             <th>Date ID Submitted</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.SalesTransactions)
+                        @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
                             if (transaction.BusinessPartner?.OtherBuyers != null)
@@ -338,24 +344,24 @@
                         }
                     </tbody>
                 </table>
-                <!-- AFTER buyers table, Credit Review tab system -->
 
+                <!-- Credit Review Tabs -->
                 <ul class="nav nav-tabs" id="creditReviewTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="credit-tab" data-bs-toggle="tab" data-bs-target="#credit" type="button" role="tab" aria-controls="credit" aria-selected="true">
+                        <button class="nav-link active" id="credit-tab" data-bs-toggle="tab" data-bs-target="#credit" type="button" role="tab">
                             Credit Review
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="buyerdocs-tab" data-bs-toggle="tab" data-bs-target="#buyerdocs" type="button" role="tab" aria-controls="buyerdocs" aria-selected="false">
+                        <button class="nav-link" id="buyerdocs-tab" data-bs-toggle="tab" data-bs-target="#buyerdocs" type="button" role="tab">
                             Buyer Documents
                         </button>
                     </li>
                 </ul>
 
                 <div class="tab-content border p-3" id="creditReviewTabsContent">
-                    <div class="tab-pane fade show active" id="credit" role="tabpanel" aria-labelledby="credit-tab">
-                        @foreach (var item in Model.SalesTransactions)
+                    <div class="tab-pane fade show active" id="credit" role="tabpanel">
+                        @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
                             if (transaction.CreditReview != null)
@@ -471,8 +477,8 @@
                         }
                     </div>
 
-                    <div class="tab-pane fade" id="buyerdocs" role="tabpanel" aria-labelledby="buyerdocs-tab">
-                        @foreach (var item in Model.SalesTransactions)
+                    <div class="tab-pane fade" id="buyerdocs" role="tabpanel">
+                        @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
                             if (transaction.BuyerDocument != null)
@@ -490,7 +496,6 @@
                                                     <th>EXPIRATION DATE 1</th>
                                                     <th>SPOUSE/CO BORROWER ID</th>
                                                     <th>EXPIRATION DATE 2</th>
-                                                    
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -504,6 +509,7 @@
                                         </table>
                                     </div>
                                 </div>
+
                                 <!-- FOR TAX IDENTIFICATION NUMBER-->
                                 <div class="card mb-4">
                                     <div class="card-header bg-success text-white">
@@ -532,6 +538,7 @@
                                         </table>
                                     </div>
                                 </div>
+
                                 <!-- FOR Supporting Documents-->
                                 <div class="card mb-4">
                                     <div class="card-header bg-success text-white">
@@ -562,6 +569,7 @@
                                         </table>
                                     </div>
                                 </div>
+
                                 <!-- SPA/AIF-->
                                 <div class="card mb-4">
                                     <div class="card-header bg-success text-white">
@@ -590,12 +598,12 @@
                                         </table>
                                     </div>
                                 </div>
+
                                 <!-- Additional Information Buyer info -->
                                 <div class="card mb-4">
                                     <div class="card-header bg-secondary text-white">
                                         <strong>Additional Information</strong>
                                     </div>
-
                                     <div class="card-body p-3">
                                         <table class="table table-bordered table-striped table-sm text-center align-middle">
                                             <thead class="table-light">
@@ -610,13 +618,13 @@
                                                 <tr>
                                                     <td>@transaction.BuyerDocument.DOR</td>
                                                     <td>@transaction.BuyerDocument.SpecificIncomeDocsSubmitted</td>
-                                                    <td>@transaction.BuyerDocument.AdditionalPOI </td>
-                                                    <td>@transaction.BuyerDocument.OathOfAllegiance </td>
+                                                    <td>@transaction.BuyerDocument.AdditionalPOI</td>
+                                                    <td>@transaction.BuyerDocument.OathOfAllegiance</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>             
+                                </div>
                             }
                             else
                             {
@@ -638,7 +646,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.SalesTransactions)
+                        @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
                             <tr>
@@ -659,14 +667,13 @@
                             <th>Broker</th>
                             <th>PS/QC/ISM</th>
                             <th>Marketing Officer</th>
-                            <th>Markerting Manager</th>
-                            <th>Deputy Markerting Director</th>
+                            <th>Marketing Manager</th>
+                            <th>Deputy Marketing Director</th>
                             <th>Marketing Director</th>
-                            <!-- Add more fields if needed -->
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.SalesTransactions)
+                        @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
                             <tr>
@@ -682,219 +689,71 @@
                 </table>
             </div>
         </div>
-    .main-card {
-        background: rgba(26, 77, 46, 0.92);
-        border-radius: 28px;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18), 0 2px 16px 0 rgba(44,62,80,0.10);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        padding: clamp(2.5rem, 6vw, 3.5rem) clamp(2rem, 6vw, 3rem);
-        margin: 4rem auto 2rem auto;
-        max-width: 820px;
-        border: 1.5px solid rgba(255,255,255,0.13);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        transition: box-shadow 0.3s, background 0.3s;
-        position: relative;
-        z-index: 2;
+    }
+    else
+    {
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 40vh;">
+            <div aria-live="polite" aria-atomic="true" class="position-relative">
+                <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+                    <div id="noResultToast" class="toast align-items-center text-bg-warning border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <strong>No results found for your search.</strong>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Friendly SVG illustration -->
+            <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-3">
+                <ellipse cx="90" cy="150" rx="70" ry="15" fill="#E0F2F1"/>
+                <rect x="50" y="60" width="80" height="50" rx="10" fill="#C8E6C9"/>
+                <rect x="60" y="70" width="60" height="30" rx="5" fill="#A5D6A7"/>
+                <circle cx="90" cy="85" r="8" fill="#388E3C"/>
+                <rect x="80" y="100" width="20" height="5" rx="2.5" fill="#388E3C"/>
+                <rect x="70" y="110" width="40" height="8" rx="4" fill="#81C784"/>
+            </svg>
+            <div class="text-center">
+                <h4 class="text-success mb-2">No Results Found</h4>
+                <p class="text-muted mb-1">We couldn't find any matches for your search.</p>
+                <p class="text-muted">Try a different search term or check for typos.</p>
+            </div>
+        </div>
+    }
 
-    }
-    .logo-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 2.5rem;
-    }
-    .logo {
-        width: 150px;
-        height: auto;
-        margin-bottom: 1.2rem;
-        filter: drop-shadow(0 4px 16px #4CAF50) drop-shadow(0 2px 4px rgba(0,0,0,0.12));
-        border-radius: 16px;
-        background: rgba(255,255,255,0.05);
-        padding: 0.5rem;
-        transition: filter 0.3s, width 0.3s;
-    }
-    .welcome-text {
-        color: #fff;
-        font-size: 2rem;
-        font-weight: 800;
-        letter-spacing: 1.5px;
-        margin-bottom: 1.5rem;
-        text-align: center;
-        text-shadow: 0 2px 12px rgba(44,62,80,0.18);
-        line-height: 1.2;
-        transition: text-shadow 0.3s;
-    }
-    .tagline {
-        color: #e0ffe0;
-        font-size: 1.15rem;
-        text-align: center;
-        margin-bottom: 2.2rem;
-        font-style: italic;
-        opacity: 0.92;
-        letter-spacing: 0.5px;
-    }
-    .search-form {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 2.5rem;
-        justify-content: center;
-        width: 100%;
-        max-width: 600px;
-    }
-    .search-input {
-        border: none;
-        border-radius: 30px 0 0 30px;
-        padding: 1rem 1.5rem;
-        font-size: 1.1rem;
-        background: rgba(255,255,255,0.93);
-        color: #1A4D2E;
-        box-shadow: 0 2px 8px rgba(44,62,80,0.08);
-        outline: none;
-        width: 65%;
-        min-width: 0;
-        transition: all 0.3s;
-    }
-    .search-input:focus {
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
-        transform: translateY(-1px);
-    }
-    .search-button {
-        background: #4CAF50;
-        color: #fff;
-        border: none;
-        border-radius: 0 30px 30px 0;
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-        transition: all 0.3s;
-        box-shadow: 0 2px 8px rgba(44,62,80,0.08);
-        cursor: pointer;
-    }
-    .search-button:hover, .search-button:focus {
-        background: #388e3c;
-        box-shadow: 0 4px 16px rgba(44,62,80,0.12);
-        transform: translateY(-1px) scale(1.03);
-    }
-    .divider {
-        border-top: 1.5px solid rgba(255,255,255,0.2);
-        margin: 2.5rem 0;
-        width: 100%;
-    }
-    .quick-actions {
-        display: flex;
-        gap: 2rem;
-        justify-content: center;
-        margin-bottom: 2.5rem;
-        width: 100%;
-        flex-wrap: wrap;
-    }
-    .action-button {
-        background: rgba(255,255,255,0.18);
-        color: #fff;
-        border: 1.5px solid #4CAF50;
-        border-radius: 16px;
-        padding: 1.2rem 2.5rem;
-        font-weight: 600;
-        font-size: 1.1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        box-shadow: 0 2px 8px rgba(44,62,80,0.08);
-        text-decoration: none;
-        transition: all 0.3s;
-        cursor: pointer;
-        min-width: 180px;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-    .action-button:hover, .action-button:focus {
-        background: #4CAF50;
-        color: #fff;
-        border-color: #388e3c;
-        box-shadow: 0 4px 16px rgba(44,62,80,0.12);
-        transform: translateY(-2px) scale(1.03);
-    }
-    .action-button i {
-        font-size: 1.4rem;
-        color: #e0ffe0;
-        margin-right: 0.5rem;
-    }
-    .subtext {
-        color: rgba(255,255,255,0.93);
-        font-size: 1.08rem;
-        text-align: center;
-        line-height: 1.6;
-        margin-top: 2rem;
-        margin-bottom: 0.5rem;
-    }
-    /* SVG Wave */
-    .wave {
-        position: absolute;
-        top: -60px;
-        left: 0;
-        width: 100%;
-        height: 60px;
-        z-index: 1;
-    }
-    @@media (max-width: 900px) {
-        .main-card { padding: 2rem 1.5rem; max-width: 95%; }
-        .welcome-text { font-size: 1.6rem; }
-        .search-input, .search-button { font-size: 1rem; }
-    }
-    @@media (max-width: 700px) {
-        .main-card { padding: 1.5rem 1rem; max-width: 99%; }
-        .search-form { flex-direction: column; gap: 1rem; max-width: 100%; }
-        .search-input, .search-button { width: 100%; border-radius: 30px; text-align: center; }
-        .quick-actions { flex-direction: column; gap: 1rem; }
-    }
-    @@media (max-width: 480px) {
-        .main-card { padding: 1.5rem 0.8rem; }
-        .welcome-text { font-size: 1.3rem; }
-        .logo { width: 100px; }
-        .action-button { padding: 1rem 1.5rem; font-size: 1rem; }
-    }
-</style>
-<div class="main-card" role="main" aria-label="Sales Transactions">
-    <svg class="wave" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#4CAF50" fill-opacity="0.25" d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z"></path></svg>
-    <div class="logo-container">
-        <img src="@Url.Content("~/src/full-logo-1.png")" class="logo" alt="Company Logo" />
-        <div class="welcome-text">Welcome to Sales Transactions</div>
-        <div class="tagline">Find, create, and manage your property sales with ease.</div>
-    </div>
-    <form method="get" class="search-form" aria-label="Search Sales Transactions">
-        <input type="text"
-               name="searchTerm"
-               class="search-input"
-               value="@(Model?.SearchTerm ?? "")"
-               placeholder="Search Contract No, Fullname, or Unit Code"
-               aria-label="Search input" />
-        <button type="submit" asp-action="SearchResults" class="search-button" aria-label="Search">
-            <i class="bi bi-search"></i>
-            <span>Search</span>
-        </button>
-    </form>
-    <div class="divider" aria-hidden="true"></div>
-    <div class="quick-actions">
-        <a asp-controller="Property" asp-action="Create" class="action-button" aria-label="Create New Property">
-            <i class="bi bi-plus-circle"></i>
-            <span>New Property</span>
-        </a>
-        <a asp-controller="SalesTransaction" asp-action="Create" class="action-button" aria-label="Create New Sale">
-            <i class="bi bi-cart-plus"></i>
-            <span>New Sale</span>
-        </a>
-    </div>
-    <div class="subtext">
-        <span>Tip: Use the search bar to quickly find contracts, customers, or units. Or use the quick actions to add new records!</span>
-    </div>
+  
 </div>
-<!-- Optionally, add Bootstrap Icons CDN if not already included -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> 
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Show spinner on any form submit
+            document.querySelectorAll('form').forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    document.getElementById('spinnerOverlay').style.display = 'flex';
+                });
+            });
+
+            // Hide spinner when page loads
+            document.getElementById('spinnerOverlay').style.display = 'none';
+
+            document.querySelectorAll(".clickable-row").forEach(row => {
+                row.addEventListener("click", function () {
+                    const targetId = this.getAttribute("data-bs-target");
+                    const contentRow = document.getElementById(targetId);
+                    if (contentRow) {
+                        contentRow.classList.toggle("d-none");
+                    }
+                });
+            });
+
+            // Show toast if it exists
+            var toastEl = document.getElementById('noResultToast');
+            if (toastEl) {
+                var toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+                toast.show();
+            }
+        });
+    </script>
+} 
