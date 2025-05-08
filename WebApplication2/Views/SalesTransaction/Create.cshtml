@@ -2,103 +2,299 @@
 
 @{
     ViewData["Title"] = "Create Sales Transaction";
+    Layout = "_Layout";
 }
 
-<h2>Create Sales Transaction</h2>
+<style>
+    .create-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
 
-<form asp-action="Create" method="post">
+    .form-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1.25rem;
+        font-weight: 600;
+        border: none;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid rgba(0,0,0,0.1);
+        border-radius: var(--border-radius);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all var(--transition-speed) ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+            outline: none;
+        }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary i {
+            font-size: 1.1rem;
+        }
+
+    .section-title {
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .section-title i {
+            font-size: 1.25rem;
+        }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .row {
+        margin-bottom: 1rem;
+    }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Animation for new business partner fields */
+    #newBpFields {
+        transition: all var(--transition-speed) ease;
+    }
+
+        #newBpFields.hidden {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        #newBpFields.visible {
+            opacity: 1;
+            height: auto;
+        }
+</style>
+
+<div class="create-container">
+    <div class="section-title">
+        <i class="bi bi-file-earmark-plus"></i>
+        <h2 class="mb-0">Create New Sales Transaction</h2>
+    </div>
+
+    <form asp-action="Create" method="post">
         @Html.AntiForgeryToken()
 
-    <h4>Sales Transaction Info</h4>
-    <div>
-        <label asp-for="ContractNumber"></label>
-        <input asp-for="ContractNumber" class="form-control" />
-    </div>
-
-    <div>
-        <label asp-for="TypeOfSale"></label>
-        <input asp-for="TypeOfSale" class="form-control" />
-    </div>
-
-    <div>
-        <label asp-for="HoldingDate"></label>
-        <input asp-for="HoldingDate" class="form-control" type="date" />
-    </div>
-
-    <div>
-        <label asp-for="TransactionType"></label>
-        <input asp-for="TransactionType" class="form-control" />
-    </div>
-
-    <div>
-        <label asp-for="PromoDiscount"></label>
-        <input asp-for="PromoDiscount" class="form-control" />
-    </div>
-
-    <div>
-        <label asp-for="StatusInGeneral"></label>
-        <input asp-for="StatusInGeneral" class="form-control" />
-    </div>
-
-    <div>
-        <label asp-for="Milestone"></label>
-        <input asp-for="Milestone" class="form-control" />
-    </div>
-
-    <div>
-        <label asp-for="NewColorStatus"></label>
-        <input asp-for="NewColorStatus" class="form-control" />
-    </div>
-
-    <h4>Select Existing Business Partner</h4>
-    <div>
-        <label asp-for="SelectedBusinessPartnerId"></label>
-        <select id="bpDropdown" asp-for="SelectedBusinessPartnerId" asp-items="Model.ExistingBusinessPartners" class="form-control">
-            <option value="">-- Create New Business Partner --</option>
-        </select>
-    </div>
-    <div id="newBpFields">
-        <div>
-            <label asp-for="Fullname"></label>
-            <input asp-for="Fullname" class="form-control" />
+        <div class="form-card">
+            <div class="card-header">
+                <i class="bi bi-info-circle me-2"></i>Sales Transaction Information
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="ContractNumber" class="form-label">Contract Number</label>
+                            <input asp-for="ContractNumber" class="form-control" placeholder="Enter contract number" />
+                            <span asp-validation-for="ContractNumber" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TypeOfSale" class="form-label">Type of Sale</label>
+                            <input asp-for="TypeOfSale" class="form-control" placeholder="Enter type of sale" />
+                            <span asp-validation-for="TypeOfSale" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="HoldingDate" class="form-label">Holding Date</label>
+                            <input asp-for="HoldingDate" type="date" class="form-control" />
+                            <span asp-validation-for="HoldingDate" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TransactionType" class="form-label">Transaction Type</label>
+                            <input asp-for="TransactionType" class="form-control" placeholder="Enter transaction type" />
+                            <span asp-validation-for="TransactionType" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="PromoDiscount" class="form-label">Promo Discount</label>
+                            <input asp-for="PromoDiscount" class="form-control" placeholder="Enter promo discount" />
+                            <span asp-validation-for="PromoDiscount" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="StatusInGeneral" class="form-label">Status</label>
+                            <input asp-for="StatusInGeneral" class="form-control" placeholder="Enter status" />
+                            <span asp-validation-for="StatusInGeneral" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Milestone" class="form-label">Milestone</label>
+                            <input asp-for="Milestone" class="form-control" placeholder="Enter milestone" />
+                            <span asp-validation-for="Milestone" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="NewColorStatus" class="form-label">Color Status</label>
+                            <input asp-for="NewColorStatus" class="form-control" placeholder="Enter color status" />
+                            <span asp-validation-for="NewColorStatus" class="validation-message"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <label asp-for="Role"></label>
-            <input asp-for="Role" class="form-control" />
+
+        <div class="form-card">
+            <div class="card-header">
+                <i class="bi bi-people me-2"></i>Business Partner Information
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="SelectedBusinessPartnerId" class="form-label">Select Existing Business Partner</label>
+                    <select id="bpDropdown" asp-for="SelectedBusinessPartnerId" asp-items="Model.ExistingBusinessPartners" class="form-select">
+                        <option value="">-- Create New Business Partner --</option>
+                    </select>
+                </div>
+
+                <div id="newBpFields" class="row g-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Fullname" class="form-label">Full Name</label>
+                            <input asp-for="Fullname" class="form-control" placeholder="Enter full name" />
+                            <span asp-validation-for="Fullname" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Role" class="form-label">Role</label>
+                            <input asp-for="Role" class="form-control" placeholder="Enter role" />
+                            <span asp-validation-for="Role" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="CustomerCode" class="form-label">Customer Code</label>
+                            <input asp-for="CustomerCode" class="form-control" placeholder="Enter customer code" />
+                            <span asp-validation-for="CustomerCode" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="ClientBase" class="form-label">Client Base</label>
+                            <input asp-for="ClientBase" class="form-control" placeholder="Enter client base" />
+                            <span asp-validation-for="ClientBase" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="IdSubmitted" class="form-label">ID Submitted</label>
+                            <input asp-for="IdSubmitted" class="form-control" placeholder="Enter ID submitted" />
+                            <span asp-validation-for="IdSubmitted" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="IdDateSubmitted" class="form-label">ID Date Submitted</label>
+                            <input asp-for="IdDateSubmitted" type="date" class="form-control" />
+                            <span asp-validation-for="IdDateSubmitted" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="EmailAddress" class="form-label">Email Address</label>
+                            <input asp-for="EmailAddress" class="form-control" placeholder="Enter email address" />
+                            <span asp-validation-for="EmailAddress" class="validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="ContactNumber" class="form-label">Contact Number</label>
+                            <input asp-for="ContactNumber" class="form-control" placeholder="Enter contact number" />
+                            <span asp-validation-for="ContactNumber" class="validation-message"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <label asp-for="CustomerCode"></label>
-            <input asp-for="CustomerCode" class="form-control" />
+
+        <div class="form-card">
+            <div class="card-header">
+                <i class="bi bi-house me-2"></i>Property Information
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="SelectedPropertyId" class="form-label">Select Property</label>
+                    <select asp-for="SelectedPropertyId" asp-items="Model.Properties" class="form-select">
+                        <option value="">-- Select a Property --</option>
+                    </select>
+                    <span asp-validation-for="SelectedPropertyId" class="validation-message"></span>
+                </div>
+            </div>
         </div>
-        <div>
-            <label asp-for="ClientBase"></label>
-            <input asp-for="ClientBase" class="form-control" />
+
+        <div class="btn-group">
+            <a asp-action="SearchResults" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i>Back to List
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i>Save Transaction
+            </button>
         </div>
-        <div>
-            <label asp-for="IdSubmitted"></label>
-            <input asp-for="IdSubmitted" class="form-control" />
-        </div>
-        <div>
-            <label asp-for="IdDateSubmitted"></label>
-            <input asp-for="IdDateSubmitted" class="form-control" type="date" />
-        </div>
-        <div>
-            <label asp-for="EmailAddress"></label>
-            <input asp-for="EmailAddress" class="form-control" />
-        </div>
-        <div>
-            <label asp-for="ContactNumber"></label>
-            <input asp-for="ContactNumber" class="form-control" />
-        </div>
-    </div>
-    <div>
-        <label asp-for="SelectedPropertyId">Select Property</label>
-        <select asp-for="SelectedPropertyId" asp-items="Model.Properties" class="form-control">
-            <option value="">-- Select a Property --</option>
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+    </form>
+</div>
 
 @section Scripts {
     <script>
@@ -107,18 +303,15 @@
 
         function toggleNewFields() {
             if (dropdown.value) {
-                newFields.style.display = "none";
+                newFields.classList.remove('visible');
+                newFields.classList.add('hidden');
             } else {
-                newFields.style.display = "block";
+                newFields.classList.remove('hidden');
+                newFields.classList.add('visible');
             }
         }
 
-        // Run on load and on change
         toggleNewFields();
         dropdown.addEventListener("change", toggleNewFields);
     </script>
-
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
 }

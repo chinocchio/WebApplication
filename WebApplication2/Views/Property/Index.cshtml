@@ -1,729 +1,228 @@
 ﻿@model WebApplication2.ViewModels.PropertyListViewModel
 
 @{
-    ViewData["Title"] = "Sales Transactions";
-    Layout = "_Layout";
+    ViewData["Title"] = "Property Search";
 }
-
-<h2>Sales Transactions</h2>
-
-<form method="get">
-    <input type="text" name="searchTerm" value="@Model.SearchTerm" placeholder="Search Contract No, Fullname, or Unit Code" />
-    <button type="submit">Search</button>
-</form>
-
-@if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
-{
-    if (Model.SalesTransactions != null && Model.SalesTransactions.Any())
-    {
-        <ul class="nav nav-tabs mt-4" id="transactionTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="sales-tab" data-bs-toggle="tab" href="#sales" role="tab">Sales Info</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="buyer-tab" data-bs-toggle="tab" href="#buyer" role="tab">Buyer Info</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="property-tab" data-bs-toggle="tab" href="#property" role="tab">Property Info</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="proponent-tab" data-bs-toggle="tab" href="#proponent" role="tab">Sales Proponent Info</a>
-            </li>
-        </ul>
-
-        <div class="tab-content border p-3" id="transactionTabsContent">
-            @section Scripts {
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                document.querySelectorAll(".clickable-row").forEach(row => {
-                row.addEventListener("click", function () {
-                const targetId = this.getAttribute("data-bs-target");
-                const contentRow = document.getElementById(targetId);
-                if (contentRow) {
-                contentRow.classList.toggle("d-none");
-                }
-                });
-                });
-                });
-            </script>
+<style>
+    body {
+        background: linear-gradient(135deg, #1A4D2E 0%, #4CAF50 100%);
+        min-height: 100vh;
+        background-attachment: fixed;
     }
+ 
+    .main-card {
+        background: rgba(26, 77, 46, 0.92);
+        border-radius: 28px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18), 0 2px 16px 0 rgba(44,62,80,0.10);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: clamp(2.5rem, 6vw, 3.5rem) clamp(2rem, 6vw, 3rem);
+        margin: 4rem auto 2rem auto;
+        max-width: 820px;
+        border: 1.5px solid rgba(255,255,255,0.13);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: box-shadow 0.3s, background 0.3s;
+        position: relative;
+        z-index: 2;
 
-            <div class="tab-pane fade show active" id="sales" role="tabpanel">
-                <table class="table mt-3">
-                    <thead>
-                        <tr>
-                            <th>Contract Number</th>
-                            <th>Type of Sale</th>
-                            <th>Holding Date</th>
-                            <th>Promo Discount</th>
-                            <th>Transaction Type</th>
-                            <th>Milestone</th>
-                            <th>Status Color</th>
-                            <th>Status In General</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.SalesTransactions)
-                        {
-                            var transaction = item.SalesTransaction;
-
-                            var targetId = $"details_{transaction.SalesTransactionId}";
-
-                            <tr class="clickable-row table-primary" style="cursor:pointer;" data-bs-target="@targetId">
-                                <td>@transaction.ContractNumber</td>
-                                <td>@transaction.TypeOfSale</td>
-                                <td>@transaction.HoldingDate</td>
-                                <td>@transaction.PromoDiscount</td>
-                                <td>@transaction.TransactionType</td>
-                                <td>@transaction.Milestone</td>
-                                <td>@transaction.NewColorStatus</td>
-                                <td>@transaction.StatusInGeneral</td>
-                            </tr>
-
-                            <tr id="@targetId" class="d-none bg-light">
-                                <td colspan="8">
-                                    <!-- Sales Document and Credit Review Tabs -->
-                                    <ul class="nav nav-tabs mt-3" id="salesDocTabs_@transaction.SalesTransactionId" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" id="salesDoc-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#salesDocContent-@transaction.SalesTransactionId" type="button" role="tab">
-                                                Documents
-                                            </button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link" id="resarvationFee-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#resarvationFeeContent-@transaction.SalesTransactionId" type="button" role="tab">
-                                                Payment Term 
-                                            </button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link" id="buyerLedger-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#buyerLedgerContent-@transaction.SalesTransactionId" type="button" role="tab">
-                                                Buyer's Ledger
-                                            </button>
-                                        </li>
-                                    </ul>
-
-
-                                    <!-- Tab content for Document submitted -->
-                                    <div class="tab-content p-3 border" id="salesDocTabsContent_@transaction.SalesTransactionId">
-                                        <div class="tab-pane fade show active" id="salesDocContent-@transaction.SalesTransactionId" role="tabpanel">
-                                            @* @if (transaction.SalesDocument != null) *@
-                                            @* { *@
-                                                
-                                            @* } *@
-
-                                            <!-- Submitted Documents Section -->
-                                            @if (item.SubmittedDocuments.Any())
-                                            {
-                                                <div class="card mb-4">
-                                                    <div class="card-header bg-success text-white">
-                                                        <strong>
-                                                            Submitted Documents
-                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
-                                                                @item.SubmittedDocuments.Count()
-                                                            </span>
-                                                        </strong>
-                                                    </div>
-                                                    <div class="card-body p-3">
-                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                                            <thead class="table-light">
-                                                                <tr>
-                                                                    <th>Document Code</th>
-                                                                    <th>Document Name</th>
-                                                                    <th>Customer Code</th>
-                                                                    <th>Date Submitted</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach (var doc in item.SubmittedDocuments)
-                                                                {
-                                                                    <tr>
-                                                                        <td>@doc.DocumentCode</td>
-                                                                        <td>@doc.DocumentName</td>
-                                                                        <td>@doc.CustomerCode</td>
-                                                                        <td>@doc.DateSubmitted</td>
-                                                                    </tr>
-                                                                }
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <p>No submitted documents.</p>
-                                            }
-
-                                            <!-- Required Documents Section -->
-                                            @if (item.DocumentsForSubmission != null && item.DocumentsForSubmission.Any())
-                                            {
-                                                <div class="card mb-4">
-                                                    <div class="card-header bg-success text-white">
-                                                        <strong>
-                                                            Required Documents
-                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
-                                                                @item.DocumentsForSubmission.Count()
-                                                            </span>
-                                                        </strong>
-                                                    </div>
-                                                    <div class="card-body p-3">
-                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                                            <thead class="table-light">
-                                                                <tr>
-                                                                    <th>Document Code</th>
-                                                                    <th>Document Name</th>
-                                                                    <th>Finance Type</th>
-                                                                    <th>Location</th>
-                                                                    <th>Source of Income</th>
-                                                                    <th>Group</th>
-
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach (var reqDoc in item.DocumentsForSubmission)
-                                                                {
-                                                                    <tr>
-                                                                        <td>@reqDoc.DocumentCode</td>
-                                                                        <td>@reqDoc.DocumentName</td>
-                                                                        <td>@reqDoc.DocumentFinanceType</td>
-                                                                        <td>@reqDoc.DocumentLocation</td>
-                                                                        <td>@reqDoc.DocumentSourceOfIncome</td>
-                                                                        <td>@reqDoc.DocumentGroup</td>
-                                                                    </tr>
-                                                                }
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <p class="text-muted">No required documents listed.</p>
-                                            }
-                                      </div>
-                                    
-
-
-                                   
-                                        <div class="tab-pane fade" id="resarvationFeeContent-@transaction.SalesTransactionId" role="tabpanel">
-                                            @* Credit Review content goes here *@
-                                            @if (transaction.PaymentTerm != null)
-                                            {
-                                                <dl class="row">
-                                                    <dt class="col-sm-3">RF AMOUNT PAID TO UNIT:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountPaidToUnit</dd>
-
-                                                    <dt class="col-sm-3">RF AMOUNT PAID TO GMTOE:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountPaidToGMTOE</dd>
-
-                                                    <dt class="col-sm-3">TOTAL:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountGMTOE_Unit</dd>
-
-                                                    <dt class="col-sm-3">RF CREDITED:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfDateCredited</dd>
-
-                                                    <dt class="col-sm-3">RF OR NUMBER:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfOrNumber</dd>
-
-                                                    <dt class="col-sm-3">PAYMENT TERM:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.Paymentterm</dd>
-
-                                                    <dt class="col-sm-3">% TOB:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.PercentTOB</dd>
-
-                                                    <dt class="col-sm-3">TOB MODE OF PAYMENT BANK/CASH:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TOBModeOfPayment</dd>
-
-                                                    <dt class="col-sm-3">TOB:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TOB</dd>
-
-                                                    <dt class="col-sm-3">ESTIMATED BANK MA at 7.5%:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.EstimatedBankMAFor7Point5Percent</dd>
-
-                                                    <dt class="col-sm-3">START DATE ( 1st MA):</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.StartDate1stMA</dd>
-
-                                                    <dt class="col-sm-3">UNIT/PARKING:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.UnitParking</dd>
-
-                                                    <dt class="col-sm-3">TRANSFER FEE:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TransferFee</dd>
-
-                                                    <dt class="col-sm-3">AMOUNT PAID TO UNIT:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.AmountPaidToUnit</dd>
-
-                                                    <dt class="col-sm-3">AMOUNT PAID TO TRANSFER FEE:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.AmountPaidToTF</dd>
-
-                                                    <dt class="col-sm-3">DATE PAID:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.DatePaid</dd>
-
-                                                    <dt class="col-sm-3">FIRST MA OR NUMBER:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.FirstMAOrNumber</dd>
-
-                                                    <dt class="col-sm-3">PAYMENT DUE DATE:</dt>
-                                                    <dd class="col-sm-9">@transaction.PaymentTerm.PaymentDueDate</dd>
-                                                    @* Add more CreditReview fields here *@
-                                                </dl>
-                                            }
-                                            else
-                                            {
-                                                <em class="text-muted">No credit review data available.</em>
-                                            }
-                                        </div>
-
-
-                                        <div class="tab-pane fade" id="buyerLedgerContent-@transaction.SalesTransactionId" role="tabpanel">
-                                            @if (item.BuyerLedgers.Any())
-                                            {
-                                                <div class="card mb-4">
-                                                    <div class="card-header bg-success text-white">
-                                                        <strong>
-                                                            Buyer's Ledger Entries
-                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
-                                                                @item.BuyerLedgers.Count()
-                                                            </span>
-                                                        </strong>
-                                                    </div>
-                                                    <div class="card-body p-3">
-                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                                            <thead class="table-light">
-                                                        <tr>
-                                                           
-                                                            <th>Customer Code</th>
-                                                            <th>Unit Code</th>
-                                                            <th>Paid FT</th>
-                                                            <th>INV.NO.</th>
-                                                            <th>Amount Due</th>
-                                                            <th>Paid Mode</th>
-                                                            <th>When Due</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach (var ledger in item.BuyerLedgers)
-                                                        {
-                                                            <tr>
-                                                               
-                                                                <td>@ledger.CustomerCode</td>
-                                                                <td>@ledger.UnitCode</td>
-                                                                <td>@ledger.PaymentNumber</td>
-                                                                <td>@ledger.PaymentReferenceDocNumber</td>
-                                                                <td>@ledger.AmountDue</td>
-                                                                <td>@ledger.PaymentReferenceDocType</td>
-                                                                <td>@ledger.WhenDue</td>
-
-                                                            </tr>
-                                                        }
-                                                                <tr class="table-secondary fw-bold">
-                                                                    <td colspan="4" class="text-end">Total Amount Due:</td>
-                                                                    <td>
-                                                                        @((item.BuyerLedgers.Sum(x => x.AmountDue) ?? 0).ToString("N0"))
-
-
-                                                                    </td>
-                                                                    <td colspan="2"></td>
-                                                                </tr>
-                                                    </tbody>
-                                                </table>
-                                                    </div>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <p>No ledger entries available for this contract.</p>
-                                            }
-                                        </div>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="tab-pane fade" id="buyer" role="tabpanel">
-                <table class="table mt-3">
-                    <thead>
-                        <tr>
-                            <th>Client's Name</th>
-                            <th>Role</th>
-                            <th>Customer Code</th>
-                            <th>Client Base</th>
-                            <th>Contact Number</th>
-                            <th>Email Address</th>
-                            <th>ID Sbmitted</th>
-                            <th>Date ID Submitted</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.SalesTransactions)
-                        {
-                            var transaction = item.SalesTransaction;
-                            if (transaction.BusinessPartner?.OtherBuyers != null)
-                            {
-                                foreach (var buyer in transaction.BusinessPartner.OtherBuyers)
-                                {
-                                    <tr>
-                                        <td>@buyer.Fullname</td>
-                                        <td>@buyer.Role</td>
-                                        <td>@buyer.CustomerCode</td>
-                                        <td>@buyer.ClientBase</td>
-                                        <td>@buyer.ContactNumber</td>
-                                        <td>@buyer.EmailAddress</td>
-                                        <td>@buyer.IdSubmitted</td>
-                                        <td>@buyer.IdDateSubmitted</td>
-                                    </tr>
-                                }
-                            }
-                        }
-                    </tbody>
-                </table>
-                <!-- AFTER buyers table, Credit Review tab system -->
-
-                <ul class="nav nav-tabs" id="creditReviewTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="credit-tab" data-bs-toggle="tab" data-bs-target="#credit" type="button" role="tab" aria-controls="credit" aria-selected="true">
-                            Credit Review
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="buyerdocs-tab" data-bs-toggle="tab" data-bs-target="#buyerdocs" type="button" role="tab" aria-controls="buyerdocs" aria-selected="false">
-                            Buyer Documents
-                        </button>
-                    </li>
-                </ul>
-
-                <div class="tab-content border p-3" id="creditReviewTabsContent">
-                    <div class="tab-pane fade show active" id="credit" role="tabpanel" aria-labelledby="credit-tab">
-                        @foreach (var item in Model.SalesTransactions)
-                        {
-                            var transaction = item.SalesTransaction;
-                            if (transaction.CreditReview != null)
-                            {
-                                <div class="mb-4" style="max-height: 600px; overflow-y: auto; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <strong>CI Result:</strong> @transaction.CreditReview.CreditReviewResult
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>CMAP Result:</strong> @transaction.CreditReview.CMAPResult
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>CI Remarks:</strong> @transaction.CreditReview.CreditReviewRemarks
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>NDI Status:</strong> @transaction.CreditReview.NDIStatus
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Is Bank Approvable:</strong> @transaction.CreditReview.IsBankApporvable
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Red Tag:</strong> @transaction.CreditReview.RedTag
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Red Tag Reason:</strong> @transaction.CreditReview.RedTagReason
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>CI Completion Date:</strong> @(transaction.CreditReview.CiCompletionDate.ToString("MM/dd/yyyy"))
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Reason For Purchase:</strong> @transaction.CreditReview.ReasonForPurchase
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>1st Home In PH:</strong> @transaction.CreditReview.FirstHomeInPH
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Number of home in PH:</strong> @transaction.CreditReview.NumberOfHomesInPH
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>With Other CPGI Units:</strong> @transaction.CreditReview.WithOtherCPGIUnits
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>PROJECT/UNIT NO. OF OTHER CPGI UNIT:</strong> @transaction.CreditReview.ProjectOrUnitCodeOfOtherCPGIUnit
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>INCOME DECLARED PRINCIPAL (PHP):</strong> @transaction.CreditReview.IncomeDeclaredPb
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>INCOME DECLARED CO-BORROWER:</strong> @transaction.CreditReview.IncomeDeclaredCb
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>TOTAL INCOME (COMBINED):</strong> @transaction.CreditReview.TotalIncomeCombined
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Type of Income:</strong> @transaction.CreditReview.TypeOfIncome
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>NDI Rate:</strong> @transaction.CreditReview.NdiRate
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Net Disposable Income:</strong> @transaction.CreditReview.NetDisposableIncome
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Other Loans:</strong> @transaction.CreditReview.OtherLoans
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Net NDI:</strong> @transaction.CreditReview.NetNdi
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>NDI vs Bank MA TOB Amount:</strong> @transaction.CreditReview.NdiVsBankMaTobAmt
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Percent of NDI vs MA:</strong> @transaction.CreditReview.PercentOfNdiVsMa
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>NDI Category:</strong> @transaction.CreditReview.NdiCategory
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Max Term:</strong> @transaction.CreditReview.MaxTerm
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Estimated Max Term:</strong> @transaction.CreditReview.EstimatedMaxTerm
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Persona Category:</strong> @transaction.CreditReview.PersonaCategory
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>IMMIGRANT/NON-IMMIGRANT:</strong> @transaction.CreditReview.ImmigrantOrNonImmigrant
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>HIGH RISK (Y/N):</strong> @transaction.CreditReview.HighRishk
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>HIGH RISK FACTOR/S:</strong> @transaction.CreditReview.HighRiskFactors
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                            else
-                            {
-                                <p class="text-muted">No Credit Review information available for this transaction.</p>
-                            }
-                        }
-                    </div>
-
-                    <div class="tab-pane fade" id="buyerdocs" role="tabpanel" aria-labelledby="buyerdocs-tab">
-                        @foreach (var item in Model.SalesTransactions)
-                        {
-                            var transaction = item.SalesTransaction;
-                            if (transaction.BuyerDocument != null)
-                            {
-                                <!-- ID SUBMITTED FOR PB-->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-success text-white">
-                                        <strong>IDS SUBMITTED</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>PRINCIPAL BUYER ID TYPE</th>
-                                                    <th>EXPIRATION DATE 1</th>
-                                                    <th>SPOUSE/CO BORROWER ID</th>
-                                                    <th>EXPIRATION DATE 2</th>
-                                                    
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.PbIDType</td>
-                                                    <td>@transaction.BuyerDocument.ExpirationDate1</td>
-                                                    <td>@transaction.BuyerDocument.SpsCbId</td>
-                                                    <td>@transaction.BuyerDocument.ExpirationDate2</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <!-- FOR TAX IDENTIFICATION NUMBER-->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-success text-white">
-                                        <strong>TAX IDENTIFICATION NUMBER</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>VERIFIED TIN</th>
-                                                    <th>TIN AUTHO LETTER</th>
-                                                    <th>PRIMARY - 1904 FORM</th>
-                                                    <th>COBORROWER - 1904 FORM</th>
-                                                    <th>TIN NUMBER</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.VerifiedTin</td>
-                                                    <td>@transaction.BuyerDocument.TinAuthoLetter</td>
-                                                    <td>@transaction.BuyerDocument.Pb1904Form</td>
-                                                    <td>@transaction.BuyerDocument.Cb1904Form</td>
-                                                    <td>@transaction.BuyerDocument.TinAuthoLetter</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <!-- FOR Supporting Documents-->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-success text-white">
-                                        <strong>SUPPORTING DOCUMENTS</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>BIRTH CERTIFICATE</th>
-                                                    <th>CENOMAR</th>
-                                                    <th>MARRIAGE CERTIFICATE</th>
-                                                    <th>DEATH CERTIFICATE</th>
-                                                    <th>PROOF OF BILLING 1</th>
-                                                    <th>PROOF OF BILLING 2</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.BirthCertificate</td>
-                                                    <td>@transaction.BuyerDocument.Cenomar</td>
-                                                    <td>@transaction.BuyerDocument.MarriageCertificate</td>
-                                                    <td>@transaction.BuyerDocument.DeathCertificate</td>
-                                                    <td>@transaction.BuyerDocument.ProofOfBilling1</td>
-                                                    <td>@transaction.BuyerDocument.ProofOfBilling2</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <!-- SPA/AIF-->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-success text-white">
-                                        <strong>SPA/AIF</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>SPA</th>
-                                                    <th>SPA APOSTILLED/CONSULARIZED/NOTARIZED</th>
-                                                    <th>AIF ID</th>
-                                                    <th>NAME OF AIF</th>
-                                                    <th>CONTACT NUMBER OF AIF</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.SPA</td>
-                                                    <td>@transaction.BuyerDocument.SPA_ACN</td>
-                                                    <td>@transaction.BuyerDocument.AIFId</td>
-                                                    <td>@transaction.BuyerDocument.NameOfAif</td>
-                                                    <td>@transaction.BuyerDocument.ContactNumberOfAIF</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <!-- Additional Information Buyer info -->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-secondary text-white">
-                                        <strong>Additional Information</strong>
-                                    </div>
-
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>DOR</th>
-                                                    <th>SPECIFIC INCOME DOCS SUBMITTED</th>
-                                                    <th>ADDITIONAL POI</th>
-                                                    <th>OATH OF ALLEGIANCE</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.DOR</td>
-                                                    <td>@transaction.BuyerDocument.SpecificIncomeDocsSubmitted</td>
-                                                    <td>@transaction.BuyerDocument.AdditionalPOI </td>
-                                                    <td>@transaction.BuyerDocument.OathOfAllegiance </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>             
-                            }
-                            else
-                            {
-                                <p class="text-muted">No Buyer Document information available for this transaction.</p>
-                            }
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="property" role="tabpanel">
-                <table class="table mt-3">
-                    <thead>
-                        <tr>
-                            <th>Property Type</th>
-                            <th>Project Name</th>
-                            <th>Building/Phase</th>
-                            <th>Unit Code</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.SalesTransactions)
-                        {
-                            var transaction = item.SalesTransaction;
-                            <tr>
-                                <td>@transaction.Properties?.PropertyType</td>
-                                <td>@transaction.Properties?.ProjectName</td>
-                                <td>@transaction.Properties?.BuildingPhase</td>
-                                <td>@transaction.Properties?.UnitCode</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="tab-pane fade" id="proponent" role="tabpanel">
-                <table class="table mt-3">
-                    <thead>
-                        <tr>
-                            <th>Broker</th>
-                            <th>PS/QC/ISM</th>
-                            <th>Marketing Officer</th>
-                            <th>Markerting Manager</th>
-                            <th>Deputy Markerting Director</th>
-                            <th>Marketing Director</th>
-                            <!-- Add more fields if needed -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.SalesTransactions)
-                        {
-                            var transaction = item.SalesTransaction;
-                            <tr>
-                                <td>@transaction.SalesProponent?.Broker</td>
-                                <td>@transaction.SalesProponent?.PS_QC_ISM</td>
-                                <td>@transaction.SalesProponent?.MarketingOfficer</td>
-                                <td>@transaction.SalesProponent?.MarketingManager</td>
-                                <td>@transaction.SalesProponent?.DeputyMarketingDirector</td>
-                                <td>@transaction.SalesProponent?.MarketingDirector</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
     }
-    else
-    {
-        <p class="text-danger mt-4">No results found.</p>
+    .logo-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2.5rem;
     }
-}
+    .logo {
+        width: 150px;
+        height: auto;
+        margin-bottom: 1.2rem;
+        filter: drop-shadow(0 4px 16px #4CAF50) drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+        border-radius: 16px;
+        background: rgba(255,255,255,0.05);
+        padding: 0.5rem;
+        transition: filter 0.3s, width 0.3s;
+    }
+    .welcome-text {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        text-shadow: 0 2px 12px rgba(44,62,80,0.18);
+        line-height: 1.2;
+        transition: text-shadow 0.3s;
+    }
+    .tagline {
+        color: #e0ffe0;
+        font-size: 1.15rem;
+        text-align: center;
+        margin-bottom: 2.2rem;
+        font-style: italic;
+        opacity: 0.92;
+        letter-spacing: 0.5px;
+    }
+    .search-form {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2.5rem;
+        justify-content: center;
+        width: 100%;
+        max-width: 600px;
+    }
+    .search-input {
+        border: none;
+        border-radius: 30px 0 0 30px;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        background: rgba(255,255,255,0.93);
+        color: #1A4D2E;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        outline: none;
+        width: 65%;
+        min-width: 0;
+        transition: all 0.3s;
+    }
+    .search-input:focus {
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        transform: translateY(-1px);
+    }
+    .search-button {
+        background: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 0 30px 30px 0;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        cursor: pointer;
+    }
+    .search-button:hover, .search-button:focus {
+        background: #388e3c;
+        box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+        transform: translateY(-1px) scale(1.03);
+    }
+    .divider {
+        border-top: 1.5px solid rgba(255,255,255,0.2);
+        margin: 2.5rem 0;
+        width: 100%;
+    }
+    .quick-actions {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .action-button {
+        background: rgba(255,255,255,0.18);
+        color: #fff;
+        border: 1.5px solid #4CAF50;
+        border-radius: 16px;
+        padding: 1.2rem 2.5rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        text-decoration: none;
+        transition: all 0.3s;
+        cursor: pointer;
+        min-width: 180px;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .action-button:hover, .action-button:focus {
+        background: #4CAF50;
+        color: #fff;
+        border-color: #388e3c;
+        box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+        transform: translateY(-2px) scale(1.03);
+    }
+    .action-button i {
+        font-size: 1.4rem;
+        color: #e0ffe0;
+        margin-right: 0.5rem;
+    }
+    .subtext {
+        color: rgba(255,255,255,0.93);
+        font-size: 1.08rem;
+        text-align: center;
+        line-height: 1.6;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    /* SVG Wave */
+    .wave {
+        position: absolute;
+        top: -60px;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 1;
+    }
+    @@media (max-width: 900px) {
+        .main-card { padding: 2rem 1.5rem; max-width: 95%; }
+        .welcome-text { font-size: 1.6rem; }
+        .search-input, .search-button { font-size: 1rem; }
+    }
+    @@media (max-width: 700px) {
+        .main-card { padding: 1.5rem 1rem; max-width: 99%; }
+        .search-form { flex-direction: column; gap: 1rem; max-width: 100%; }
+        .search-input, .search-button { width: 100%; border-radius: 30px; text-align: center; }
+        .quick-actions { flex-direction: column; gap: 1rem; }
+    }
+    @@media (max-width: 480px) {
+        .main-card { padding: 1.5rem 0.8rem; }
+        .welcome-text { font-size: 1.3rem; }
+        .logo { width: 100px; }
+        .action-button { padding: 1rem 1.5rem; font-size: 1rem; }
+    }
+</style>
+<div class="main-card" role="main" aria-label="Sales Transactions">
+    <svg class="wave" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#4CAF50" fill-opacity="0.25" d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z"></path></svg>
+    <div class="logo-container">
+        <img src="@Url.Content("~/src/full-logo-1.png")" class="logo" alt="Company Logo" />
+        <div class="welcome-text">Welcome to Sales Transactions</div>
+        <div class="tagline">Find, create, and manage your property sales with ease.</div>
+    </div>
+    <form method="get" class="search-form" aria-label="Search Sales Transactions">
+        <input type="text"
+               name="searchTerm"
+               class="search-input"
+               value="@(Model?.SearchTerm ?? "")"
+               placeholder="Search Contract No, Fullname, or Unit Code"
+               aria-label="Search input" />
+        <button type="submit" asp-action="SearchResults" class="search-button" aria-label="Search">
+            <i class="bi bi-search"></i>
+            <span>Search</span>
+        </button>
+    </form>
+    <div class="divider" aria-hidden="true"></div>
+    <div class="quick-actions">
+        <a asp-controller="Property" asp-action="Create" class="action-button" aria-label="Create New Property">
+            <i class="bi bi-plus-circle"></i>
+            <span>New Property</span>
+        </a>
+        <a asp-controller="SalesTransaction" asp-action="Create" class="action-button" aria-label="Create New Sale">
+            <i class="bi bi-cart-plus"></i>
+            <span>New Sale</span>
+        </a>
+    </div>
+    <div class="subtext">
+        <span>Tip: Use the search bar to quickly find contracts, customers, or units. Or use the quick actions to add new records!</span>
+    </div>
+</div>
+<!-- Optionally, add Bootstrap Icons CDN if not already included -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> 
