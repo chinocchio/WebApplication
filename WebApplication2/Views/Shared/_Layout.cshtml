@@ -1258,7 +1258,33 @@
             <i class="bi bi-list"></i>
         </button>
 
-        <main class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+                <div class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true" id="successToast">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["Success"]
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+                <div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true" id="errorToast">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["Error"]
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        }
+        <main class="container mt-4">
             @RenderBody()
         </main>
     </div>
@@ -1304,6 +1330,19 @@
                 const event = new Event('change');
                 toggleSwitch.dispatchEvent(event);
             });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var successToast = document.getElementById('successToast');
+            if (successToast) {
+                var toast = new bootstrap.Toast(successToast, { delay: 4000 });
+                toast.show();
+            }
+            var errorToast = document.getElementById('errorToast');
+            if (errorToast) {
+                var toast = new bootstrap.Toast(errorToast, { delay: 5000 });
+                toast.show();
+            }
         });
     </script>
 

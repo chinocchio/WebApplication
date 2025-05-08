@@ -25,6 +25,21 @@
     </div>
 </div>
 
+<style>
+    .tab-pane.fade {
+        transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.4,2,.6,1);
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    .tab-pane.fade.show.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+
+@* Add Bootstrap Icons CDN if not already present *@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 <div class="container mt-4">
    
     <h2>Search Results</h2>
@@ -46,22 +61,30 @@
         </div>
         <ul class="nav nav-tabs mt-4" id="transactionTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="sales-tab" data-bs-toggle="tab" href="#sales" role="tab">Sales Info</a>
+                <a class="nav-link active" id="sales-tab" data-bs-toggle="tab" href="#sales" role="tab">
+                    <i class="bi bi-bar-chart"></i> Sales Info
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="buyer-tab" data-bs-toggle="tab" href="#buyer" role="tab">Buyer Info</a>
+                <a class="nav-link" id="buyer-tab" data-bs-toggle="tab" href="#buyer" role="tab">
+                    <i class="bi bi-person-lines-fill"></i> Buyer Info
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="property-tab" data-bs-toggle="tab" href="#property" role="tab">Property Info</a>
+                <a class="nav-link" id="property-tab" data-bs-toggle="tab" href="#property" role="tab">
+                    <i class="bi bi-house-door"></i> Property Info
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="proponent-tab" data-bs-toggle="tab" href="#proponent" role="tab">Sales Proponent Info</a>
+                <a class="nav-link" id="proponent-tab" data-bs-toggle="tab" href="#proponent" role="tab">
+                    <i class="bi bi-people"></i> Sales Proponent Info
+                </a>
             </li>
         </ul>
 
         <div class="tab-content border p-3" id="transactionTabsContent">
             <div class="tab-pane fade show active" id="sales" role="tabpanel">
-                <table class="table mt-3">
+                <table class="table mt-3 d-none d-md-table">
                     <thead>
                         <tr>
                             <th>Contract Number</th>
@@ -87,7 +110,17 @@
                                 <td>@transaction.PromoDiscount</td>
                                 <td>@transaction.TransactionType</td>
                                 <td>@transaction.Milestone</td>
-                                <td>@transaction.NewColorStatus</td>
+                                <td>
+                                    @if (transaction.NewColorStatus?.ToUpper() == "GREEN") {
+                                        <span class="badge bg-success">GREEN</span>
+                                    } else if (transaction.NewColorStatus?.ToUpper() == "YELLOW") {
+                                        <span class="badge bg-warning text-dark">YELLOW</span>
+                                    } else if (transaction.NewColorStatus?.ToUpper() == "RED") {
+                                        <span class="badge bg-danger">RED</span>
+                                    } else {
+                                        <span class="badge bg-secondary">@transaction.NewColorStatus</span>
+                                    }
+                                </td>
                                 <td>@transaction.StatusInGeneral</td>
                             </tr>
 
@@ -341,6 +374,28 @@
                         }
                     </tbody>
                 </table>
+                <!-- Card layout for mobile -->
+                <div class="d-md-none">
+                    @foreach (var item in ViewBag.SalesTransactions)
+                    {
+                        var transaction = item.SalesTransaction;
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title mb-2">
+                                    <span class="text-success fw-bold">Contract:</span>
+                                    @Highlight(transaction.ContractNumber?.ToString(), ViewBag.SearchTerm as string)
+                                </h5>
+                                <div class="mb-1"><strong>Type of Sale:</strong> @transaction.TypeOfSale</div>
+                                <div class="mb-1"><strong>Holding Date:</strong> @transaction.HoldingDate</div>
+                                <div class="mb-1"><strong>Promo Discount:</strong> @transaction.PromoDiscount</div>
+                                <div class="mb-1"><strong>Transaction Type:</strong> @transaction.TransactionType</div>
+                                <div class="mb-1"><strong>Milestone:</strong> @transaction.Milestone</div>
+                                <div class="mb-1"><strong>Status Color:</strong> @transaction.NewColorStatus</div>
+                                <div class="mb-1"><strong>Status In General:</strong> @transaction.StatusInGeneral</div>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
 
             <div class="tab-pane fade" id="buyer" role="tabpanel">
@@ -402,106 +457,94 @@
                             var transaction = item.SalesTransaction;
                             if (transaction.CreditReview != null)
                             {
-                                <div class="mb-4" style="max-height: 600px; overflow-y: auto; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <strong>CI Result:</strong> @transaction.CreditReview.CreditReviewResult
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>CMAP Result:</strong> @transaction.CreditReview.CMAPResult
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>CI Remarks:</strong> @transaction.CreditReview.CreditReviewRemarks
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>NDI Status:</strong> @transaction.CreditReview.NDIStatus
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Is Bank Approvable:</strong> @transaction.CreditReview.IsBankApporvable
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Red Tag:</strong> @transaction.CreditReview.RedTag
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Red Tag Reason:</strong> @transaction.CreditReview.RedTagReason
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>CI Completion Date:</strong> @(transaction.CreditReview.CiCompletionDate.ToString("MM/dd/yyyy"))
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Reason For Purchase:</strong> @transaction.CreditReview.ReasonForPurchase
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>1st Home In PH:</strong> @transaction.CreditReview.FirstHomeInPH
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Number of home in PH:</strong> @transaction.CreditReview.NumberOfHomesInPH
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>With Other CPGI Units:</strong> @transaction.CreditReview.WithOtherCPGIUnits
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>PROJECT/UNIT NO. OF OTHER CPGI UNIT:</strong> @transaction.CreditReview.ProjectOrUnitCodeOfOtherCPGIUnit
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>INCOME DECLARED PRINCIPAL (PHP):</strong> @transaction.CreditReview.IncomeDeclaredPb
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>INCOME DECLARED CO-BORROWER:</strong> @transaction.CreditReview.IncomeDeclaredCb
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>TOTAL INCOME (COMBINED):</strong> @transaction.CreditReview.TotalIncomeCombined
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Type of Income:</strong> @transaction.CreditReview.TypeOfIncome
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>NDI Rate:</strong> @transaction.CreditReview.NdiRate
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Net Disposable Income:</strong> @transaction.CreditReview.NetDisposableIncome
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Other Loans:</strong> @transaction.CreditReview.OtherLoans
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Net NDI:</strong> @transaction.CreditReview.NetNdi
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>NDI vs Bank MA TOB Amount:</strong> @transaction.CreditReview.NdiVsBankMaTobAmt
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Percent of NDI vs MA:</strong> @transaction.CreditReview.PercentOfNdiVsMa
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>NDI Category:</strong> @transaction.CreditReview.NdiCategory
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Max Term:</strong> @transaction.CreditReview.MaxTerm
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Estimated Max Term:</strong> @transaction.CreditReview.EstimatedMaxTerm
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>Persona Category:</strong> @transaction.CreditReview.PersonaCategory
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <strong>IMMIGRANT/NON-IMMIGRANT:</strong> @transaction.CreditReview.ImmigrantOrNonImmigrant
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>HIGH RISK (Y/N):</strong> @transaction.CreditReview.HighRishk
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <strong>HIGH RISK FACTOR/S:</strong> @transaction.CreditReview.HighRiskFactors
+                                <div class="card mb-4 shadow-sm">
+                                    <div class="card-header bg-success text-white">
+                                        <strong>Credit Review</strong>
+                                    </div>
+                                    <div class="card-body bg-light">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <strong>CI Result:</strong>
+                                                @if (transaction.CreditReview.CreditReviewResult?.ToLower().Contains("clear") == true) {
+                                                    <span class="text-success"><i class="bi bi-check-circle-fill" data-bs-toggle="tooltip" title="Clear with condition"></i></span>
+                                                } else {
+                                                    <span class="text-danger"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" title="Not clear"></i></span>
+                                                }
+                                                <span class="text-dark">@transaction.CreditReview.CreditReviewResult</span><br>
+                                                <strong data-bs-toggle="tooltip" title="Net Disposable Income">NDI Status:</strong>
+                                                @if (transaction.CreditReview.NDIStatus?.ToLower().Contains("low") == true) {
+                                                    <span class="badge bg-warning text-dark">@transaction.CreditReview.NDIStatus</span>
+                                                } else {
+                                                    <span class="badge bg-success">@transaction.CreditReview.NDIStatus</span>
+                                                }<br>
+                                                <strong>Red Tag Reason:</strong>
+                                                @if (!string.IsNullOrEmpty(transaction.CreditReview.RedTagReason) && transaction.CreditReview.RedTagReason != "-") {
+                                                    <span class="text-danger fw-bold">@transaction.CreditReview.RedTagReason</span>
+                                                } else {
+                                                    <span class="text-muted">@transaction.CreditReview.RedTagReason</span>
+                                                }<br>
+                                                <strong>1st Home In PH:</strong> <span>@transaction.CreditReview.FirstHomeInPH</span><br>
+                                                <strong>Project/Unit No. of Other CPGI Unit:</strong> <span>@transaction.CreditReview.ProjectOrUnitCodeOfOtherCPGIUnit</span><br>
+                                                <strong>Total Income (Combined):</strong> <span>@transaction.CreditReview.TotalIncomeCombined</span><br>
+                                                <strong>Net Disposable Income:</strong> <span>@transaction.CreditReview.NetDisposableIncome</span><br>
+                                                <strong>NDI vs Bank MA TOB Amount:</strong> <span>@transaction.CreditReview.NdiVsBankMaTobAmt</span><br>
+                                                <strong>Max Term:</strong> <span>@transaction.CreditReview.MaxTerm</span><br>
+                                                <strong>Immigrant/Non-Immigrant:</strong> <span>@transaction.CreditReview.ImmigrantOrNonImmigrant</span>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <strong>CMAP Result:</strong>
+                                                @if (transaction.CreditReview.CMAPResult?.ToLower().Contains("no adverse") == true) {
+                                                    <span class="text-success"><i class="bi bi-shield-check" data-bs-toggle="tooltip" title="No adverse findings"></i></span>
+                                                } else {
+                                                    <span class="text-danger"><i class="bi bi-exclamation-triangle-fill" data-bs-toggle="tooltip" title="Adverse findings"></i></span>
+                                                }
+                                                <span>@transaction.CreditReview.CMAPResult</span><br>
+                                                <strong>Is Bank Approvable:</strong>
+                                                @if (transaction.CreditReview.IsBankApporvable?.ToLower() == "yes") {
+                                                    <span class="badge bg-success">Yes</span>
+                                                } else if (transaction.CreditReview.IsBankApporvable?.ToLower() == "no") {
+                                                    <span class="badge bg-danger">No</span>
+                                                } else {
+                                                    <span class="badge bg-secondary">-</span>
+                                                }<br>
+                                                <strong>CI Completion Date:</strong> <span>@(transaction.CreditReview.CiCompletionDate.ToString("MM/dd/yyyy"))</span><br>
+                                                <strong>Number of home in PH:</strong> <span>@transaction.CreditReview.NumberOfHomesInPH</span><br>
+                                                <strong>Income Declared Principal (PHP):</strong> <span>@transaction.CreditReview.IncomeDeclaredPb</span><br>
+                                                <strong>Type of Income:</strong> <span>@transaction.CreditReview.TypeOfIncome</span><br>
+                                                <strong>Other Loans:</strong> <span>@transaction.CreditReview.OtherLoans</span><br>
+                                                <strong>Percent of NDI vs MA:</strong> <span>@transaction.CreditReview.PercentOfNdiVsMa</span><br>
+                                                <strong>Estimated Max Term:</strong> <span>@transaction.CreditReview.EstimatedMaxTerm</span><br>
+                                                <strong>High Risk (Y/N):</strong>
+                                                @if (transaction.CreditReview.HighRishk?.ToLower() == "yes") {
+                                                    <span class="badge bg-danger">Yes</span>
+                                                } else if (transaction.CreditReview.HighRishk?.ToLower() == "no") {
+                                                    <span class="badge bg-success">No</span>
+                                                } else {
+                                                    <span class="badge bg-secondary">-</span>
+                                                }
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <strong>CI Remarks:</strong> <span>@transaction.CreditReview.CreditReviewRemarks</span><br>
+                                                <strong>Red Tag:</strong>
+                                                @if (!string.IsNullOrEmpty(transaction.CreditReview.RedTag) && transaction.CreditReview.RedTag != "-") {
+                                                    <span class="text-danger fw-bold"><i class="bi bi-exclamation-circle-fill" data-bs-toggle="tooltip" title="Red Tag"></i> @transaction.CreditReview.RedTag</span>
+                                                } else {
+                                                    <span class="text-muted">@transaction.CreditReview.RedTag</span>
+                                                }<br>
+                                                <strong>Reason For Purchase:</strong> <span>@transaction.CreditReview.ReasonForPurchase</span><br>
+                                                <strong>With Other CPGI Units:</strong> <span>@transaction.CreditReview.WithOtherCPGIUnits</span><br>
+                                                <strong>Income Declared Co-Borrower:</strong> <span>@transaction.CreditReview.IncomeDeclaredCb</span><br>
+                                                <strong>NDI Rate:</strong> <span>@transaction.CreditReview.NdiRate</span><br>
+                                                <strong>Net NDI:</strong> <span>@transaction.CreditReview.NetNdi</span><br>
+                                                <strong>NDI Category:</strong> <span>@transaction.CreditReview.NdiCategory</span><br>
+                                                <strong>Persona Category:</strong> <span>@transaction.CreditReview.PersonaCategory</span><br>
+                                                <strong>High Risk Factor/s:</strong>
+                                                @if (!string.IsNullOrEmpty(transaction.CreditReview.HighRiskFactors) && transaction.CreditReview.HighRiskFactors != "-") {
+                                                    <span class="text-danger">@transaction.CreditReview.HighRiskFactors</span>
+                                                } else {
+                                                    <span class="text-muted">@transaction.CreditReview.HighRiskFactors</span>
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -790,6 +833,12 @@
                 var toast = new bootstrap.Toast(toastEl, { delay: 4000 });
                 toast.show();
             }
+
+            // Initialize Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         });
     </script>
 } 
