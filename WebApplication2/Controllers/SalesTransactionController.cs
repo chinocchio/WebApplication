@@ -7,16 +7,19 @@ using WebApplication2.ViewModels;
 
 namespace WebApplication2.Controllers
 {
+    // Controller to ng mga sales transaction, boss. Dito lahat ng galawan ng benta. Wag mo gagalawin ng basta-basta, baka magka-leche-leche ang sales mo!
     public class SalesTransactionController : Controller
     {
         private readonly DataContext _context;
 
+        // Konstruktor to, boss. Dito pinapasa yung database context. Parang suplay ng kuryente, wag mo puputulin!
         public SalesTransactionController(DataContext context)
         {
             _context = context;
         }
 
         // GET: SalesTransaction/Create
+        // Gawa ng bagong benta, parang nagbebenta ka ng yaman. Dito ka mag-ingat, boss!
         public IActionResult Create()
         {
             var model = new SalesTransactionCreateViewModel
@@ -39,6 +42,7 @@ namespace WebApplication2.Controllers
         }
 
         // POST: SalesTransaction/Create
+        // Eto na yung tunay na laban, boss. Dito na isasave yung bagong benta mo. Wag kang magkamali dito!
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(SalesTransactionCreateViewModel model)
@@ -49,13 +53,13 @@ namespace WebApplication2.Controllers
 
                 if (model.SelectedBusinessPartnerId.HasValue)
                 {
-                    // Use selected existing partner
+                    // Gamitin yung existing na partner. Wag ka na gumawa ng bago kung meron na.
                     businessPartner = _context.BusinessPartners
                         .First(bp => bp.BusinessPartnerId == model.SelectedBusinessPartnerId.Value);
                 }
                 else
                 {
-                    // Create new one
+                    // Gawa ng bagong business partner kung wala pa. Parang bagong tropa sa barkada.
                     businessPartner = new BusinessPartner
                     {
                         Role = model.Role,
@@ -72,7 +76,7 @@ namespace WebApplication2.Controllers
                     _context.SaveChanges();
                 }
 
-                // Optionally: Create a new SalesTransaction to link to the selected property
+                // Gawa ng bagong SalesTransaction na naka-link sa property. Dito na ang totoong transaksyon!
                 if (model.SelectedPropertyId.HasValue)
                 {
                     var transaction = new SalesTransaction
@@ -93,10 +97,11 @@ namespace WebApplication2.Controllers
                     _context.SaveChanges();
                 }
 
+                // Pag successful, balik sa listahan ng benta. Parang tapos na ang laban, boss!
                 return RedirectToAction("Index");
             }
 
-            // Repopulate Properties if ModelState failed
+            // Pag sablay, ulitin dropdowns. Wag kang tamad, ayusin mo input mo!
             model.Properties = _context.Properties
                 .Select(p => new SelectListItem
                 {
@@ -111,6 +116,12 @@ namespace WebApplication2.Controllers
             }).ToList();
 
             return View(model);
+        }
+
+        // Boss, wag mo gagalawin to kung di mo alam ginagawa mo. Delikado 'to!
+        private bool SalesTransactionExists(int id)
+        {
+            return _context.SalesTransactions.Any(e => e.SalesTransactionId == id);
         }
     }
 }
