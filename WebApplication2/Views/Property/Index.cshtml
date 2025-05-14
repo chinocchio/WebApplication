@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Property Search";
 }
+<!-- O, mga boss! Dito mo iikot ang style mo. Wag kang magpaka-basic, comments lang to! -->
 <style>
     body {
         background: linear-gradient(135deg, #195c4b 0%, #7ec8a6 100%);
@@ -13,6 +14,7 @@
         background: linear-gradient(135deg, #111 0%, #222 100%);
         color: #e6f4ee;
     }
+    /* Main card, parang VIP section ng page mo. Dito ang mga bigatin! */
     .main-card {
         background: rgba(25, 92, 75, 0.96);
         border-radius: 28px;
@@ -35,6 +37,7 @@
         border: 1.5px solid #7ec8a6;
         color: #e6f4ee;
     }
+    /* Logo container, parang selfie spot ng page mo. Dito ang pa-cute! */
     .logo-container {
         display: flex;
         flex-direction: column;
@@ -51,6 +54,7 @@
         padding: 0.5rem;
         transition: filter 0.3s, width 0.3s;
     }
+    /* Welcome text, dito mo ipaparamdam na ikaw ang bida. */
     .welcome-text {
         color: #fff;
         font-size: 2rem;
@@ -66,6 +70,7 @@
         color: #e6f4ee;
         text-shadow: 0 2px 12px #111;
     }
+    /* Tagline, para sa mga hugot at pa-motivate. */
     .tagline {
         color: #b6f0d4;
         font-size: 1.15rem;
@@ -78,6 +83,7 @@
     body[data-theme='dark'] .tagline {
         color: #7ec8a6;
     }
+    /* Search form, parang hanap ng forever. Sana makita mo na! */
     .search-form {
         display: flex;
         gap: 0.5rem;
@@ -114,6 +120,7 @@
         color: #fff;
         box-shadow: 0 0 0 3px #7ec8a6;
     }
+    /* Search button, parang send ng chat sa crush mo. Sana mag-reply! */
     .search-button {
         background: #7ec8a6;
         color: #195c4b;
@@ -143,11 +150,13 @@
         background: #195c4b;
         color: #fff;
     }
+    /* Divider, parang break up line. Linya ng buhay! */
     .divider {
         border-top: 1.5px solid #7ec8a6;
         margin: 2.5rem 0;
         width: 100%;
     }
+    /* Quick actions, para sa mga laging nagmamadali. */
     .quick-actions {
         display: flex;
         gap: 2rem;
@@ -212,7 +221,7 @@
     body[data-theme='dark'] .subtext {
         color: #b6f0d4;
     }
-    /* SVG Wave */
+    /* SVG Wave, para sa mga mahilig sa design. */
     .wave {
         position: absolute;
         top: -60px;
@@ -243,13 +252,17 @@
         .action-button { padding: 1rem 1.5rem; font-size: 1rem; }
     }
 </style>
+<!-- Main card, parang tambayan ng tropa. -->
 <div class="main-card" role="main" aria-label="Sales Transactions">
+    <!-- SVG Wave, para sa mga mahilig sa design. -->
     <svg class="wave" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#4CAF50" fill-opacity="0.25" d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z"></path></svg>
+    <!-- Logo section, parang profile pic ng page mo. -->
     <div class="logo-container">
         <img src="@Url.Content("~/src/full-logo-1.png")" class="logo" alt="Century Properties Logo" />
         <div class="welcome-text">Welcome to Sales Transactions</div>
         <div class="tagline">Find, create, and manage your property sales with ease.</div>
     </div>
+    <!-- Search form, parang hanap ng jowa. -->
     <form method="get" class="search-form" aria-label="Search Sales Transactions">
         <input type="text"
                name="searchTerm"
@@ -262,7 +275,9 @@
             <span>Search</span>
         </button>
     </form>
+    <!-- Divider, parang break ng kwentuhan. -->
     <div class="divider" aria-hidden="true"></div>
+    <!-- Quick actions, para sa mga laging nagmamadali. -->
     <div class="quick-actions">
         <a asp-controller="Property" asp-action="Create" class="action-button" aria-label="Create New Property">
             <i class="bi bi-plus-circle"></i>
@@ -273,9 +288,14 @@
             <span>New Sale</span>
         </a>
     </div>
+    <!-- Subtext, parang paalala ng nanay mo. -->
     <div class="subtext">
         <span>Tip: Use the search bar to quickly find contracts, customers, or units. Or use the quick actions to add new records!</span>
     </div>
 </div>
+<!-- Footer, para di ka mawala sa dulo. -->
+<footer class="mt-5 text-center text-muted">
+    <p>© 2024 Century Properties.</p>
+</footer>
 <!-- Optionally, add Bootstrap Icons CDN if not already included -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> 

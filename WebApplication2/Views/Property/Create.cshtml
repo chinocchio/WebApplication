@@ -5,6 +5,7 @@
     Layout = "_Layout";
 }
 
+<!-- O, mga tropa! Dito nagsisimula ang style mo. Wag kang mag-alala, di ko gagalawin code mo, comments lang to! -->
 <style>
     .create-container {
         max-width: 800px;
@@ -12,6 +13,7 @@
         padding: 2rem;
     }
 
+    /* Astig na form card, para mukha kang pro kahit di ka pa pro. */
     .form-card {
         background: white;
         border-radius: var(--border-radius);
@@ -19,6 +21,7 @@
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
 
+    /* Header ng form, dito mo ipapakita na seryoso ka sa buhay. */
     .form-header {
         margin-bottom: 2rem;
         padding-bottom: 1rem;
@@ -31,6 +34,7 @@
             margin: 0;
         }
 
+    /* Form group, para di magulo tingnan inputs mo. */
     .form-group {
         margin-bottom: 1.5rem;
     }
@@ -56,12 +60,14 @@
             outline: none;
         }
 
+    /* Pag nagkamali ka, dito ka mapapahiya. */
     .text-danger {
         color: #dc3545;
         font-size: 0.875rem;
         margin-top: 0.5rem;
     }
 
+    /* Button group, para di ka maligaw sa dami ng button. */
     .btn-group {
         display: flex;
         gap: 1rem;
@@ -89,12 +95,14 @@
         }
 </style>
 
+<!-- Dito ka mag-encode ng property, wag kang kabahan, comments lang to! -->
 <div class="create-container">
     <div class="form-card">
         <div class="form-header">
             <h2>Create New Property</h2>
         </div>
 
+        <!-- Form na walang halong eklat, encode ka lang ng encode! -->
         <form asp-action="Create" method="post">
             @Html.AntiForgeryToken()
 
@@ -122,6 +130,7 @@
                 <span asp-validation-for="UnitCode" class="text-danger"></span>
             </div>
 
+            <!-- Mga button na pang-mabilisang desisyon, wag ka magdalawang isip! -->
             <div class="btn-group">
                 <button type="submit" class="btn btn-custom" id="submitBtn">
                     <span id="spinner" class="spinner-border spinner-border-sm d-none"></span>
@@ -136,6 +145,7 @@
 </div>
 
 @section Scripts {
+<!-- Script na pang-sureball, para di ka magmukhang tanga pag nag-click ka! -->
 <script>
     document.querySelector('form').addEventListener('submit', function() {
         document.getElementById('submitBtn').disabled = true;
