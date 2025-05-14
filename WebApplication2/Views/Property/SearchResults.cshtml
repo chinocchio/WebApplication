@@ -26,6 +26,113 @@
 </div>
 
 <style>
+    :root {
+        --primary-bg: #fff;
+        --primary-text: #222;
+        --card-bg: #fff;
+        --border-color: #e0e0e0;
+        --table-header-bg: #f8f9fa;
+        --table-row-hover: #f1f3f4;
+        --badge-success-bg: #198754;
+        --badge-danger-bg: #dc3545;
+        --badge-warning-bg: #ffc107;
+        --badge-secondary-bg: #6c757d;
+        --alert-info-bg: #d1ecf1;
+        --alert-info-text: #0c5460;
+        --alert-success-bg: #d4edda;
+        --alert-success-text: #155724;
+        --alert-warning-bg: #fff3cd;
+        --alert-warning-text: #856404;
+    }
+    body.dark-mode {
+        --primary-bg: #181a1b;
+        --primary-text: #f1f1f1;
+        --card-bg: #23272b;
+        --border-color: #343a40;
+        --table-header-bg: #23272b;
+        --table-row-hover: #23272b;
+        --badge-success-bg: #25a244;
+        --badge-danger-bg: #e63946;
+        --badge-warning-bg: #ffd166;
+        --badge-secondary-bg: #adb5bd;
+        --alert-info-bg: #22313a;
+        --alert-info-text: #b8e0ef;
+        --alert-success-bg: #223a2a;
+        --alert-success-text: #b8efc2;
+        --alert-warning-bg: #4d4a1a;
+        --alert-warning-text: #ffe066;
+    }
+    body, .container {
+        background: var(--primary-bg) !important;
+        color: var(--primary-text) !important;
+        transition: background 0.3s, color 0.3s;
+    }
+    .card, .form-card, .card-body, .bg-light {
+        background: var(--card-bg) !important;
+        color: var(--primary-text) !important;
+        border-color: var(--border-color) !important;
+        transition: background 0.3s, color 0.3s, border-color 0.3s;
+    }
+    .table th {
+        background: var(--table-header-bg) !important;
+        color: var(--primary-text) !important;
+    }
+    .table tr:hover {
+        background: var(--table-row-hover) !important;
+    }
+    .badge.bg-success {
+        background: var(--badge-success-bg) !important;
+        color: #fff !important;
+    }
+    .badge.bg-danger {
+        background: var(--badge-danger-bg) !important;
+        color: #fff !important;
+    }
+    .badge.bg-warning {
+        background: var(--badge-warning-bg) !important;
+        color: #222 !important;
+    }
+    .badge.bg-secondary {
+        background: var(--badge-secondary-bg) !important;
+        color: #fff !important;
+    }
+    .alert-info {
+        background: var(--alert-info-bg) !important;
+        color: var(--alert-info-text) !important;
+        border: none;
+    }
+    .alert-success {
+        background: var(--alert-success-bg) !important;
+        color: var(--alert-success-text) !important;
+        border: none;
+    }
+    .alert-warning, .text-bg-warning {
+        background: var(--alert-warning-bg) !important;
+        color: var(--alert-warning-text) !important;
+        border: none;
+    }
+    .table-primary {
+        background: rgba(0,123,255,0.08) !important;
+        color: var(--primary-text) !important;
+    }
+    .nav-tabs .nav-link.active {
+        background: var(--card-bg) !important;
+        color: var(--primary-text) !important;
+        border-color: var(--border-color) var(--border-color) var(--card-bg) !important;
+    }
+    .nav-tabs .nav-link {
+        color: var(--primary-text) !important;
+        transition: color 0.3s;
+    }
+    .tab-content {
+        background: var(--card-bg) !important;
+        color: var(--primary-text) !important;
+        border-color: var(--border-color) !important;
+    }
+    /* Spinner overlay for dark mode */
+    #spinnerOverlay {
+        background: rgba(24,26,27,0.7);
+    }
     .tab-pane.fade {
         transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.4,2,.6,1);
         opacity: 0;

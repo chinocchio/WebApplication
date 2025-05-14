@@ -139,58 +139,58 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="ContractNumber" class="form-label">Contract Number</label>
-                            <input asp-for="ContractNumber" class="form-control" placeholder="Enter contract number" />
-                            <span asp-validation-for="ContractNumber" class="validation-message"></span>
+                            <label asp-for="ContractNumber" class="form-label">Contract Number <span class="text-danger">*</span></label>
+                            <input asp-for="ContractNumber" class="form-control" required />
+                            <span asp-validation-for="ContractNumber" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="TypeOfSale" class="form-label">Type of Sale</label>
-                            <input asp-for="TypeOfSale" class="form-control" placeholder="Enter type of sale" />
-                            <span asp-validation-for="TypeOfSale" class="validation-message"></span>
+                            <label asp-for="TypeOfSale" class="form-label">Type of Sale <span class="text-danger">*</span></label>
+                            <input asp-for="TypeOfSale" class="form-control" required />
+                            <span asp-validation-for="TypeOfSale" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="HoldingDate" class="form-label">Holding Date</label>
-                            <input asp-for="HoldingDate" type="date" class="form-control" />
-                            <span asp-validation-for="HoldingDate" class="validation-message"></span>
+                            <label asp-for="HoldingDate" class="form-label">Holding Date <span class="text-danger">*</span></label>
+                            <input asp-for="HoldingDate" type="date" class="form-control" required />
+                            <span asp-validation-for="HoldingDate" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="TransactionType" class="form-label">Transaction Type</label>
-                            <input asp-for="TransactionType" class="form-control" placeholder="Enter transaction type" />
-                            <span asp-validation-for="TransactionType" class="validation-message"></span>
+                            <label asp-for="TransactionType" class="form-label">Transaction Type <span class="text-danger">*</span></label>
+                            <input asp-for="TransactionType" class="form-control" required />
+                            <span asp-validation-for="TransactionType" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="PromoDiscount" class="form-label">Promo Discount</label>
-                            <input asp-for="PromoDiscount" class="form-control" placeholder="Enter promo discount" />
-                            <span asp-validation-for="PromoDiscount" class="validation-message"></span>
+                            <label asp-for="PromoDiscount" class="form-label">Promo Discount <span class="text-danger">*</span></label>
+                            <input asp-for="PromoDiscount" class="form-control" required />
+                            <span asp-validation-for="PromoDiscount" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="StatusInGeneral" class="form-label">Status</label>
-                            <input asp-for="StatusInGeneral" class="form-control" placeholder="Enter status" />
-                            <span asp-validation-for="StatusInGeneral" class="validation-message"></span>
+                            <label asp-for="StatusInGeneral" class="form-label">Status <span class="text-danger">*</span></label>
+                            <input asp-for="StatusInGeneral" class="form-control" required />
+                            <span asp-validation-for="StatusInGeneral" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="Milestone" class="form-label">Milestone</label>
-                            <input asp-for="Milestone" class="form-control" placeholder="Enter milestone" />
-                            <span asp-validation-for="Milestone" class="validation-message"></span>
+                            <label asp-for="Milestone" class="form-label">Milestone <span class="text-danger">*</span></label>
+                            <input asp-for="Milestone" class="form-control" required />
+                            <span asp-validation-for="Milestone" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="NewColorStatus" class="form-label">Color Status</label>
-                            <input asp-for="NewColorStatus" class="form-control" placeholder="Enter color status" />
-                            <span asp-validation-for="NewColorStatus" class="validation-message"></span>
+                            <label asp-for="NewColorStatus" class="form-label">Color Status <span class="text-danger">*</span></label>
+                            <input asp-for="NewColorStatus" class="form-control" required />
+                            <span asp-validation-for="NewColorStatus" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -203,8 +203,8 @@
             </div>
             <div class="card-body">
                 <div class="form-group">
-                    <label asp-for="SelectedBusinessPartnerId" class="form-label">Select Existing Business Partner</label>
-                    <select id="bpDropdown" asp-for="SelectedBusinessPartnerId" asp-items="Model.ExistingBusinessPartners" class="form-select">
+                    <label asp-for="SelectedBusinessPartnerId" class="form-label">Select Existing Business Partner <span class="text-danger">*</span></label>
+                    <select id="bpDropdown" asp-for="SelectedBusinessPartnerId" asp-items="Model.ExistingBusinessPartners" class="form-select" required>
                         <option value="">-- Create New Business Partner --</option>
                     </select>
                 </div>
@@ -212,58 +212,58 @@
                 <div id="newBpFields" class="row g-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="Fullname" class="form-label">Full Name</label>
-                            <input asp-for="Fullname" class="form-control" placeholder="Enter full name" />
-                            <span asp-validation-for="Fullname" class="validation-message"></span>
+                            <label asp-for="Fullname" class="form-label">Full Name <span class="text-danger">*</span></label>
+                            <input asp-for="Fullname" class="form-control" required />
+                            <span asp-validation-for="Fullname" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="Role" class="form-label">Role</label>
-                            <input asp-for="Role" class="form-control" placeholder="Enter role" />
-                            <span asp-validation-for="Role" class="validation-message"></span>
+                            <label asp-for="Role" class="form-label">Role <span class="text-danger">*</span></label>
+                            <input asp-for="Role" class="form-control" required />
+                            <span asp-validation-for="Role" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="CustomerCode" class="form-label">Customer Code</label>
-                            <input asp-for="CustomerCode" class="form-control" placeholder="Enter customer code" />
-                            <span asp-validation-for="CustomerCode" class="validation-message"></span>
+                            <label asp-for="CustomerCode" class="form-label">Customer Code <span class="text-danger">*</span></label>
+                            <input asp-for="CustomerCode" class="form-control" required />
+                            <span asp-validation-for="CustomerCode" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="ClientBase" class="form-label">Client Base</label>
-                            <input asp-for="ClientBase" class="form-control" placeholder="Enter client base" />
-                            <span asp-validation-for="ClientBase" class="validation-message"></span>
+                            <label asp-for="ClientBase" class="form-label">Client Base <span class="text-danger">*</span></label>
+                            <input asp-for="ClientBase" class="form-control" required />
+                            <span asp-validation-for="ClientBase" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="IdSubmitted" class="form-label">ID Submitted</label>
-                            <input asp-for="IdSubmitted" class="form-control" placeholder="Enter ID submitted" />
-                            <span asp-validation-for="IdSubmitted" class="validation-message"></span>
+                            <label asp-for="IdSubmitted" class="form-label">ID Submitted <span class="text-danger">*</span></label>
+                            <input asp-for="IdSubmitted" class="form-control" required />
+                            <span asp-validation-for="IdSubmitted" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="IdDateSubmitted" class="form-label">ID Date Submitted</label>
-                            <input asp-for="IdDateSubmitted" type="date" class="form-control" />
-                            <span asp-validation-for="IdDateSubmitted" class="validation-message"></span>
+                            <label asp-for="IdDateSubmitted" class="form-label">ID Date Submitted <span class="text-danger">*</span></label>
+                            <input asp-for="IdDateSubmitted" type="date" class="form-control" required />
+                            <span asp-validation-for="IdDateSubmitted" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="EmailAddress" class="form-label">Email Address</label>
-                            <input asp-for="EmailAddress" class="form-control" placeholder="Enter email address" />
-                            <span asp-validation-for="EmailAddress" class="validation-message"></span>
+                            <label asp-for="EmailAddress" class="form-label">Email Address <span class="text-danger">*</span></label>
+                            <input asp-for="EmailAddress" class="form-control" required />
+                            <span asp-validation-for="EmailAddress" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="ContactNumber" class="form-label">Contact Number</label>
-                            <input asp-for="ContactNumber" class="form-control" placeholder="Enter contact number" />
-                            <span asp-validation-for="ContactNumber" class="validation-message"></span>
+                            <label asp-for="ContactNumber" class="form-label">Contact Number <span class="text-danger">*</span></label>
+                            <input asp-for="ContactNumber" class="form-control" required />
+                            <span asp-validation-for="ContactNumber" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -276,11 +276,11 @@
             </div>
             <div class="card-body">
                 <div class="form-group">
-                    <label asp-for="SelectedPropertyId" class="form-label">Select Property</label>
-                    <select asp-for="SelectedPropertyId" asp-items="Model.Properties" class="form-select">
+                    <label asp-for="SelectedPropertyId" class="form-label">Select Property <span class="text-danger">*</span></label>
+                    <select asp-for="SelectedPropertyId" asp-items="Model.Properties" class="form-select" required>
                         <option value="">-- Select a Property --</option>
                     </select>
-                    <span asp-validation-for="SelectedPropertyId" class="validation-message"></span>
+                    <span asp-validation-for="SelectedPropertyId" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -289,7 +289,8 @@
             <a asp-action="SearchResults" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i>Back to List
             </a>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+                <span id="spinner" class="spinner-border spinner-border-sm d-none"></span>
                 <i class="bi bi-save"></i>Save Transaction
             </button>
         </div>
@@ -313,5 +314,10 @@
 
         toggleNewFields();
         dropdown.addEventListener("change", toggleNewFields);
+
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('spinner').classList.remove('d-none');
+        });
     </script>
 }

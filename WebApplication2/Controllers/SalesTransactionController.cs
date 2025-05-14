@@ -93,7 +93,7 @@ namespace WebApplication2.Controllers
                     _context.SaveChanges();
                 }
 
-                return RedirectToAction("Create");
+                return RedirectToAction("Index");
             }
 
             // Repopulate Properties if ModelState failed
