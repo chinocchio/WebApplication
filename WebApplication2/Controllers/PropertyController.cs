@@ -33,7 +33,6 @@ namespace WebApplication2.Controllers
                         .Include(st => st.BusinessPartner)
                         .Include(st => st.PaymentTerm)
                         .Include(st => st.CreditReview)
-                        .Include(st => st.BuyerDocument)
                         .Include(st => st.SalesDocument)
                         .AsQueryable();
 

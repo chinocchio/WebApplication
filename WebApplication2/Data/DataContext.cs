@@ -14,7 +14,6 @@ namespace WebApplication2.Data
         public DbSet<PaymentTerm> PaymentTerms { get; set; }
         public DbSet<CreditReview> CreditReviews { get; set; }
         public DbSet<SalesDocument> SalesDocuments { get; set; }
-        public DbSet<BuyerDocument> BuyerDocuments { get; set; }
         public DbSet<DocumentRegistry> DocumentRegistries { get; set; }
         public DbSet<DocumentForSubmission> DocumentForSubmissions { get; set; }
         public DbSet<DocumentSubmitted> SubmittedDocuments { get; set; }
@@ -40,10 +39,6 @@ namespace WebApplication2.Data
                 .HasOne(st => st.CreditReview)
                 .WithMany(cr => cr.SalesTransaction)
                 .HasForeignKey(bp => bp.CreditReviewId);
-            modelBuilder.Entity<SalesTransaction>()
-                .HasOne(st => st.BuyerDocument)
-                .WithMany(cr => cr.SalesTransaction)
-                .HasForeignKey(bd =>bd.BuyerDocumentId);
             modelBuilder.Entity<SalesTransaction>()
                 .HasOne(st => st.SalesDocument)
                 .WithMany(cr => cr.SalesTransaction)
