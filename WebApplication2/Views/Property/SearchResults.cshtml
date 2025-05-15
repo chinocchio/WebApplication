@@ -580,11 +580,6 @@
                             Credit Review
                         </button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="buyerdocs-tab" data-bs-toggle="tab" data-bs-target="#buyerdocs" type="button" role="tab">
-                            Buyer Documents
-                        </button>
-                    </li>
                 </ul>
 
                 <div class="tab-content border p-3" id="creditReviewTabsContent">
@@ -692,162 +687,6 @@
                             }
                         }
                     </div>
-
-                    <div class="tab-pane fade" id="buyerdocs" role="tabpanel">
-                        @foreach (var item in ViewBag.SalesTransactions)
-                        {
-                            var transaction = item.SalesTransaction;
-                            if (transaction.BuyerDocument != null)
-                            {
-                                <!-- ID SUBMITTED FOR PB-->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-success text-white">
-                                        <strong>IDS SUBMITTED</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>PRINCIPAL BUYER ID TYPE</th>
-                                                    <th>EXPIRATION DATE 1</th>
-                                                    <th>SPOUSE/CO BORROWER ID</th>
-                                                    <th>EXPIRATION DATE 2</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.PbIDType</td>
-                                                    <td>@transaction.BuyerDocument.ExpirationDate1</td>
-                                                    <td>@transaction.BuyerDocument.SpsCbId</td>
-                                                    <td>@transaction.BuyerDocument.ExpirationDate2</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <!-- FOR TAX IDENTIFICATION NUMBER-->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-success text-white">
-                                        <strong>TAX IDENTIFICATION NUMBER</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>VERIFIED TIN</th>
-                                                    <th>TIN AUTHO LETTER</th>
-                                                    <th>PRIMARY - 1904 FORM</th>
-                                                    <th>COBORROWER - 1904 FORM</th>
-                                                    <th>TIN NUMBER</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.VerifiedTin</td>
-                                                    <td>@transaction.BuyerDocument.TinAuthoLetter</td>
-                                                    <td>@transaction.BuyerDocument.Pb1904Form</td>
-                                                    <td>@transaction.BuyerDocument.Cb1904Form</td>
-                                                    <td>@transaction.BuyerDocument.TinAuthoLetter</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <!-- FOR Supporting Documents-->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-success text-white">
-                                        <strong>SUPPORTING DOCUMENTS</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>BIRTH CERTIFICATE</th>
-                                                    <th>CENOMAR</th>
-                                                    <th>MARRIAGE CERTIFICATE</th>
-                                                    <th>DEATH CERTIFICATE</th>
-                                                    <th>PROOF OF BILLING 1</th>
-                                                    <th>PROOF OF BILLING 2</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.BirthCertificate</td>
-                                                    <td>@transaction.BuyerDocument.Cenomar</td>
-                                                    <td>@transaction.BuyerDocument.MarriageCertificate</td>
-                                                    <td>@transaction.BuyerDocument.DeathCertificate</td>
-                                                    <td>@transaction.BuyerDocument.ProofOfBilling1</td>
-                                                    <td>@transaction.BuyerDocument.ProofOfBilling2</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <!-- SPA/AIF-->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-success text-white">
-                                        <strong>SPA/AIF</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>SPA</th>
-                                                    <th>SPA APOSTILLED/CONSULARIZED/NOTARIZED</th>
-                                                    <th>AIF ID</th>
-                                                    <th>NAME OF AIF</th>
-                                                    <th>CONTACT NUMBER OF AIF</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.SPA</td>
-                                                    <td>@transaction.BuyerDocument.SPA_ACN</td>
-                                                    <td>@transaction.BuyerDocument.AIFId</td>
-                                                    <td>@transaction.BuyerDocument.NameOfAif</td>
-                                                    <td>@transaction.BuyerDocument.ContactNumberOfAIF</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <!-- Additional Information Buyer info -->
-                                <div class="card mb-4">
-                                    <div class="card-header bg-secondary text-white">
-                                        <strong>Additional Information</strong>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>DOR</th>
-                                                    <th>SPECIFIC INCOME DOCS SUBMITTED</th>
-                                                    <th>ADDITIONAL POI</th>
-                                                    <th>OATH OF ALLEGIANCE</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@transaction.BuyerDocument.DOR</td>
-                                                    <td>@transaction.BuyerDocument.SpecificIncomeDocsSubmitted</td>
-                                                    <td>@transaction.BuyerDocument.AdditionalPOI</td>
-                                                    <td>@transaction.BuyerDocument.OathOfAllegiance</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            }
-                            else
-                            {
-                                <p class="text-muted">No Buyer Document information available for this transaction.</p>
-                            }
-                        }
-                    </div>
                 </div>
             </div>
 
@@ -896,14 +735,7 @@
                                 var proponent = item.ProponentHierarchy[i];
                                 <tr class="@(i == 0 ? "table-primary" : "")">
                                     <td>
-                                        @if (i == 0)
-                                        {
-                                            <span class="badge bg-primary">Primary</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">Reports to Level @(i)</span>
-                                        }
+                                        <span class="badge bg-info">Level @(i + 1)</span>
                                     </td>
                                     <td>@proponent?.Roles</td>
                                     <td>@proponent?.ProponentBpNumber</td>

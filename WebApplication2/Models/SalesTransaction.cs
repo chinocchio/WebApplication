@@ -19,12 +19,12 @@ namespace WebApplication2.Models
         public int? PaymentTermId { get; set; }
         public int? CreditReviewId { get; set; }
         public int? SalesDocumentId { get; set; }
-        public int? BuyerDocumentId { get; set; }
+
+        // Navigation properties
         public CreditReview? CreditReview { get; set; } 
         public Property? Properties { get; set; }
         public BusinessPartner? BusinessPartner { get; set; }
         public PaymentTerm? PaymentTerm { get; set; }
         public SalesDocument? SalesDocument { get; set; }
-        public BuyerDocument? BuyerDocument { get; set; }
     }
 }
