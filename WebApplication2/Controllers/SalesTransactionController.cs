@@ -35,6 +35,12 @@ namespace WebApplication2.Controllers
                 {
                     Value = bp.BusinessPartnerId.ToString(),
                     Text = $"{bp.Role } - {bp.Fullname} - {bp.CustomerCode}"
+                }).ToList(),
+
+                SalesProponents = _context.SalesProponents.Select(sp => new SelectListItem
+                {
+                    Value = sp.ProponentBpNumber.ToString(),
+                    Text = $"{sp.Roles} - {sp.Fullname} - {sp.ProponentBpNumber}"
                 }).ToList()
             };
 
@@ -90,6 +96,7 @@ namespace WebApplication2.Controllers
                         NewColorStatus = model.NewColorStatus,
                         BusinessPartnerId = businessPartner.BusinessPartnerId,
                         PropertyId = model.SelectedPropertyId.Value,
+                        ProponentBpNumber = model.SelectedProponentBpNumber,
                         HoldingDate = DateOnly.FromDateTime(DateTime.Now)
                     };
 
@@ -113,6 +120,12 @@ namespace WebApplication2.Controllers
             {
                 Value = bp.BusinessPartnerId.ToString(),
                 Text = $"{bp.Fullname} - {bp.CustomerCode}"
+            }).ToList();
+
+            model.SalesProponents = _context.SalesProponents.Select(sp => new SelectListItem
+            {
+                Value = sp.ProponentBpNumber.ToString(),
+                Text = $"{sp.Roles} - {sp.Fullname} - {sp.ProponentBpNumber}"
             }).ToList();
 
             return View(model);

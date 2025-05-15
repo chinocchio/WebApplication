@@ -285,6 +285,21 @@
             </div>
         </div>
 
+        <div class="form-card">
+            <div class="card-header">
+                <i class="bi bi-person-badge me-2"></i>Sales Proponent Information
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="SelectedProponentBpNumber" class="form-label">Select Sales Proponent <span class="text-danger">*</span></label>
+                    <select asp-for="SelectedProponentBpNumber" asp-items="Model.SalesProponents" class="form-select" required>
+                        <option value="">-- Select a Sales Proponent --</option>
+                    </select>
+                    <span asp-validation-for="SelectedProponentBpNumber" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
         <div class="btn-group">
             <a asp-action="SearchResults" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i>Back to List

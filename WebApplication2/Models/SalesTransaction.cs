@@ -15,7 +15,7 @@ namespace WebApplication2.Models
         public string? NewColorStatus { get; set; } = string.Empty;
         public int? BusinessPartnerId { get; set; }
         public int? PropertyId { get; set; }
-        public int? SalesProponentsId { get; set; }
+        public long? ProponentBpNumber { get; set; }
         public int? PaymentTermId { get; set; }
         public int? CreditReviewId { get; set; }
         public int? SalesDocumentId { get; set; }
@@ -23,7 +23,6 @@ namespace WebApplication2.Models
         public CreditReview? CreditReview { get; set; } 
         public Property? Properties { get; set; }
         public BusinessPartner? BusinessPartner { get; set; }
-        public SalesProponent? SalesProponent { get; set; }
         public PaymentTerm? PaymentTerm { get; set; }
         public SalesDocument? SalesDocument { get; set; }
         public BuyerDocument? BuyerDocument { get; set; }

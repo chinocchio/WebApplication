@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApplication2.Models;
 
@@ -27,6 +26,9 @@ namespace WebApplication2.ViewModels
         public int? SelectedPropertyId { get; set; }
         public List<SelectListItem>? Properties { get; set; }
 
+        // For selecting a sales proponent
+        public long? SelectedProponentBpNumber { get; set; }
+        public List<SelectListItem>? SalesProponents { get; set; }
 
         // SalesTransaction Fields
         public long ContractNumber { get; set; }
