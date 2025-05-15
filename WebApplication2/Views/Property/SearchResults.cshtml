@@ -155,6 +155,15 @@
         opacity: 1;
         transform: translateY(0);
     }
+    .badge-lightgreen {
+        background-color: #a5d6a7 !important; /* matches your --primary-light */
+        color: #195c4b !important;           /* matches your --primary-color */
+        border-radius: 8px;
+        padding: 0.25em 0.75em;
+        font-weight: 600;
+        font-size: 0.95em;
+        border: none;
+    }
 </style>
 
 @* Add Bootstrap Icons CDN if not already present *@
@@ -243,6 +252,8 @@
                                         <span class="badge bg-warning text-dark">YELLOW</span>
                                     } else if (transaction.NewColorStatus?.ToUpper() == "RED") {
                                         <span class="badge bg-danger">RED</span>
+                                    } else if (transaction.NewColorStatus?.ToUpper() == "LIGHT GREEN") {
+                                        <span class="badge badge-lightgreen">LIGHT GREEN</span>
                                     } else {
                                         <span class="badge bg-secondary">@transaction.NewColorStatus</span>
                                     }
