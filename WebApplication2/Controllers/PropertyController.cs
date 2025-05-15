@@ -31,7 +31,6 @@ namespace WebApplication2.Controllers
                         .AsNoTracking()
                         .Include(st => st.Properties)
                         .Include(st => st.BusinessPartner)
-                        .Include(st => st.SalesProponent)
                         .Include(st => st.PaymentTerm)
                         .Include(st => st.CreditReview)
                         .Include(st => st.BuyerDocument)
@@ -45,7 +44,8 @@ namespace WebApplication2.Controllers
                     st.ContractNumber.ToString().Contains(searchTerm) ||
                     st.BusinessPartner.Fullname.ToLower().Contains(searchTerm) ||
                     st.BusinessPartner.CustomerCode.ToString().Contains(searchTerm) ||
-                    st.Properties.UnitCode.ToLower().Contains(searchTerm)
+                    st.Properties.UnitCode.ToLower().Contains(searchTerm) ||
+                    st.ProponentBpNumber.ToString().Contains(searchTerm)
                 );
             }
 
@@ -60,6 +60,18 @@ namespace WebApplication2.Controllers
             var allDocumentsForSubmission = await _context.DocumentForSubmissions
                 .AsNoTracking()
                 .ToListAsync();
+
+            // Get all unique ProponentBpNumbers from the transactions
+            var proponentBpNumbers = salesTransactions
+                .Where(st => st.ProponentBpNumber.HasValue)
+                .Select(st => st.ProponentBpNumber.Value)
+                .Distinct()
+                .ToList();
+
+            // Fetch all SalesProponents in one query (we need all of them for the hierarchy)
+            var allSalesProponents = await _context.SalesProponents
+                .AsNoTracking()
+                .ToDictionaryAsync(sp => sp.ProponentBpNumber);
 
             var result = salesTransactions.Select(st => {
                 var submittedForThis = submittedDocuments
@@ -77,12 +89,42 @@ namespace WebApplication2.Controllers
                    .Where(bl => bl.ContractNumber == st.ContractNumber)
                    .ToList();
 
+                // Get the initial proponent
+                allSalesProponents.TryGetValue(st.ProponentBpNumber ?? 0, out var initialProponent);
+
+                // Build the reporting hierarchy
+                var proponentHierarchy = new List<SalesProponent>();
+                if (initialProponent != null)
+                {
+                    var currentProponent = initialProponent;
+                    proponentHierarchy.Add(currentProponent);
+
+                    // Follow the reporting chain until we reach someone with no reporting to
+                    while (!string.IsNullOrEmpty(currentProponent.ReportingTo))
+                    {
+                        // Try to find the next person in the reporting chain
+                        var reportingToNumber = long.TryParse(currentProponent.ReportingTo, out var number) ? number : 0;
+                        if (reportingToNumber > 0 && allSalesProponents.TryGetValue(reportingToNumber, out var nextProponent))
+                        {
+                            proponentHierarchy.Add(nextProponent);
+                            currentProponent = nextProponent;
+                        }
+                        else
+                        {
+                            // Break if we can't find the next person
+                            break;
+                        }
+                    }
+                }
+
                 return new SalesTransactionWithDocumentsViewModel
                 {
                     SalesTransaction = st,
                     SubmittedDocuments = submittedForThis,
                     DocumentsForSubmission = remainingRequired,
-                    BuyerLedgers = matchingLedgers
+                    BuyerLedgers = matchingLedgers,
+                    SalesProponent = initialProponent,
+                    ProponentHierarchy = proponentHierarchy
                 };
             }).ToList();
 

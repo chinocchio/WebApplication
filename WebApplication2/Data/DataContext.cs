@@ -22,6 +22,8 @@ namespace WebApplication2.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<SalesTransaction>()
                 .HasOne(st => st.Properties)
                 .WithMany(p => p.SalesTransaction)
@@ -30,10 +32,6 @@ namespace WebApplication2.Data
                 .HasOne(st => st.BusinessPartner)
                 .WithMany(bp => bp.SalesTransaction)
                 .HasForeignKey(st => st.BusinessPartnerId);
-            modelBuilder.Entity<SalesTransaction>()
-                .HasOne(st => st.SalesProponent)
-                .WithMany(sp => sp.SalesTransaction)
-                .HasForeignKey(st => st.SalesProponentsId);
             modelBuilder.Entity<SalesTransaction>()
                 .HasOne(st => st.PaymentTerm)
                 .WithMany(rf => rf.SalesTransaction)
@@ -52,5 +50,5 @@ namespace WebApplication2.Data
                 .HasForeignKey(sd => sd.SalesDocumentId);
         }
     }
-    }
+}
 
