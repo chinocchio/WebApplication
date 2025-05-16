@@ -10,7 +10,7 @@ namespace WebApplication2.ViewModels
         // Dropdown selection
         public int? SelectedBusinessPartnerId { get; set; }
         public List<SelectListItem>? ExistingBusinessPartners { get; set; }
-
+        public int SalesTransactionId { get; set; }
         // New Business Partner fields (if not selecting existing one)
         public string? Role { get; set; }
         public string? Fullname { get; set; }
