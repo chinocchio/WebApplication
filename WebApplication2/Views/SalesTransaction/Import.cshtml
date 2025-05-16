@@ -1,0 +1,99 @@
+@model WebApplication2.ViewModels.SalesTransactionImportViewModel
+
+@{
+    ViewData["Title"] = "Import Sales Transactions";
+}
+
+<div class="container mt-4">
+    <h2>Import Sales Transactions</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Import" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Upload File</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="File" class="form-label">Select Excel or CSV File</label>
+                            <input asp-for="File" class="form-control" type="file" accept=".xlsx,.xls,.csv" />
+                            <span asp-validation-for="File" class="text-danger"></span>
+                            <div class="form-text">
+                                Supported file types: .xlsx, .xls, .csv<br />
+                                The file should contain the following columns:<br />
+                                ContractNumber, TypeOfSale, HoldingDate, TransactionType, StatusInGeneral, Milestone, NewColorStatus
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload and Import
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+
+            @if (Model.ImportErrors != null && Model.ImportErrors.Any())
+            {
+                <div class="card mt-4">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0">Import Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>Successfully imported:</strong> @Model.SuccessCount records<br />
+                            <strong>Errors encountered:</strong> @Model.ErrorCount records
+                        </p>
+                        <div class="alert alert-danger">
+                            <h6>Error Details:</h6>
+                            <ul class="mb-0">
+                                @foreach (var error in Model.ImportErrors)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Instructions</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Required Columns:</h6>
+                    <ul>
+                        <li><strong>ContractNumber</strong> (Required, Number)</li>
+                        <li><strong>TypeOfSale</strong> (Optional, Text)</li>
+                        <li><strong>HoldingDate</strong> (Required, Date)</li>
+                        <li><strong>TransactionType</strong> (Optional, Text)</li>
+                        <li><strong>StatusInGeneral</strong> (Optional, Text)</li>
+                        <li><strong>Milestone</strong> (Optional, Text)</li>
+                        <li><strong>NewColorStatus</strong> (Optional, Text)</li>
+                    </ul>
+                    <h6>Notes:</h6>
+                    <ul>
+                        <li>The first row should contain column headers</li>
+                        <li>Dates should be in format: M/D/YY (e.g., 5/21/22) or M/D/YYYY (e.g., 5/21/2022)</li>
+                        <li>Contract Numbers must be valid numbers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 
