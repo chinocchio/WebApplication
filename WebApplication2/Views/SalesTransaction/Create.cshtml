@@ -275,12 +275,32 @@
                 <i class="bi bi-house me-2"></i>Property Information
             </div>
             <div class="card-body">
-                <div class="form-group">
-                    <label asp-for="SelectedPropertyId" class="form-label">Select Property <span class="text-danger">*</span></label>
-                    <select asp-for="SelectedPropertyId" asp-items="Model.Properties" class="form-select" required>
-                        <option value="">-- Select a Property --</option>
-                    </select>
-                    <span asp-validation-for="SelectedPropertyId" class="text-danger"></span>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="SelectedProjectName" class="form-label">Project Name <span class="text-danger">*</span></label>
+                            <select asp-for="SelectedProjectName" asp-items="Model.ProjectNames" class="form-select" required id="projectNameSelect">
+                                <option value="">-- Select Project --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="SelectedBuildingPhase" class="form-label">Building Phase <span class="text-danger">*</span></label>
+                            <select asp-for="SelectedBuildingPhase" asp-items="Model.BuildingPhases" class="form-select" required id="buildingPhaseSelect" disabled>
+                                <option value="">-- Select Building Phase --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="SelectedPropertyId" class="form-label">Available Units <span class="text-danger">*</span></label>
+                            <select asp-for="SelectedPropertyId" asp-items="Model.Properties" class="form-select" required id="propertySelect" disabled>
+                                <option value="">-- Select Unit --</option>
+                            </select>
+                            <span asp-validation-for="SelectedPropertyId" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -330,9 +350,107 @@
         toggleNewFields();
         dropdown.addEventListener("change", toggleNewFields);
 
-        document.querySelector('form').addEventListener('submit', function() {
-            document.getElementById('submitBtn').disabled = true;
-            document.getElementById('spinner').classList.remove('d-none');
+        // Enhanced property selection cascading dropdowns
+        const projectSelect = document.getElementById('projectNameSelect');
+        const phaseSelect = document.getElementById('buildingPhaseSelect');
+        const propertySelect = document.getElementById('propertySelect');
+
+        async function loadBuildingPhases() {
+            try {
+                phaseSelect.innerHTML = '<option value="">-- Select Building Phase --</option>';
+                propertySelect.innerHTML = '<option value="">-- Select Unit --</option>';
+                phaseSelect.disabled = !projectSelect.value;
+                propertySelect.disabled = true;
+
+                if (projectSelect.value) {
+                    const response = await fetch(`/SalesTransaction/GetBuildingPhases?projectName=${encodeURIComponent(projectSelect.value)}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const phases = await response.json();
+                    console.log('Loaded phases:', phases); // Debug log
+
+                    if (phases && phases.length > 0) {
+                        phases.forEach(phase => {
+                            const option = new Option(phase, phase);
+                            phaseSelect.add(option);
+                        });
+                    } else {
+                        console.log('No phases found for project:', projectSelect.value);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading building phases:', error);
+                alert('Failed to load building phases. Please try again.');
+            }
+        }
+
+        async function loadAvailableUnits() {
+            try {
+                propertySelect.innerHTML = '<option value="">-- Select Unit --</option>';
+                propertySelect.disabled = !phaseSelect.value;
+
+                if (projectSelect.value && phaseSelect.value) {
+                    const response = await fetch(
+                        `/SalesTransaction/GetAvailableUnits?projectName=${encodeURIComponent(projectSelect.value)}&buildingPhase=${encodeURIComponent(phaseSelect.value)}`
+                    );
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const units = await response.json();
+                    console.log('Loaded units:', units); // Debug log
+
+                    if (units && units.length > 0) {
+                        units.forEach(unit => {
+                            const option = new Option(unit.unitCode, unit.propertyId);
+                            propertySelect.add(option);
+                        });
+                    } else {
+                        console.log('No units found for project:', projectSelect.value, 'and phase:', phaseSelect.value);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading available units:', error);
+                alert('Failed to load available units. Please try again.');
+            }
+        }
+
+        // Event listeners
+        projectSelect.addEventListener('change', loadBuildingPhases);
+        phaseSelect.addEventListener('change', loadAvailableUnits);
+
+        // Form submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('spinner');
+            
+            // Basic validation
+            if (!projectSelect.value) {
+                e.preventDefault();
+                alert('Please select a project');
+                return;
+            }
+            if (!phaseSelect.value) {
+                e.preventDefault();
+                alert('Please select a building phase');
+                return;
+            }
+            if (!propertySelect.value) {
+                e.preventDefault();
+                alert('Please select a unit');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            spinner.classList.remove('d-none');
         });
+
+        // Initial load if values are pre-selected (e.g., after validation failure)
+        if (projectSelect.value) {
+            loadBuildingPhases();
+            if (phaseSelect.value) {
+                loadAvailableUnits();
+            }
+        }
     </script>
 }
