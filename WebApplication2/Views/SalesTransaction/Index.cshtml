@@ -1,0 +1,84 @@
+@model IEnumerable<WebApplication2.Models.SalesTransaction>
+
+@{
+    ViewData["Title"] = "Sales Transactions";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-cart-check me-2"></i>Sales Transactions
+        </h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Create New
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Contract Number</th>
+                            <th>Type of Sale</th>
+                            <th>Holding Date</th>
+                            <th>Transaction Type</th>
+                            <th>Promo Discount</th>
+                            <th>Status</th>
+                            <th>Milestone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ContractNumber</td>
+                                <td>@item.TypeOfSale</td>
+                                <td>@item.HoldingDate.ToString("MM/dd/yyyy")</td>
+                                <td>@item.TransactionType</td>
+                                <td>@item.PromoDiscount</td>
+                                <td>
+                                    <span class="badge bg-@(item.NewColorStatus?.ToLower() == "green" ? "success" : 
+                                                      item.NewColorStatus?.ToLower() == "yellow" ? "warning" : 
+                                                      item.NewColorStatus?.ToLower() == "red" ? "danger" : "secondary")">
+                                        @item.StatusInGeneral
+                                    </span>
+                                </td>
+                                <td>@item.Milestone</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-action="Edit" asp-route-id="@item.SalesTransactionId" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.SalesTransactionId" class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-info-circle"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.table').DataTable({
+                "order": [[0, "desc"]],
+                "pageLength": 25,
+                "language": {
+                    "search": "Search transactions:",
+                    "lengthMenu": "Show _MENU_ transactions per page",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ transactions"
+                }
+            });
+        });
+    </script>
+} 
