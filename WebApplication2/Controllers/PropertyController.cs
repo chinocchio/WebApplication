@@ -235,7 +235,7 @@ namespace WebApplication2.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(SearchResults));
             }
             return View(property);
         }
@@ -264,13 +264,21 @@ namespace WebApplication2.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var property = await _context.Properties.FindAsync(id);
-            if (property != null)
+            if (property == null)
+            {
+                return Json(new { success = false, message = "Property not found." });
+            }
+
+            try
             {
                 _context.Properties.Remove(property);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Property deleted successfully." });
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error deleting property: " + ex.Message });
+            }
         }
 
         private bool PropertyExists(int id)
