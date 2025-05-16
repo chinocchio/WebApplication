@@ -1,0 +1,842 @@
+@using Microsoft.EntityFrameworkCore
+@inject WebApplication2.Data.DataContext _context
+@model WebApplication2.ViewModels.PropertyListViewModel
+@using System.Linq
+@using Microsoft.AspNetCore.Html
+@functions {
+    public IHtmlContent Highlight(string input, string searchTerm)
+    {
+        if (string.IsNullOrEmpty(searchTerm) || string.IsNullOrEmpty(input))
+            return new HtmlString(input ?? "");
+        var regex = new System.Text.RegularExpressions.Regex(
+            System.Text.RegularExpressions.Regex.Escape(searchTerm),
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        var result = regex.Replace(input, m => $"<mark>{m.Value}</mark>");
+        return new HtmlString(result);
+    }
+}
+@{
+    ViewData["Title"] = "Search Results";
+    Layout = "_Layout";
+}
+
+<!-- Spinner Overlay, parang loading ng buhay mo pag naghihintay ka ng reply. -->
+<div id="spinnerOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(255,255,255,0.7); z-index:2000; align-items:center; justify-content:center;">
+    <div class="spinner-border text-success" style="width: 4rem; height: 4rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<!-- Style section, dito mo palalabasin ang tunay mong galing sa design. -->
+<style>
+    :root {
+        --primary-bg: #fff;
+        --primary-text: #222;
+        --card-bg: #fff;
+        --border-color: #e0e0e0;
+        --table-header-bg: #f8f9fa;
+        --table-row-hover: #f1f3f4;
+        --badge-success-bg: #198754;
+        --badge-danger-bg: #dc3545;
+        --badge-warning-bg: #ffc107;
+        --badge-secondary-bg: #6c757d;
+        --alert-info-bg: #d1ecf1;
+        --alert-info-text: #0c5460;
+        --alert-success-bg: #d4edda;
+        --alert-success-text: #155724;
+        --alert-warning-bg: #fff3cd;
+        --alert-warning-text: #856404;
+    }
+    /* Dark mode, para sa mga ayaw sa liwanag ng katotohanan. */
+    body.dark-mode {
+        --primary-bg: #181a1b;
+        --primary-text: #f1f1f1;
+        --card-bg: #23272b;
+        --border-color: #343a40;
+        --table-header-bg: #23272b;
+        --table-row-hover: #23272b;
+        --badge-success-bg: #25a244;
+        --badge-danger-bg: #e63946;
+        --badge-warning-bg: #ffd166;
+        --badge-secondary-bg: #adb5bd;
+        --alert-info-bg: #22313a;
+        --alert-info-text: #b8e0ef;
+        --alert-success-bg: #223a2a;
+        --alert-success-text: #b8efc2;
+        --alert-warning-bg: #4d4a1a;
+        --alert-warning-text: #ffe066;
+    }
+    /* Container, parang balot ng lumpia. Dito lahat ng laman! */
+    body, .container {
+        background: var(--primary-bg) !important;
+        color: var(--primary-text) !important;
+        transition: background 0.3s, color 0.3s;
+    }
+    /* Card, para sa mga gusto ng sosyal na table. */
+    .card, .form-card, .card-body, .bg-light {
+        background: var(--card-bg) !important;
+        color: var(--primary-text) !important;
+        border-color: var(--border-color) !important;
+        transition: background 0.3s, color 0.3s, border-color 0.3s;
+    }
+    /* Table header, parang teacher na mahilig magturo. */
+    .table th {
+        background: var(--table-header-bg) !important;
+        color: var(--primary-text) !important;
+    }
+    /* Table row hover, para sa mga mahilig mag-stalk. */
+    .table tr:hover {
+        background: var(--table-row-hover) !important;
+    }
+    /* Badge, parang medalya ng mga achiever. */
+    .badge.bg-success {
+        background: var(--badge-success-bg) !important;
+        color: #fff !important;
+    }
+    .badge.bg-danger {
+        background: var(--badge-danger-bg) !important;
+        color: #fff !important;
+    }
+    .badge.bg-warning {
+        background: var(--badge-warning-bg) !important;
+        color: #222 !important;
+    }
+    .badge.bg-secondary {
+        background: var(--badge-secondary-bg) !important;
+        color: #fff !important;
+    }
+    /* Alert, para sa mga mahilig magpaalala. */
+    .alert-info {
+        background: var(--alert-info-bg) !important;
+        color: var(--alert-info-text) !important;
+        border: none;
+    }
+    .alert-success {
+        background: var(--alert-success-bg) !important;
+        color: var(--alert-success-text) !important;
+        border: none;
+    }
+    .alert-warning, .text-bg-warning {
+        background: var(--alert-warning-bg) !important;
+        color: var(--alert-warning-text) !important;
+        border: none;
+    }
+    /* Table primary, parang honor student ng table rows. */
+    .table-primary {
+        background: rgba(0,123,255,0.08) !important;
+        color: var(--primary-text) !important;
+    }
+    /* Tabs, para sa mga mahilig mag-multitask. */
+    .nav-tabs .nav-link.active {
+        background: var(--card-bg) !important;
+        color: var(--primary-text) !important;
+        border-color: var(--border-color) var(--border-color) var(--card-bg) !important;
+    }
+    .nav-tabs .nav-link {
+        color: var(--primary-text) !important;
+        transition: color 0.3s;
+    }
+    .tab-content {
+        background: var(--card-bg) !important;
+        color: var(--primary-text) !important;
+        border-color: var(--border-color) !important;
+    }
+    /* Spinner overlay for dark mode, para sa mga ayaw magpahuli sa loading. */
+    #spinnerOverlay {
+        background: rgba(24,26,27,0.7);
+    }
+    /* Tab pane, parang kwarto ng magkakapatid. May kanya-kanyang mundo! */
+    .tab-pane.fade {
+        transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.4,2,.6,1);
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    .tab-pane.fade.show.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .badge-lightgreen {
+        background-color: #a5d6a7 !important; /* matches your --primary-light */
+        color: #195c4b !important;           /* matches your --primary-color */
+        border-radius: 8px;
+        padding: 0.25em 0.75em;
+        font-weight: 600;
+        font-size: 0.95em;
+        border: none;
+    }
+</style>
+
+@* Add Bootstrap Icons CDN if not already present *@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<!-- Container, parang lunchbox ng estudyante. Dito lahat ng baon mo! -->
+<div class="container mt-4">
+   
+    <h2>Search Results</h2>
+    
+    <!-- Alert, parang text ng nanay mo pag late ka na. -->
+    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+    {
+        <div class="alert alert-info">
+            Showing results for: <strong>@ViewBag.SearchTerm</strong>
+        </div>
+    }
+
+    <!-- Result count, parang attendance check sa klase. -->
+    @if (ViewBag.SalesTransactions != null && ViewBag.SalesTransactions.Count > 0)
+    {
+        <div class="mb-3">
+            <span class="badge bg-success fs-6">
+                @ViewBag.SalesTransactions.Count result@(ViewBag.SalesTransactions.Count == 1 ? "" : "s") found for:
+                <strong>@ViewBag.SearchTerm</strong>
+            </span>
+        </div>
+        <!-- Tabs, parang barkadahan na may kanya-kanyang trip. -->
+        <ul class="nav nav-tabs mt-4" id="transactionTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="sales-tab" data-bs-toggle="tab" href="#sales" role="tab">
+                    <i class="bi bi-bar-chart"></i> Sales Info
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="buyer-tab" data-bs-toggle="tab" href="#buyer" role="tab">
+                    <i class="bi bi-person-lines-fill"></i> Buyer Info
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="property-tab" data-bs-toggle="tab" href="#property" role="tab">
+                    <i class="bi bi-house-door"></i> Property Info
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="proponent-tab" data-bs-toggle="tab" href="#proponent" role="tab">
+                    <i class="bi bi-people"></i> Sales Proponent Info
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tab content, parang group chat na may topic bawat isa. -->
+        <div class="tab-content border p-3" id="transactionTabsContent">
+            <div class="tab-pane fade show active" id="sales" role="tabpanel">
+                <!-- Table, parang roll call ng tropa. -->
+                <table class="table mt-3 d-none d-md-table">
+                    <thead>
+                        <tr>
+                            <th>Contract Number</th>
+                            <th>Type of Sale</th>
+                            <th>Holding Date</th>
+                            <th>Promo Discount</th>
+                            <th>Transaction Type</th>
+                            <th>Milestone</th>
+                            <th>Status Color</th>
+                            <th>Status In General</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.SalesTransactions)
+                        {
+                            var transaction = item.SalesTransaction;
+                            var targetId = $"details_{transaction.SalesTransactionId}";
+
+                            <tr class="clickable-row table-primary" style="cursor:pointer;" data-bs-target="@targetId">
+                                <td>@Highlight(transaction.ContractNumber?.ToString(), ViewBag.SearchTerm as string)</td>
+                                <td>@transaction.TypeOfSale</td>
+                                <td>@transaction.HoldingDate</td>
+                                <td>@transaction.PromoDiscount</td>
+                                <td>@transaction.TransactionType</td>
+                                <td>@transaction.Milestone</td>
+                                <td>
+                                    @if (transaction.NewColorStatus?.ToUpper() == "GREEN") {
+                                        <span class="badge bg-success">GREEN</span>
+                                    } else if (transaction.NewColorStatus?.ToUpper() == "YELLOW") {
+                                        <span class="badge bg-warning text-dark">YELLOW</span>
+                                    } else if (transaction.NewColorStatus?.ToUpper() == "RED") {
+                                        <span class="badge bg-danger">RED</span>
+                                    } else if (transaction.NewColorStatus?.ToUpper() == "LIGHT GREEN") {
+                                        <span class="badge badge-lightgreen">LIGHT GREEN</span>
+                                    } else {
+                                        <span class="badge bg-secondary">@transaction.NewColorStatus</span>
+                                    }
+                                </td>
+                                <td>@transaction.StatusInGeneral</td>
+                            </tr>
+
+                            <tr id="@targetId" class="d-none bg-light">
+                                <td colspan="8">
+                                    <!-- Sales Document and Credit Review Tabs -->
+                                    <ul class="nav nav-tabs mt-3" id="salesDocTabs_@transaction.SalesTransactionId" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="salesDoc-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#salesDocContent-@transaction.SalesTransactionId" type="button" role="tab">
+                                                Documents
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="resarvationFee-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#resarvationFeeContent-@transaction.SalesTransactionId" type="button" role="tab">
+                                                Payment Term 
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="buyerLedger-tab-@transaction.SalesTransactionId" data-bs-toggle="tab" data-bs-target="#buyerLedgerContent-@transaction.SalesTransactionId" type="button" role="tab">
+                                                Buyer's Ledger
+                                            </button>
+                                        </li>
+                                    </ul>
+
+                                    <!-- Tab content for Document submitted -->
+                                    <div class="tab-content p-3 border" id="salesDocTabsContent_@transaction.SalesTransactionId">
+                                        <div class="tab-pane fade show active" id="salesDocContent-@transaction.SalesTransactionId" role="tabpanel">
+                                            <!-- Submitted Documents Section -->
+                                            @if (item.SubmittedDocuments != null && item.SubmittedDocuments.Count > 0)
+                                            {
+                                                <div class="card mb-4">
+                                                    <div class="card-header bg-success text-white">
+                                                        <strong>
+                                                            Submitted Documents
+                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
+                                                                @item.SubmittedDocuments.Count
+                                                            </span>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="card-body p-3">
+                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>Document Code</th>
+                                                                    <th>Document Name</th>
+                                                                    <th>Customer Code</th>
+                                                                    <th>Date Submitted</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var doc in item.SubmittedDocuments)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@doc.DocumentCode</td>
+                                                                        <td>@doc.DocumentName</td>
+                                                                        <td>@doc.CustomerCode</td>
+                                                                        <td>@doc.DateSubmitted</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <p>No submitted documents.</p>
+                                            }
+
+                                            <!-- Required Documents Section -->
+                                            @if (item.DocumentsForSubmission != null && item.DocumentsForSubmission.Count > 0)
+                                            {
+                                                <div class="card mb-4">
+                                                    <div class="card-header bg-success text-white">
+                                                        <strong>
+                                                            Required Documents
+                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
+                                                                @item.DocumentsForSubmission.Count
+                                                            </span>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="card-body p-3">
+                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>Document Code</th>
+                                                                    <th>Document Name</th>
+                                                                    <th>Finance Type</th>
+                                                                    <th>Location</th>
+                                                                    <th>Source of Income</th>
+                                                                    <th>Group</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var reqDoc in item.DocumentsForSubmission)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@reqDoc.DocumentCode</td>
+                                                                        <td>@reqDoc.DocumentName</td>
+                                                                        <td>@reqDoc.DocumentFinanceType</td>
+                                                                        <td>@reqDoc.DocumentLocation</td>
+                                                                        <td>@reqDoc.DocumentSourceOfIncome</td>
+                                                                        <td>@reqDoc.DocumentGroup</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted">No required documents listed.</p>
+                                            }
+                                        </div>
+
+                                        <div class="tab-pane fade" id="resarvationFeeContent-@transaction.SalesTransactionId" role="tabpanel">
+                                            @if (transaction.PaymentTerm != null)
+                                            {
+                                                <dl class="row">
+                                                    <dt class="col-sm-3">RF AMOUNT PAID TO UNIT:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountPaidToUnit</dd>
+
+                                                    <dt class="col-sm-3">RF AMOUNT PAID TO GMTOE:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountPaidToGMTOE</dd>
+
+                                                    <dt class="col-sm-3">TOTAL:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfAmountGMTOE_Unit</dd>
+
+                                                    <dt class="col-sm-3">RF CREDITED:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfDateCredited</dd>
+
+                                                    <dt class="col-sm-3">RF OR NUMBER:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.RfOrNumber</dd>
+
+                                                    <dt class="col-sm-3">PAYMENT TERM:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.Paymentterm</dd>
+
+                                                    <dt class="col-sm-3">% TOB:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.PercentTOB</dd>
+
+                                                    <dt class="col-sm-3">TOB MODE OF PAYMENT BANK/CASH:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TOBModeOfPayment</dd>
+
+                                                    <dt class="col-sm-3">TOB:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TOB</dd>
+
+                                                    <dt class="col-sm-3">ESTIMATED BANK MA at 7.5%:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.EstimatedBankMAFor7Point5Percent</dd>
+
+                                                    <dt class="col-sm-3">START DATE ( 1st MA):</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.StartDate1stMA</dd>
+
+                                                    <dt class="col-sm-3">UNIT/PARKING:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.UnitParking</dd>
+
+                                                    <dt class="col-sm-3">TRANSFER FEE:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.TransferFee</dd>
+
+                                                    <dt class="col-sm-3">AMOUNT PAID TO UNIT:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.AmountPaidToUnit</dd>
+
+                                                    <dt class="col-sm-3">AMOUNT PAID TO TRANSFER FEE:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.AmountPaidToTF</dd>
+
+                                                    <dt class="col-sm-3">DATE PAID:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.DatePaid</dd>
+
+                                                    <dt class="col-sm-3">FIRST MA OR NUMBER:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.FirstMAOrNumber</dd>
+
+                                                    <dt class="col-sm-3">PAYMENT DUE DATE:</dt>
+                                                    <dd class="col-sm-9">@transaction.PaymentTerm.PaymentDueDate</dd>
+                                                </dl>
+                                            }
+                                            else
+                                            {
+                                                <em class="text-muted">No payment term data available.</em>
+                                            }
+                                        </div>
+
+                                        <div class="tab-pane fade" id="buyerLedgerContent-@transaction.SalesTransactionId" role="tabpanel">
+                                            @if (item.BuyerLedgers != null && item.BuyerLedgers.Count > 0)
+                                            {
+                                                <div class="card mb-4">
+                                                    <div class="card-header bg-success text-white">
+                                                        <strong>
+                                                            Buyer's Ledger Entries
+                                                            <span class="badge bg-danger" style="font-size: 0.60rem; vertical-align: middle;">
+                                                                @item.BuyerLedgers.Count
+                                                            </span>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="card-body p-3">
+                                                        <table class="table table-bordered table-striped table-sm text-center align-middle">
+                                                            <thead class="table-light">
+                                                                <tr>
+
+                                                                    <th>Customer Code</th>
+                                                                    <th>Unit Code</th>
+                                                                    <th>Paid FT</th>
+                                                                    <th>INV.NO.</th>
+                                                                    <th>Amount Due</th>
+                                                                    <th>Paid Mode</th>
+                                                                    <th>When Due</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var ledger in item.BuyerLedgers)
+                                                                {
+                                                                    <tr>
+
+                                                                        <td>@ledger.CustomerCode</td>
+                                                                        <td>@ledger.UnitCode</td>
+                                                                        <td>@ledger.PaymentNumber</td>
+                                                                        <td>@ledger.PaymentReferenceDocNumber</td>
+                                                                        <td>@ledger.AmountDue.ToString("N2")</td>
+                                                                        <td>@ledger.PaymentReferenceDocType</td>
+                                                                        <td>@ledger.WhenDue</td>
+
+                                                                    </tr>
+                                                                }
+                                                                <tr class="table-secondary fw-bold">
+                                                                    <td colspan="4" class="text-end">Total Amount Due:</td>
+                                                                    <td>
+                                                                        @{
+                                                                            decimal totalAmountDue = 0m;
+                                                                            foreach (var ledger in item.BuyerLedgers)
+                                                                            {
+                                                                                totalAmountDue += (decimal)(ledger.AmountDue ?? 0);
+                                                                            }
+                                                                        }
+                                                                        @totalAmountDue.ToString("N2")
+
+                                                                    </td>
+                                                                    <td colspan="2"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <p>No ledger entries available for this contract.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <!-- Card layout for mobile -->
+                <div class="d-md-none">
+                    @foreach (var item in ViewBag.SalesTransactions)
+                    {
+                        var transaction = item.SalesTransaction;
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title mb-2">
+                                    <span class="text-success fw-bold">Contract:</span>
+                                    @Highlight(transaction.ContractNumber?.ToString(), ViewBag.SearchTerm as string)
+                                </h5>
+                                <div class="mb-1"><strong>Type of Sale:</strong> @transaction.TypeOfSale</div>
+                                <div class="mb-1"><strong>Holding Date:</strong> @transaction.HoldingDate</div>
+                                <div class="mb-1"><strong>Promo Discount:</strong> @transaction.PromoDiscount</div>
+                                <div class="mb-1"><strong>Transaction Type:</strong> @transaction.TransactionType</div>
+                                <div class="mb-1"><strong>Milestone:</strong> @transaction.Milestone</div>
+                                <div class="mb-1"><strong>Status Color:</strong> @transaction.NewColorStatus</div>
+                                <div class="mb-1"><strong>Status In General:</strong> @transaction.StatusInGeneral</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="buyer" role="tabpanel">
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th>Client's Name</th>
+                            <th>Role</th>
+                            <th>Customer Code</th>
+                            <th>Client Base</th>
+                            <th>Contact Number</th>
+                            <th>Email Address</th>
+                            <th>ID Submitted</th>
+                            <th>Date ID Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.SalesTransactions)
+                        {
+                            var transaction = item.SalesTransaction;
+                            if (transaction.BusinessPartner?.OtherBuyers != null)
+                            {
+                                foreach (var buyer in transaction.BusinessPartner.OtherBuyers)
+                                {
+                                    <tr>
+                                        <td>@buyer.Fullname</td>
+                                        <td>@buyer.Role</td>
+                                        <td>@buyer.CustomerCode</td>
+                                        <td>@buyer.ClientBase</td>
+                                        <td>@buyer.ContactNumber</td>
+                                        <td>@buyer.EmailAddress</td>
+                                        <td>@buyer.IdSubmitted</td>
+                                        <td>@buyer.IdDateSubmitted</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <!-- Credit Review Tabs -->
+                <ul class="nav nav-tabs" id="creditReviewTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="credit-tab" data-bs-toggle="tab" data-bs-target="#credit" type="button" role="tab">
+                            Credit Review
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content border p-3" id="creditReviewTabsContent">
+                    <div class="tab-pane fade show active" id="credit" role="tabpanel">
+                        @foreach (var item in ViewBag.SalesTransactions)
+                        {
+                            var transaction = item.SalesTransaction;
+                            if (transaction.CreditReview != null)
+                            {
+                                <div class="card mb-4 shadow-sm">
+                                    <div class="card-header bg-success text-white">
+                                        <strong>Credit Review</strong>
+                                    </div>
+                                    <div class="card-body bg-light">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <strong>CI Result:</strong>
+                                                @if (transaction.CreditReview.CreditReviewResult?.ToLower().Contains("clear") == true) {
+                                                    <span class="text-success"><i class="bi bi-check-circle-fill" data-bs-toggle="tooltip" title="Clear with condition"></i></span>
+                                                } else {
+                                                    <span class="text-danger"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" title="Not clear"></i></span>
+                                                }
+                                                <span class="text-dark">@transaction.CreditReview.CreditReviewResult</span><br>
+                                                <strong data-bs-toggle="tooltip" title="Net Disposable Income">NDI Status:</strong>
+                                                @if (transaction.CreditReview.NDIStatus?.ToLower().Contains("low") == true) {
+                                                    <span class="badge bg-warning text-dark">@transaction.CreditReview.NDIStatus</span>
+                                                } else {
+                                                    <span class="badge bg-success">@transaction.CreditReview.NDIStatus</span>
+                                                }<br>
+                                                <strong>Red Tag Reason:</strong>
+                                                @if (!string.IsNullOrEmpty(transaction.CreditReview.RedTagReason) && transaction.CreditReview.RedTagReason != "-") {
+                                                    <span class="text-danger fw-bold">@transaction.CreditReview.RedTagReason</span>
+                                                } else {
+                                                    <span class="text-muted">@transaction.CreditReview.RedTagReason</span>
+                                                }<br>
+                                                <strong>1st Home In PH:</strong> <span>@transaction.CreditReview.FirstHomeInPH</span><br>
+                                                <strong>Project/Unit No. of Other CPGI Unit:</strong> <span>@transaction.CreditReview.ProjectOrUnitCodeOfOtherCPGIUnit</span><br>
+                                                <strong>Total Income (Combined):</strong> <span>@transaction.CreditReview.TotalIncomeCombined</span><br>
+                                                <strong>Net Disposable Income:</strong> <span>@transaction.CreditReview.NetDisposableIncome</span><br>
+                                                <strong>NDI vs Bank MA TOB Amount:</strong> <span>@transaction.CreditReview.NdiVsBankMaTobAmt</span><br>
+                                                <strong>Max Term:</strong> <span>@transaction.CreditReview.MaxTerm</span><br>
+                                                <strong>Immigrant/Non-Immigrant:</strong> <span>@transaction.CreditReview.ImmigrantOrNonImmigrant</span>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <strong>CMAP Result:</strong>
+                                                @if (transaction.CreditReview.CMAPResult?.ToLower().Contains("no adverse") == true) {
+                                                    <span class="text-success"><i class="bi bi-shield-check" data-bs-toggle="tooltip" title="No adverse findings"></i></span>
+                                                } else {
+                                                    <span class="text-danger"><i class="bi bi-exclamation-triangle-fill" data-bs-toggle="tooltip" title="Adverse findings"></i></span>
+                                                }
+                                                <span>@transaction.CreditReview.CMAPResult</span><br>
+                                                <strong>Is Bank Approvable:</strong>
+                                                @if (transaction.CreditReview.IsBankApporvable?.ToLower() == "yes") {
+                                                    <span class="badge bg-success">Yes</span>
+                                                } else if (transaction.CreditReview.IsBankApporvable?.ToLower() == "no") {
+                                                    <span class="badge bg-danger">No</span>
+                                                } else {
+                                                    <span class="badge bg-secondary">-</span>
+                                                }<br>
+                                                <strong>CI Completion Date:</strong> <span>@(transaction.CreditReview.CiCompletionDate.ToString("MM/dd/yyyy"))</span><br>
+                                                <strong>Number of home in PH:</strong> <span>@transaction.CreditReview.NumberOfHomesInPH</span><br>
+                                                <strong>Income Declared Principal (PHP):</strong> <span>@transaction.CreditReview.IncomeDeclaredPb</span><br>
+                                                <strong>Type of Income:</strong> <span>@transaction.CreditReview.TypeOfIncome</span><br>
+                                                <strong>Other Loans:</strong> <span>@transaction.CreditReview.OtherLoans</span><br>
+                                                <strong>Percent of NDI vs MA:</strong> <span>@transaction.CreditReview.PercentOfNdiVsMa</span><br>
+                                                <strong>Estimated Max Term:</strong> <span>@transaction.CreditReview.EstimatedMaxTerm</span><br>
+                                                <strong>High Risk (Y/N):</strong>
+                                                @if (transaction.CreditReview.HighRishk?.ToLower() == "yes") {
+                                                    <span class="badge bg-danger">Yes</span>
+                                                } else if (transaction.CreditReview.HighRishk?.ToLower() == "no") {
+                                                    <span class="badge bg-success">No</span>
+                                                } else {
+                                                    <span class="badge bg-secondary">-</span>
+                                                }
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <strong>CI Remarks:</strong> <span>@transaction.CreditReview.CreditReviewRemarks</span><br>
+                                                <strong>Red Tag:</strong>
+                                                @if (!string.IsNullOrEmpty(transaction.CreditReview.RedTag) && transaction.CreditReview.RedTag != "-") {
+                                                    <span class="text-danger fw-bold"><i class="bi bi-exclamation-circle-fill" data-bs-toggle="tooltip" title="Red Tag"></i> @transaction.CreditReview.RedTag</span>
+                                                } else {
+                                                    <span class="text-muted">@transaction.CreditReview.RedTag</span>
+                                                }<br>
+                                                <strong>Reason For Purchase:</strong> <span>@transaction.CreditReview.ReasonForPurchase</span><br>
+                                                <strong>With Other CPGI Units:</strong> <span>@transaction.CreditReview.WithOtherCPGIUnits</span><br>
+                                                <strong>Income Declared Co-Borrower:</strong> <span>@transaction.CreditReview.IncomeDeclaredCb</span><br>
+                                                <strong>NDI Rate:</strong> <span>@transaction.CreditReview.NdiRate</span><br>
+                                                <strong>Net NDI:</strong> <span>@transaction.CreditReview.NetNdi</span><br>
+                                                <strong>NDI Category:</strong> <span>@transaction.CreditReview.NdiCategory</span><br>
+                                                <strong>Persona Category:</strong> <span>@transaction.CreditReview.PersonaCategory</span><br>
+                                                <strong>High Risk Factor/s:</strong>
+                                                @if (!string.IsNullOrEmpty(transaction.CreditReview.HighRiskFactors) && transaction.CreditReview.HighRiskFactors != "-") {
+                                                    <span class="text-danger">@transaction.CreditReview.HighRiskFactors</span>
+                                                } else {
+                                                    <span class="text-muted">@transaction.CreditReview.HighRiskFactors</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No Credit Review information available for this transaction.</p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="property" role="tabpanel">
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th>Property Type</th>
+                            <th>Project Name</th>
+                            <th>Building/Phase</th>
+                            <th>Unit Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.SalesTransactions)
+                        {
+                            var transaction = item.SalesTransaction;
+                            <tr>
+                                <td>@transaction.Properties?.PropertyType</td>
+                                <td>@transaction.Properties?.ProjectName</td>
+                                <td>@transaction.Properties?.BuildingPhase</td>
+                                <td>@transaction.Properties?.UnitCode</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade" id="proponent" role="tabpanel">
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Role</th>
+                            <th>BP Number</th>
+                            <th>Full Name</th>
+                            <th>Reports To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.SalesTransactions)
+                        {
+                            var transaction = item.SalesTransaction;
+                            for (var i = 0; i < item.ProponentHierarchy.Count; i++)
+                            {
+                                var proponent = item.ProponentHierarchy[i];
+                                <tr class="@(i == 0 ? "table-primary" : "")">
+                                    <td>
+                                        <span class="badge bg-info">Level @(i + 1)</span>
+                                    </td>
+                                    <td>@proponent?.Roles</td>
+                                    <td>@proponent?.ProponentBpNumber</td>
+                                    <td>@proponent?.Fullname</td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(proponent?.ReportingTo))
+                                        {
+                                            <span class="badge bg-success">Top Level</span>
+                                        }
+                                        else
+                                        {
+                                            @proponent?.ReportingTo
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            @if (item.ProponentHierarchy.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">
+                                        <em>No proponent information available</em>
+                                    </td>
+                                </tr>
+                            }
+                            <tr><td colspan="5" class="border-bottom"></td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 40vh;">
+            <div aria-live="polite" aria-atomic="true" class="position-relative">
+                <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+                    <div id="noResultToast" class="toast align-items-center text-bg-warning border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <strong>No results found for your search.</strong>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Friendly SVG illustration -->
+            <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-3">
+                <ellipse cx="90" cy="150" rx="70" ry="15" fill="#E0F2F1"/>
+                <rect x="50" y="60" width="80" height="50" rx="10" fill="#C8E6C9"/>
+                <rect x="60" y="70" width="60" height="30" rx="5" fill="#A5D6A7"/>
+                <circle cx="90" cy="85" r="8" fill="#388E3C"/>
+                <rect x="80" y="100" width="20" height="5" rx="2.5" fill="#388E3C"/>
+                <rect x="70" y="110" width="40" height="8" rx="4" fill="#81C784"/>
+            </svg>
+            <div class="text-center">
+                <h4 class="text-success mb-2">No Results Found</h4>
+                <p class="text-muted mb-1">We couldn't find any matches for your search.</p>
+                <p class="text-muted">Try a different search term or check for typos.</p>
+            </div>
+        </div>
+    }
+
+  
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Show spinner on any form submit
+            document.querySelectorAll('form').forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    document.getElementById('spinnerOverlay').style.display = 'flex';
+                });
+            });
+
+            // Hide spinner when page loads
+            document.getElementById('spinnerOverlay').style.display = 'none';
+
+            document.querySelectorAll(".clickable-row").forEach(row => {
+                row.addEventListener("click", function () {
+                    const targetId = this.getAttribute("data-bs-target");
+                    const contentRow = document.getElementById(targetId);
+                    if (contentRow) {
+                        contentRow.classList.toggle("d-none");
+                    }
+                });
+            });
+
+            // Show toast if it exists
+            var toastEl = document.getElementById('noResultToast');
+            if (toastEl) {
+                var toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+                toast.show();
+            }
+
+            // Initialize Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+} 
