@@ -825,30 +825,56 @@
                             <th>Email Address</th>
                             <th>ID Submitted</th>
                             <th>Date ID Submitted</th>
-                       
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
-                            if (transaction.BusinessPartner?.OtherBuyers != null)
+                            var processedCustomerCodes = new HashSet<string>();
+
+                            if (transaction.BusinessPartner != null)
                             {
-                                foreach (var buyer in transaction.BusinessPartner.OtherBuyers)
+                                // Display Principal Buyer first
+                                var principalBuyer = transaction.BusinessPartner;
+                                if (!string.IsNullOrEmpty(principalBuyer.CustomerCode) && 
+                                    !processedCustomerCodes.Contains($"{transaction.ContractNumber}-{principalBuyer.CustomerCode}-{principalBuyer.Role}"))
                                 {
-                                    <tr>
-                                        <td>@buyer.Fullname</td>
-                                        <td>@buyer.Role</td>
-                                        <td>@buyer.CustomerCode</td>
-                                        <td>@buyer.ClientBase</td>
-                                        <td>@buyer.ContactNumber</td>
-                                        <td>@buyer.EmailAddress</td>
-                                        <td>@buyer.IdSubmitted</td>
-                                        <td>@buyer.IdDateSubmitted</td>
-                                        <td>
-                                           
-                                        </td>
+                                    <tr class="table-primary">
+                                        <td>@principalBuyer.Fullname</td>
+                                        <td>@principalBuyer.Role</td>
+                                        <td>@principalBuyer.CustomerCode</td>
+                                        <td>@principalBuyer.ClientBase</td>
+                                        <td>@principalBuyer.ContactNumber</td>
+                                        <td>@principalBuyer.EmailAddress</td>
+                                        <td>@principalBuyer.IdSubmitted</td>
+                                        <td>@(principalBuyer.IdDateSubmitted?.ToString("MM/dd/yyyy"))</td>
                                     </tr>
+                                    processedCustomerCodes.Add($"{transaction.ContractNumber}-{principalBuyer.CustomerCode}-{principalBuyer.Role}");
+                                }
+
+                                // Display other buyers (Co-Buyer, Spouse) if they exist and haven't been processed
+                                if (transaction.BusinessPartner.OtherBuyers != null)
+                                {
+                                    var otherBuyers = transaction.BusinessPartner.OtherBuyers;
+                                    foreach (var buyer in otherBuyers)
+                                    {
+                                        if (buyer.Role != "Principal Buyer" && 
+                                            !processedCustomerCodes.Contains($"{transaction.ContractNumber}-{buyer.CustomerCode}-{buyer.Role}"))
+                                        {
+                                            <tr>
+                                                <td>@buyer.Fullname</td>
+                                                <td>@buyer.Role</td>
+                                                <td>@buyer.CustomerCode</td>
+                                                <td>@buyer.ClientBase</td>
+                                                <td>@buyer.ContactNumber</td>
+                                                <td>@buyer.EmailAddress</td>
+                                                <td>@buyer.IdSubmitted</td>
+                                                <td>@(buyer.IdDateSubmitted?.ToString("MM/dd/yyyy"))</td>
+                                            </tr>
+                                            processedCustomerCodes.Add($"{transaction.ContractNumber}-{buyer.CustomerCode}-{buyer.Role}");
+                                        }
+                                    }
                                 }
                             }
                         }

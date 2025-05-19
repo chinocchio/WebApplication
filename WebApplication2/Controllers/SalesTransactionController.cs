@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
 using WebApplication2.Models;
 using WebApplication2.ViewModels;
+using ExcelDataReader;
+using System.Data;
+using System.Text;
 
 namespace WebApplication2.Controllers
 {
@@ -556,6 +559,168 @@ namespace WebApplication2.Controllers
 
             ViewBag.SalesTransactions = result;
             return View();
+        }
+
+        // GET: SalesTransaction/Import
+        public IActionResult Import()
+        {
+            return View(new SalesTransactionImportViewModel());
+        }
+
+        // POST: SalesTransaction/Import
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(SalesTransactionImportViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            model.ImportErrors = new List<string>();
+            model.SuccessCount = 0;
+            model.ErrorCount = 0;
+
+            if (model.File == null || model.File.Length == 0)
+            {
+                ModelState.AddModelError("File", "Please select a file to import");
+                return View(model);
+            }
+
+            try
+            {
+                // Register encoding provider for Excel reading
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                using (var stream = model.File.OpenReadStream())
+                {
+                    IExcelDataReader reader;
+                    
+                    // Check if it's a CSV file
+                    if (Path.GetExtension(model.File.FileName).ToLowerInvariant() == ".csv")
+                    {
+                        reader = ExcelReaderFactory.CreateCsvReader(stream);
+                        System.Diagnostics.Debug.WriteLine("Processing CSV file");
+                    }
+                    else
+                    {
+                        reader = ExcelReaderFactory.CreateReader(stream);
+                        System.Diagnostics.Debug.WriteLine("Processing Excel file");
+                    }
+
+                    using (reader)
+                    {
+                        var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                        {
+                            ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                            {
+                                UseHeaderRow = true
+                            }
+                        });
+
+                        // Process the first sheet
+                        DataTable dataTable = result.Tables[0];
+                        var transactions = new List<SalesTransaction>();
+
+                        // Debug: Print column names
+                        System.Diagnostics.Debug.WriteLine("Columns found:");
+                        foreach (DataColumn column in dataTable.Columns)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Column: {column.ColumnName}");
+                        }
+
+                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        {
+                            try
+                            {
+                                var row = dataTable.Rows[i];
+                                
+                                // Debug: Print row values
+                                System.Diagnostics.Debug.WriteLine($"\nProcessing Row {i + 2}:");
+                                foreach (DataColumn column in dataTable.Columns)
+                                {
+                                    System.Diagnostics.Debug.WriteLine($"{column.ColumnName}: {row[column]}");
+                                }
+
+                                // Parse contract number
+                                var contractNumberStr = row["ContractNumber"]?.ToString();
+                                System.Diagnostics.Debug.WriteLine($"Parsing Contract Number: {contractNumberStr}");
+                                if (!long.TryParse(contractNumberStr, out long contractNumber))
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Invalid Contract Number: {contractNumberStr}");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+
+                                // Parse holding date with specific format M/d/yy
+                                var dateString = row["HoldingDate"]?.ToString();
+                                System.Diagnostics.Debug.WriteLine($"Parsing Date: {dateString}");
+                                DateOnly holdingDate;
+                                if (DateTime.TryParseExact(dateString, 
+                                    new[] { "M/d/yy", "MM/dd/yy", "M/d/yyyy", "MM/dd/yyyy" }, 
+                                    System.Globalization.CultureInfo.InvariantCulture,
+                                    System.Globalization.DateTimeStyles.None, 
+                                    out DateTime parsedDate))
+                                {
+                                    holdingDate = DateOnly.FromDateTime(parsedDate);
+                                }
+                                else
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Invalid Holding Date format. Use format like 5/21/22. Got: {dateString}");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+
+                                var transaction = new SalesTransaction
+                                {
+                                    ContractNumber = contractNumber,
+                                    TypeOfSale = row["TypeOfSale"]?.ToString(),
+                                    HoldingDate = holdingDate,
+                                    TransactionType = row["TransactionType"]?.ToString(),
+                                    StatusInGeneral = row["StatusInGeneral"]?.ToString(),
+                                    Milestone = row["Milestone"]?.ToString(),
+                                    NewColorStatus = row["NewColorStatus"]?.ToString()
+                                };
+
+                                transactions.Add(transaction);
+                                model.SuccessCount++;
+                                System.Diagnostics.Debug.WriteLine($"Successfully created transaction for Contract Number: {contractNumber}");
+                            }
+                            catch (Exception ex)
+                            {
+                                model.ImportErrors.Add($"Row {i + 2}: {ex.Message}");
+                                model.ErrorCount++;
+                                System.Diagnostics.Debug.WriteLine($"Error processing row {i + 2}: {ex.Message}");
+                            }
+                        }
+
+                        System.Diagnostics.Debug.WriteLine($"Total transactions to save: {transactions.Count}");
+                        if (transactions.Any())
+                        {
+                            await _context.SalesTransactions.AddRangeAsync(transactions);
+                            await _context.SaveChangesAsync();
+                            System.Diagnostics.Debug.WriteLine("Transactions saved to database");
+                        }
+                    }
+                }
+
+                if (model.ErrorCount == 0 && model.SuccessCount > 0)
+                {
+                    TempData["SuccessMessage"] = $"Successfully imported {model.SuccessCount} transactions.";
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (model.SuccessCount == 0)
+                {
+                    ModelState.AddModelError("", "No records were imported. Please check your file format and data.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error processing file: {ex.Message}");
+                return View(model);
+            }
+
+            return View(model);
         }
     }
 }
