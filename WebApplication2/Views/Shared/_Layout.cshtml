@@ -566,7 +566,7 @@
             }
 
             .guide-content .highlight {
-                background: var(--primary-light);
+                background: var(--primary-color);
                 color: white;
                 padding: 0.2rem 0.5rem;
                 border-radius: 4px;
@@ -1240,16 +1240,30 @@
         html[data-theme="dark"] .table tbody tr:hover {
             background-color: #2d3238 !important;
         }
+
+        .dropdown-menu {
+            border-radius: 12px !important;
+            box-shadow: 0 4px 16px rgba(25,92,75,0.10) !important;
+            border: none !important;
+            padding: 0.5rem 0.25rem !important;
+        }
+        .dropdown-item {
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .dropdown-item:hover, .dropdown-item:focus {
+            background: var(--primary-light) !important;
+            color: var(--primary-dark) !important;
+        }
+        .dropdown-header {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color) !important;
+        }
     </style>
 </head>
 <body>
-    <div class="theme-switch-wrapper">
-        <i class="bi bi-moon-fill slider-icon"></i>
-        <div class="theme-switch">
-            <input type="checkbox" id="checkbox" />
-            <span class="slider"></span>
-        </div>
-    </div>
+  
     <div class="animated-background"></div>
     <div class="content-wrapper">
         <!-- Offcanvas -->
@@ -1276,6 +1290,35 @@
                     <a class="btn btn-custom" asp-area="" asp-controller="SalesTransaction" asp-action="Create">
                         <i class="bi bi-cart-plus me-2"></i>New Sale
                     </a>
+                    <div class="dropdown mt-1">
+                        <button class="btn btn-custom dropdown-toggle w-100 d-flex align-items-center justify-content-center" type="button" id="importDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-upload me-2"></i>
+                            <span>Upload Excel</span>
+                        </button>
+                        <ul class="dropdown-menu w-100 shadow rounded-3 p-2" aria-labelledby="importDropdown" style="min-width: 220px;">
+                            <li>
+                                <h6 class="dropdown-header text-primary mb-1">Import Options</h6>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-area="" asp-controller="SalesTransaction" asp-action="Import">
+                                    <i class="bi bi-file-earmark-arrow-up text-success"></i>
+                                    <span>
+                                        Sales Transactions<br>
+                                        <small class="text-muted">Upload sales data</small>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-area="" asp-controller="BusinessPartner" asp-action="Import">
+                                    <i class="bi bi-people-fill text-info"></i>
+                                    <span>
+                                        Business Partners<br>
+                                        <small class="text-muted">Upload partner list</small>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

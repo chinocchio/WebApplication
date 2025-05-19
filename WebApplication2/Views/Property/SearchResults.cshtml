@@ -401,6 +401,31 @@
     body.dark-mode .search-tips li i {
         color: #6ea8fe;
     }
+
+    .badge-orange {
+        background-color: #ff9800 !important;
+        color: #fff !important;
+        border-radius: 8px;
+        padding: 0.25em 0.75em;
+        font-weight: 600;
+        letter-spacing: 1px;
+        font-size: 0.95em;
+        display: inline-block;
+    }
+
+    /* Search highlight styling */
+    mark {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        padding: 0.1em 0.3em;
+        border-radius: 3px;
+        font-weight: 500;
+    }
+
+    body.dark-mode mark {
+        background-color: var(--primary-light) !important;
+        color: var(--primary-color) !important;
+    }
 </style>
 
 @* Add Bootstrap Icons CDN if not already present *@
@@ -505,13 +530,15 @@
                                 <td>@transaction.Milestone</td>
                                 <td>
                                     @if (transaction.NewColorStatus?.ToUpper() == "GREEN") {
-                                        <span class="badge bg-success">GREEN</span>
+                                        <span class="badge bg-success-subtle text-success fw-bold px-3 py-1">GREEN</span>
                                     } else if (transaction.NewColorStatus?.ToUpper() == "YELLOW") {
-                                        <span class="badge bg-warning text-dark">YELLOW</span>
+                                        <span class="badge bg-warning-subtle text-warning fw-bold px-3 py-1">YELLOW</span>
                                     } else if (transaction.NewColorStatus?.ToUpper() == "RED") {
-                                        <span class="badge bg-danger">RED</span>
+                                        <span class="badge bg-danger-subtle text-danger fw-bold px-3 py-1">RED</span>
                                     } else if (transaction.NewColorStatus?.ToUpper() == "LIGHT GREEN") {
-                                        <span class="badge badge-lightgreen">LIGHT GREEN</span>
+                                        <span class="badge bg-success-subtle text-success fw-bold px-3 py-1">LIGHT GREEN</span>
+                                    } else if (transaction.NewColorStatus?.ToUpper() == "ORANGE") {
+                                        <span class="badge-orange">ORANGE</span>
                                     } else {
                                         <span class="badge bg-secondary">@transaction.NewColorStatus</span>
                                     }

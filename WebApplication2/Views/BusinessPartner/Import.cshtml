@@ -2,27 +2,129 @@
 
 @{
     ViewData["Title"] = "Import Business Partners";
+    Layout = "_Layout";
 }
 
-<div class="container mt-4">
-    <h2>Import Business Partners</h2>
-    <hr />
+<style>
+    .import-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1.25rem;
+        font-weight: 600;
+        border: none;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all var(--transition-speed) ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px var(--input-focus-shadow);
+        outline: none;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-custom {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        border-radius: var(--border-radius);
+        transition: all var(--transition-speed) ease;
+    }
+
+    .btn-custom i {
+        font-size: 1.1rem;
+    }
+
+    .instructions-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+    }
+
+    .instructions-card .card-header {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+    }
+
+    .alert {
+        border-radius: var(--border-radius);
+        border: none;
+    }
+
+    .alert-danger {
+        background-color: #fff5f5;
+        color: #dc3545;
+    }
+
+    .alert-warning {
+        background-color: #fff8e6;
+        color: #856404;
+    }
+</style>
+
+<div class="import-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-people me-2"></i>Import Business Partners
+        </h2>
+        <a asp-controller="SalesTransaction" asp-action="Index" class="btn btn-custom btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Back to List
+        </a>
+    </div>
 
     <div class="row">
         <div class="col-md-8">
             <form asp-action="Import" enctype="multipart/form-data" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
 
-                <div class="card mb-4">
+                <div class="form-card">
                     <div class="card-header">
-                        <h5 class="mb-0">Upload File</h5>
+                        <h5 class="mb-0"><i class="bi bi-cloud-upload me-2"></i>Upload File</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
                             <label asp-for="File" class="form-label">Select Excel or CSV File</label>
                             <input asp-for="File" class="form-control" type="file" accept=".xlsx,.xls,.csv" />
                             <span asp-validation-for="File" class="text-danger"></span>
-                            <div class="form-text">
+                            <div class="form-text mt-2">
+                                <i class="bi bi-info-circle me-1"></i>
                                 Supported file types: .xlsx, .xls, .csv<br />
                                 The file should contain the following columns:<br />
                                 ContractNumber (Required), CustomerCode, Role, Fullname (Required), ClientBase, IdSubmitted, IdDateSubmitted, EmailAddress, ContactNumber
@@ -31,29 +133,31 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-upload"></i> Upload and Import
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-custom btn-primary">
+                        <i class="bi bi-cloud-upload me-2"></i>Upload and Import
                     </button>
-                    <a asp-controller="SalesTransaction" asp-action="Index" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Back to List
-                    </a>
                 </div>
             </form>
 
             @if (Model.ImportErrors != null && Model.ImportErrors.Any())
             {
-                <div class="card mt-4">
+                <div class="form-card mt-4">
                     <div class="card-header bg-warning">
-                        <h5 class="mb-0">Import Results</h5>
+                        <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Import Results</h5>
                     </div>
                     <div class="card-body">
-                        <p>
-                            <strong>Successfully imported:</strong> @Model.SuccessCount records<br />
-                            <strong>Errors encountered:</strong> @Model.ErrorCount records
-                        </p>
+                        <div class="alert alert-warning mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <div>
+                                    <strong>Successfully imported:</strong> @Model.SuccessCount records<br />
+                                    <strong>Errors encountered:</strong> @Model.ErrorCount records
+                                </div>
+                            </div>
+                        </div>
                         <div class="alert alert-danger">
-                            <h6>Error Details:</h6>
+                            <h6 class="mb-3"><i class="bi bi-exclamation-circle me-2"></i>Error Details:</h6>
                             <ul class="mb-0">
                                 @foreach (var error in Model.ImportErrors)
                                 {
@@ -67,28 +171,65 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card">
+            <div class="instructions-card">
                 <div class="card-header">
-                    <h5 class="mb-0">Instructions</h5>
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Instructions</h5>
                 </div>
                 <div class="card-body">
-                    <h6>Required Columns:</h6>
-                    <ul>
-                        <li><strong>ContractNumber</strong> (Required, Number) - Must match an existing sales transaction</li>
-                        <li><strong>CustomerCode</strong> (Optional, Text)</li>
-                        <li><strong>Role</strong> (Optional, Text)</li>
-                        <li><strong>Fullname</strong> (Required, Text)</li>
-                        <li><strong>ClientBase</strong> (Optional, Text)</li>
-                        <li><strong>IdSubmitted</strong> (Optional, Text)</li>
-                        <li><strong>IdDateSubmitted</strong> (Optional, Date - M/D/YY format)</li>
-                        <li><strong>EmailAddress</strong> (Optional, Text)</li>
-                        <li><strong>ContactNumber</strong> (Optional, Text)</li>
+                    <h6 class="mb-3">Required Columns:</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <strong>ContractNumber</strong> (Required, Number) - Must match an existing sales transaction
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-circle me-2"></i>
+                            <strong>CustomerCode</strong> (Optional, Text)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-circle me-2"></i>
+                            <strong>Role</strong> (Optional, Text)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <strong>Fullname</strong> (Required, Text)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-circle me-2"></i>
+                            <strong>ClientBase</strong> (Optional, Text)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-circle me-2"></i>
+                            <strong>IdSubmitted</strong> (Optional, Text)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-circle me-2"></i>
+                            <strong>IdDateSubmitted</strong> (Optional, Date - M/D/YY format)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-circle me-2"></i>
+                            <strong>EmailAddress</strong> (Optional, Text)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-circle me-2"></i>
+                            <strong>ContactNumber</strong> (Optional, Text)
+                        </li>
                     </ul>
-                    <h6>Notes:</h6>
-                    <ul>
-                        <li>The first row should contain column headers</li>
-                        <li>Contract Numbers must match existing sales transactions</li>
-                        <li>Dates should be in format: M/D/YY (e.g., 5/21/22) or M/D/YYYY</li>
+                    <hr />
+                    <h6 class="mb-3">Notes:</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-dot me-2"></i>
+                            The first row should contain column headers
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-dot me-2"></i>
+                            Contract Numbers must match existing sales transactions
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-dot me-2"></i>
+                            Dates should be in format: M/D/YY (e.g., 5/21/22) or M/D/YYYY
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -96,6 +237,3 @@
     </div>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-} 
