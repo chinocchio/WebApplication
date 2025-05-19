@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
 using WebApplication2.Models;
 using WebApplication2.ViewModels;
+using ExcelDataReader;
+using System.Data;
+using System.Text;
 
 namespace WebApplication2.Controllers
 {
@@ -16,6 +19,13 @@ namespace WebApplication2.Controllers
         public SalesTransactionController(DataContext context)
         {
             _context = context;
+        }
+
+        // GET: SalesTransaction
+        // Para sa listahan ng mga benta, boss. Dito mo makikita lahat ng transaksyon!
+        public IActionResult Index()
+        {
+            return RedirectToAction("SearchResults", "Property");
         }
 
         // GET: SalesTransaction/Create
@@ -232,6 +242,198 @@ namespace WebApplication2.Controllers
             return View(model);
         }
 
+        // GET: SalesTransaction/Edit/5
+        // Para sa pag-edit ng existing na benta, boss. Ingat lang sa pagbabago!
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var salesTransaction = _context.SalesTransactions
+                .Include(st => st.BusinessPartner)
+                .FirstOrDefault(st => st.SalesTransactionId == id);
+
+            if (salesTransaction == null)
+            {
+                return NotFound();
+            }
+
+            var model = new SalesTransactionCreateViewModel
+            {
+                SalesTransactionId = salesTransaction.SalesTransactionId,
+                ContractNumber = salesTransaction.ContractNumber,
+                TypeOfSale = salesTransaction.TypeOfSale,
+                TransactionType = salesTransaction.TransactionType,
+                PromoDiscount = salesTransaction.PromoDiscount,
+                StatusInGeneral = salesTransaction.StatusInGeneral,
+                Milestone = salesTransaction.Milestone,
+                NewColorStatus = salesTransaction.NewColorStatus,
+                SelectedPropertyId = salesTransaction.PropertyId,
+                SelectedBusinessPartnerId = salesTransaction.BusinessPartnerId,
+                SelectedProponentBpNumber = salesTransaction.ProponentBpNumber,
+                Role = salesTransaction.BusinessPartner.Role,
+                Fullname = salesTransaction.BusinessPartner.Fullname,
+                CustomerCode = salesTransaction.BusinessPartner.CustomerCode,
+                ClientBase = salesTransaction.BusinessPartner.ClientBase,
+                IdSubmitted = salesTransaction.BusinessPartner.IdSubmitted,
+                IdDateSubmitted = salesTransaction.BusinessPartner.IdDateSubmitted,
+                EmailAddress = salesTransaction.BusinessPartner.EmailAddress,
+                ContactNumber = salesTransaction.BusinessPartner.ContactNumber,
+
+                Properties = _context.Properties
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.PropertyId.ToString(),
+                        Text = $"{p.ProjectName} - {p.BuildingPhase} - {p.UnitCode}"
+                    }).ToList(),
+
+                ExistingBusinessPartners = _context.BusinessPartners
+                    .Select(bp => new SelectListItem
+                    {
+                        Value = bp.BusinessPartnerId.ToString(),
+                        Text = $"{bp.Role} - {bp.Fullname} - {bp.CustomerCode}"
+                    }).ToList(),
+
+                SalesProponents = _context.SalesProponents
+                    .Select(sp => new SelectListItem
+                    {
+                        Value = sp.ProponentBpNumber.ToString(),
+                        Text = $"{sp.Roles} - {sp.Fullname} - {sp.ProponentBpNumber}"
+                    }).ToList()
+            };
+
+            return View(model);
+        }
+
+        // POST: SalesTransaction/Edit/5
+        // Para sa pag-save ng mga pagbabago sa benta, boss. Double check mo muna!
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, SalesTransactionCreateViewModel model)
+        {
+            if (id != model.SalesTransactionId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var salesTransaction = _context.SalesTransactions
+                        .Include(st => st.BusinessPartner)
+                        .FirstOrDefault(st => st.SalesTransactionId == id);
+
+                    if (salesTransaction == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update Business Partner
+                    salesTransaction.BusinessPartner.Role = model.Role;
+                    salesTransaction.BusinessPartner.Fullname = model.Fullname;
+                    salesTransaction.BusinessPartner.CustomerCode = model.CustomerCode;
+                    salesTransaction.BusinessPartner.ClientBase = model.ClientBase;
+                    salesTransaction.BusinessPartner.IdSubmitted = model.IdSubmitted;
+                    salesTransaction.BusinessPartner.IdDateSubmitted = model.IdDateSubmitted;
+                    salesTransaction.BusinessPartner.EmailAddress = model.EmailAddress;
+                    salesTransaction.BusinessPartner.ContactNumber = model.ContactNumber;
+
+                    // Update Sales Transaction
+                    salesTransaction.ContractNumber = model.ContractNumber;
+                    salesTransaction.TypeOfSale = model.TypeOfSale;
+                    salesTransaction.TransactionType = model.TransactionType;
+                    salesTransaction.PromoDiscount = model.PromoDiscount;
+                    salesTransaction.StatusInGeneral = model.StatusInGeneral;
+                    salesTransaction.Milestone = model.Milestone;
+                    salesTransaction.NewColorStatus = model.NewColorStatus;
+                    salesTransaction.PropertyId = model.SelectedPropertyId.Value;
+                    salesTransaction.ProponentBpNumber = model.SelectedProponentBpNumber;
+
+                    _context.Update(salesTransaction);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SalesTransactionExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            model.Properties = _context.Properties
+                .Select(p => new SelectListItem
+                {
+                    Value = p.PropertyId.ToString(),
+                    Text = $"{p.ProjectName} - {p.BuildingPhase} - {p.UnitCode}"
+                }).ToList();
+
+            model.ExistingBusinessPartners = _context.BusinessPartners
+                .Select(bp => new SelectListItem
+                {
+                    Value = bp.BusinessPartnerId.ToString(),
+                    Text = $"{bp.Role} - {bp.Fullname} - {bp.CustomerCode}"
+                }).ToList();
+
+            model.SalesProponents = _context.SalesProponents
+                .Select(sp => new SelectListItem
+                {
+                    Value = sp.ProponentBpNumber.ToString(),
+                    Text = $"{sp.Roles} - {sp.Fullname} - {sp.ProponentBpNumber}"
+                }).ToList();
+
+            return View(model);
+        }
+
+        // POST: SalesTransaction/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var salesTransaction = await _context.SalesTransactions
+                .Include(st => st.BusinessPartner)
+                .Include(st => st.PaymentTerm)
+                .Include(st => st.CreditReview)
+                .Include(st => st.SalesDocument)
+                .FirstOrDefaultAsync(st => st.SalesTransactionId == id);
+
+            if (salesTransaction == null)
+            {
+                return Json(new { success = false, message = "Sales transaction not found." });
+            }
+
+            try
+            {
+                // Remove related records first
+                if (salesTransaction.PaymentTerm != null)
+                    _context.PaymentTerms.Remove(salesTransaction.PaymentTerm);
+                if (salesTransaction.CreditReview != null)
+                    _context.CreditReviews.Remove(salesTransaction.CreditReview);
+                if (salesTransaction.SalesDocument != null)
+                    _context.SalesDocuments.Remove(salesTransaction.SalesDocument);
+
+                // Remove the sales transaction
+                _context.SalesTransactions.Remove(salesTransaction);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Sales transaction deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error deleting sales transaction: " + ex.Message });
+            }
+        }
+
         // Boss, wag mo gagalawin to kung di mo alam ginagawa mo. Delikado 'to!
         private bool SalesTransactionExists(int id)
         {
@@ -357,6 +559,168 @@ namespace WebApplication2.Controllers
 
             ViewBag.SalesTransactions = result;
             return View();
+        }
+
+        // GET: SalesTransaction/Import
+        public IActionResult Import()
+        {
+            return View(new SalesTransactionImportViewModel());
+        }
+
+        // POST: SalesTransaction/Import
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(SalesTransactionImportViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            model.ImportErrors = new List<string>();
+            model.SuccessCount = 0;
+            model.ErrorCount = 0;
+
+            if (model.File == null || model.File.Length == 0)
+            {
+                ModelState.AddModelError("File", "Please select a file to import");
+                return View(model);
+            }
+
+            try
+            {
+                // Register encoding provider for Excel reading
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                using (var stream = model.File.OpenReadStream())
+                {
+                    IExcelDataReader reader;
+                    
+                    // Check if it's a CSV file
+                    if (Path.GetExtension(model.File.FileName).ToLowerInvariant() == ".csv")
+                    {
+                        reader = ExcelReaderFactory.CreateCsvReader(stream);
+                        System.Diagnostics.Debug.WriteLine("Processing CSV file");
+                    }
+                    else
+                    {
+                        reader = ExcelReaderFactory.CreateReader(stream);
+                        System.Diagnostics.Debug.WriteLine("Processing Excel file");
+                    }
+
+                    using (reader)
+                    {
+                        var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                        {
+                            ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                            {
+                                UseHeaderRow = true
+                            }
+                        });
+
+                        // Process the first sheet
+                        DataTable dataTable = result.Tables[0];
+                        var transactions = new List<SalesTransaction>();
+
+                        // Debug: Print column names
+                        System.Diagnostics.Debug.WriteLine("Columns found:");
+                        foreach (DataColumn column in dataTable.Columns)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Column: {column.ColumnName}");
+                        }
+
+                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        {
+                            try
+                            {
+                                var row = dataTable.Rows[i];
+                                
+                                // Debug: Print row values
+                                System.Diagnostics.Debug.WriteLine($"\nProcessing Row {i + 2}:");
+                                foreach (DataColumn column in dataTable.Columns)
+                                {
+                                    System.Diagnostics.Debug.WriteLine($"{column.ColumnName}: {row[column]}");
+                                }
+
+                                // Parse contract number
+                                var contractNumberStr = row["ContractNumber"]?.ToString();
+                                System.Diagnostics.Debug.WriteLine($"Parsing Contract Number: {contractNumberStr}");
+                                if (!long.TryParse(contractNumberStr, out long contractNumber))
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Invalid Contract Number: {contractNumberStr}");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+
+                                // Parse holding date with specific format M/d/yy
+                                var dateString = row["HoldingDate"]?.ToString();
+                                System.Diagnostics.Debug.WriteLine($"Parsing Date: {dateString}");
+                                DateOnly holdingDate;
+                                if (DateTime.TryParseExact(dateString, 
+                                    new[] { "M/d/yy", "MM/dd/yy", "M/d/yyyy", "MM/dd/yyyy" }, 
+                                    System.Globalization.CultureInfo.InvariantCulture,
+                                    System.Globalization.DateTimeStyles.None, 
+                                    out DateTime parsedDate))
+                                {
+                                    holdingDate = DateOnly.FromDateTime(parsedDate);
+                                }
+                                else
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Invalid Holding Date format. Use format like 5/21/22. Got: {dateString}");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+
+                                var transaction = new SalesTransaction
+                                {
+                                    ContractNumber = contractNumber,
+                                    TypeOfSale = row["TypeOfSale"]?.ToString(),
+                                    HoldingDate = holdingDate,
+                                    TransactionType = row["TransactionType"]?.ToString(),
+                                    StatusInGeneral = row["StatusInGeneral"]?.ToString(),
+                                    Milestone = row["Milestone"]?.ToString(),
+                                    NewColorStatus = row["NewColorStatus"]?.ToString()
+                                };
+
+                                transactions.Add(transaction);
+                                model.SuccessCount++;
+                                System.Diagnostics.Debug.WriteLine($"Successfully created transaction for Contract Number: {contractNumber}");
+                            }
+                            catch (Exception ex)
+                            {
+                                model.ImportErrors.Add($"Row {i + 2}: {ex.Message}");
+                                model.ErrorCount++;
+                                System.Diagnostics.Debug.WriteLine($"Error processing row {i + 2}: {ex.Message}");
+                            }
+                        }
+
+                        System.Diagnostics.Debug.WriteLine($"Total transactions to save: {transactions.Count}");
+                        if (transactions.Any())
+                        {
+                            await _context.SalesTransactions.AddRangeAsync(transactions);
+                            await _context.SaveChangesAsync();
+                            System.Diagnostics.Debug.WriteLine("Transactions saved to database");
+                        }
+                    }
+                }
+
+                if (model.ErrorCount == 0 && model.SuccessCount > 0)
+                {
+                    TempData["SuccessMessage"] = $"Successfully imported {model.SuccessCount} transactions.";
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (model.SuccessCount == 0)
+                {
+                    ModelState.AddModelError("", "No records were imported. Please check your file format and data.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error processing file: {ex.Message}");
+                return View(model);
+            }
+
+            return View(model);
         }
     }
 }

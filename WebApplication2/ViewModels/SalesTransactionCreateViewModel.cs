@@ -6,14 +6,15 @@ namespace WebApplication2.ViewModels
 {
     public class SalesTransactionCreateViewModel
     {
+
         // Dropdown selection
         public int? SelectedBusinessPartnerId { get; set; }
         public List<SelectListItem>? ExistingBusinessPartners { get; set; }
-
+        public int SalesTransactionId { get; set; }
         // New Business Partner fields (if not selecting existing one)
         public string? Role { get; set; }
         public string? Fullname { get; set; }
-        public long? CustomerCode { get; set; }
+        public string? CustomerCode { get; set; }
         public string? ClientBase { get; set; }
         public string? IdSubmitted { get; set; }
         public DateOnly? IdDateSubmitted { get; set; }
