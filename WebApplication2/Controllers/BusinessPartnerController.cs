@@ -128,19 +128,48 @@ namespace WebApplication2.Controllers
                             await _context.BusinessPartners.AddRangeAsync(businessPartners);
                             await _context.SaveChangesAsync();
 
-                            // Now update the corresponding SalesTransactions
+                            // Only update SalesTransactions for Principal Buyers
                             for (int i = 0; i < businessPartners.Count; i++)
                             {
-                                var transaction = await _context.SalesTransactions
-                                    .FirstOrDefaultAsync(st => st.ContractNumber == contractNumbers[i]);
+                                var partner = businessPartners[i];
+                                var contractNumber = contractNumbers[i];
 
-                                if (transaction != null)
+                                // Only update SalesTransaction if this is a Principal Buyer
+                                if (partner.Role?.Trim().Equals("Principal Buyer", StringComparison.OrdinalIgnoreCase) == true)
                                 {
-                                    transaction.BusinessPartnerId = businessPartners[i].BusinessPartnerId;
+                                    var transaction = await _context.SalesTransactions
+                                        .FirstOrDefaultAsync(st => st.ContractNumber == contractNumber);
+
+                                    if (transaction != null)
+                                    {
+                                        transaction.BusinessPartnerId = partner.BusinessPartnerId;
+                                        await _context.SaveChangesAsync();
+                                    }
+                                }
+                                else
+                                {
+                                    // For non-Principal Buyers (Spouse, Co-Buyer), verify if a Principal Buyer exists
+                                    var transaction = await _context.SalesTransactions
+                                        .Include(st => st.BusinessPartner)
+                                        .FirstOrDefaultAsync(st => st.ContractNumber == contractNumber);
+
+                                    if (transaction?.BusinessPartner != null)
+                                    {
+                                        // Update the CustomerCode to match the Principal Buyer's CustomerCode
+                                        partner.CustomerCode = transaction.BusinessPartner.CustomerCode;
+                                        await _context.SaveChangesAsync();
+                                    }
+                                    else
+                                    {
+                                        model.ImportErrors.Add($"Row {i + 2}: No Principal Buyer found for Contract Number {contractNumber}. Please import Principal Buyer first.");
+                                        model.ErrorCount++;
+                                        model.SuccessCount--;
+                                        // Remove the non-Principal Buyer since there's no Principal Buyer
+                                        _context.BusinessPartners.Remove(partner);
+                                        await _context.SaveChangesAsync();
+                                    }
                                 }
                             }
-
-                            await _context.SaveChangesAsync();
                         }
                     }
                 }
