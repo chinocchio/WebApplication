@@ -1,0 +1,119 @@
+@model WebApplication2.ViewModels.PropertyImportViewModel
+
+@{
+    ViewData["Title"] = "Import Properties";
+}
+
+<div class="container mt-4">
+    <h2>Import Properties</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Import" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Upload Property Data</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="File" class="form-label">Select Excel or CSV File</label>
+                            <input asp-for="File" class="form-control" type="file" accept=".xlsx,.xls,.csv" />
+                            <span asp-validation-for="File" class="text-danger"></span>
+                            <div class="form-text">
+                                Supported file types: .xlsx, .xls, .csv<br />
+                                <strong>Required Columns:</strong>
+                                <ul class="mt-2">
+                                    <li><strong>ContractNumber</strong> - Contract number to match with existing sales transaction (Required)</li>
+                                    <li><strong>PropertyType</strong> - Type of the property (Required)</li>
+                                    <li><strong>ProjectName</strong> - Name of the project (Required)</li>
+                                    <li><strong>BuildingPhase</strong> - Building or phase number (Required)</li>
+                                    <li><strong>UnitCode</strong> - Unique identifier for the unit (Required)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.ImportErrors != null && Model.ImportErrors.Any())
+                {
+                    <div class="alert alert-danger">
+                        <h6>Import Errors:</h6>
+                        <ul>
+                            @foreach (var error in Model.ImportErrors)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload and Import
+                    </button>
+                    <a asp-controller="Property" asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Import Guidelines</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Before importing:</h6>
+                    <ul>
+                        <li>Ensure all required fields are filled in your Excel/CSV file</li>
+                        <li>Contract Numbers must match existing sales transactions</li>
+                        <li>Each UnitCode should be unique</li>
+                        <li>PropertyType should match your system's categories</li>
+                        <li>ProjectName should be consistent across related units</li>
+                    </ul>
+                    <h6>Sample Format:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ContractNumber</th>
+                                    <th>PropertyType</th>
+                                    <th>ProjectName</th>
+                                    <th>BuildingPhase</th>
+                                    <th>UnitCode</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>12345</td>
+                                    <td>Residential</td>
+                                    <td>Green Valley</td>
+                                    <td>Phase 1</td>
+                                    <td>GV-P1-101</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle"></i> Note: Contract Numbers must exist in the Sales Transactions table for successful linking.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

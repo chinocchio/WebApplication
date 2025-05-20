@@ -459,10 +459,10 @@ namespace WebApplication2.Controllers
                 searchTerm = searchTerm.ToLower();
                 query = query.Where(st =>
                     st.ContractNumber.ToString().Contains(searchTerm) ||
-                    st.BusinessPartner.Fullname.ToLower().Contains(searchTerm) ||
-                    st.BusinessPartner.CustomerCode.ToString().Contains(searchTerm) ||
-                    st.Properties.UnitCode.ToLower().Contains(searchTerm) ||
-                    st.ProponentBpNumber.ToString().Contains(searchTerm)
+                    (st.BusinessPartner != null && st.BusinessPartner.Fullname != null && st.BusinessPartner.Fullname.ToLower().Contains(searchTerm)) ||
+                    (st.BusinessPartner != null && st.BusinessPartner.CustomerCode != null && st.BusinessPartner.CustomerCode.Contains(searchTerm)) ||
+                    (st.Properties != null && st.Properties.UnitCode != null && st.Properties.UnitCode.ToLower().Contains(searchTerm)) ||
+                    (st.ProponentBpNumber != null && st.ProponentBpNumber.ToString().Contains(searchTerm))
                 );
             }
 
