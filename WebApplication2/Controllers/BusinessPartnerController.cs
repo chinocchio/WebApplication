@@ -6,6 +6,7 @@ using WebApplication2.ViewModels;
 using ExcelDataReader;
 using System.Data;
 using System.Text;
+using OfficeOpenXml;
 
 namespace WebApplication2.Controllers
 {
@@ -190,6 +191,55 @@ namespace WebApplication2.Controllers
             }
 
             return View(model);
+        }
+
+        // GET: BusinessPartner/DownloadTemplate
+        public IActionResult DownloadTemplate()
+        {
+            ExcelPackage.License.SetNonCommercialPersonal("Chino");
+            using (var package = new OfficeOpenXml.ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Business Partner Import Template");
+
+                // Add headers
+                worksheet.Cells[1, 1].Value = "ContractNumber";
+                worksheet.Cells[1, 2].Value = "CustomerCode";
+                worksheet.Cells[1, 3].Value = "Role";
+                worksheet.Cells[1, 4].Value = "Fullname";
+                worksheet.Cells[1, 5].Value = "ClientBase";
+                worksheet.Cells[1, 6].Value = "IdSubmitted";
+                worksheet.Cells[1, 7].Value = "IdDateSubmitted";
+                worksheet.Cells[1, 8].Value = "EmailAddress";
+                worksheet.Cells[1, 9].Value = "ContactNumber";
+
+                // Add sample data
+                worksheet.Cells[2, 1].Value = "12345";
+                worksheet.Cells[2, 2].Value = "CUST001";
+                worksheet.Cells[2, 3].Value = "Principal Buyer";
+                worksheet.Cells[2, 4].Value = "John Doe";
+                worksheet.Cells[2, 5].Value = "Regular";
+                worksheet.Cells[2, 6].Value = "Passport";
+                worksheet.Cells[2, 7].Value = "5/21/2024";
+                worksheet.Cells[2, 8].Value = "john.doe@email.com";
+                worksheet.Cells[2, 9].Value = "09123456789";
+
+                // Style the header row
+                using (var range = worksheet.Cells[1, 1, 1, 9])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+
+                // Auto-fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Convert to byte array
+                var content = package.GetAsByteArray();
+
+                // Return the file
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BusinessPartnerImportTemplate.xlsx");
+            }
         }
     }
 } 

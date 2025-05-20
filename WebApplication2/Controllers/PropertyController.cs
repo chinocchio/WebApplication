@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using WebApplication2.Data;
 using WebApplication2.Models;
 using WebApplication2.ViewModels;
+using ExcelDataReader;
+using System.Data;
+using System.Text;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace WebApplication2.Controllers
 {
@@ -41,10 +46,10 @@ namespace WebApplication2.Controllers
                 searchTerm = searchTerm.ToLower();
                 query = query.Where(st =>
                     st.ContractNumber.ToString().Contains(searchTerm) ||
-                    st.BusinessPartner.Fullname.ToLower().Contains(searchTerm) ||
-                    st.BusinessPartner.CustomerCode.ToString().Contains(searchTerm) ||
-                    st.Properties.UnitCode.ToLower().Contains(searchTerm) ||
-                    st.ProponentBpNumber.ToString().Contains(searchTerm)
+                    (st.BusinessPartner != null && st.BusinessPartner.Fullname != null && st.BusinessPartner.Fullname.ToLower().Contains(searchTerm)) ||
+                    (st.BusinessPartner != null && st.BusinessPartner.CustomerCode != null && st.BusinessPartner.CustomerCode.Contains(searchTerm)) ||
+                    (st.Properties != null && st.Properties.UnitCode != null && st.Properties.UnitCode.ToLower().Contains(searchTerm)) ||
+                    (st.ProponentBpNumber != null && st.ProponentBpNumber.ToString().Contains(searchTerm))
                 );
             }
 
@@ -284,6 +289,221 @@ namespace WebApplication2.Controllers
         private bool PropertyExists(int id)
         {
             return _context.Properties.Any(e => e.PropertyId == id);
+        }
+
+        // GET: Property/Import
+        public IActionResult Import()
+        {
+            return View(new PropertyImportViewModel());
+        }
+
+        // POST: Property/Import
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(PropertyImportViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            model.ImportErrors = new List<string>();
+            model.SuccessCount = 0;
+            model.ErrorCount = 0;
+
+            try
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                using (var stream = model.File.OpenReadStream())
+                {
+                    IExcelDataReader reader;
+                    
+                    if (Path.GetExtension(model.File.FileName).ToLowerInvariant() == ".csv")
+                    {
+                        reader = ExcelReaderFactory.CreateCsvReader(stream);
+                    }
+                    else
+                    {
+                        reader = ExcelReaderFactory.CreateReader(stream);
+                    }
+
+                    using (reader)
+                    {
+                        var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                        {
+                            ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                            {
+                                UseHeaderRow = true
+                            }
+                        });
+
+                        DataTable dataTable = result.Tables[0];
+
+                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        {
+                            try
+                            {
+                                var row = dataTable.Rows[i];
+
+                                // Get and validate contract number
+                                var contractNumberStr = row["ContractNumber"]?.ToString();
+                                if (string.IsNullOrEmpty(contractNumberStr))
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Contract Number is required");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+
+                                if (!long.TryParse(contractNumberStr, out long contractNumber))
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Invalid Contract Number format");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+
+                                // Check if sales transaction exists
+                                var salesTransaction = await _context.SalesTransactions
+                                    .FirstOrDefaultAsync(st => st.ContractNumber == contractNumber);
+
+                                if (salesTransaction == null)
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: No matching Sales Transaction found for Contract Number {contractNumber}");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+
+                                // Get and validate property fields
+                                var unitCode = row["UnitCode"]?.ToString();
+                                var projectName = row["ProjectName"]?.ToString();
+                                var buildingPhase = row["BuildingPhase"]?.ToString();
+                                var propertyType = row["PropertyType"]?.ToString();
+
+                                // Validate required fields
+                                if (string.IsNullOrEmpty(unitCode))
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Unit Code is required");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+                                if (string.IsNullOrEmpty(projectName))
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Project Name is required");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+                                if (string.IsNullOrEmpty(buildingPhase))
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Building Phase is required");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+                                if (string.IsNullOrEmpty(propertyType))
+                                {
+                                    model.ImportErrors.Add($"Row {i + 2}: Property Type is required");
+                                    model.ErrorCount++;
+                                    continue;
+                                }
+
+                                // Check if property already exists
+                                var existingProperty = await _context.Properties
+                                    .FirstOrDefaultAsync(p => p.UnitCode == unitCode);
+
+                                if (existingProperty != null)
+                                {
+                                    // If property exists, update the sales transaction to link to it
+                                    salesTransaction.PropertyId = existingProperty.PropertyId;
+                                    _context.Update(salesTransaction);
+                                    await _context.SaveChangesAsync();
+                                    model.SuccessCount++;
+                                    continue;
+                                }
+
+                                // Create new property
+                                var property = new Property
+                                {
+                                    PropertyType = propertyType,
+                                    ProjectName = projectName,
+                                    BuildingPhase = buildingPhase,
+                                    UnitCode = unitCode
+                                };
+
+                                _context.Properties.Add(property);
+                                await _context.SaveChangesAsync();
+
+                                // Update sales transaction with the new property ID
+                                salesTransaction.PropertyId = property.PropertyId;
+                                _context.Update(salesTransaction);
+                                await _context.SaveChangesAsync();
+
+                                model.SuccessCount++;
+                            }
+                            catch (Exception ex)
+                            {
+                                model.ImportErrors.Add($"Row {i + 2}: {ex.Message}");
+                                model.ErrorCount++;
+                            }
+                        }
+                    }
+                }
+
+                if (model.ErrorCount == 0 && model.SuccessCount > 0)
+                {
+                    TempData["SuccessMessage"] = $"Successfully imported {model.SuccessCount} properties and linked them to sales transactions.";
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (model.SuccessCount == 0)
+                {
+                    ModelState.AddModelError("", "No records were imported. Please check your file format and data.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error processing file: {ex.Message}");
+            }
+
+            return View(model);
+        }
+
+        // GET: Property/DownloadTemplate
+        public IActionResult DownloadTemplate()
+        {
+            ExcelPackage.License.SetNonCommercialPersonal("Chino");
+            using (var package = new OfficeOpenXml.ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Property Import Template");
+
+                // Add headers
+                worksheet.Cells[1, 1].Value = "ContractNumber";
+                worksheet.Cells[1, 2].Value = "PropertyType";
+                worksheet.Cells[1, 3].Value = "ProjectName";
+                worksheet.Cells[1, 4].Value = "BuildingPhase";
+                worksheet.Cells[1, 5].Value = "UnitCode";
+
+                // Add sample data
+                worksheet.Cells[2, 1].Value = "12345";
+                worksheet.Cells[2, 2].Value = "Residential";
+                worksheet.Cells[2, 3].Value = "Green Valley";
+                worksheet.Cells[2, 4].Value = "Phase 1";
+                worksheet.Cells[2, 5].Value = "GV-P1-101";
+
+                // Style the header row
+                using (var range = worksheet.Cells[1, 1, 1, 5])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+
+                // Auto-fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Convert to byte array
+                var content = package.GetAsByteArray();
+
+                // Return the file
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "PropertyImportTemplate.xlsx");
+            }
         }
     }
 }
