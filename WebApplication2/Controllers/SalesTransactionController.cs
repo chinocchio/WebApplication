@@ -7,6 +7,7 @@ using WebApplication2.ViewModels;
 using ExcelDataReader;
 using System.Data;
 using System.Text;
+using OfficeOpenXml;
 
 namespace WebApplication2.Controllers
 {
@@ -459,10 +460,10 @@ namespace WebApplication2.Controllers
                 searchTerm = searchTerm.ToLower();
                 query = query.Where(st =>
                     st.ContractNumber.ToString().Contains(searchTerm) ||
-                    st.BusinessPartner.Fullname.ToLower().Contains(searchTerm) ||
-                    st.BusinessPartner.CustomerCode.ToString().Contains(searchTerm) ||
-                    st.Properties.UnitCode.ToLower().Contains(searchTerm) ||
-                    st.ProponentBpNumber.ToString().Contains(searchTerm)
+                    (st.BusinessPartner != null && st.BusinessPartner.Fullname != null && st.BusinessPartner.Fullname.ToLower().Contains(searchTerm)) ||
+                    (st.BusinessPartner != null && st.BusinessPartner.CustomerCode != null && st.BusinessPartner.CustomerCode.Contains(searchTerm)) ||
+                    (st.Properties != null && st.Properties.UnitCode != null && st.Properties.UnitCode.ToLower().Contains(searchTerm)) ||
+                    (st.ProponentBpNumber != null && st.ProponentBpNumber.ToString().Contains(searchTerm))
                 );
             }
 
@@ -721,6 +722,51 @@ namespace WebApplication2.Controllers
             }
 
             return View(model);
+        }
+
+        // GET: SalesTransaction/DownloadTemplate
+        public IActionResult DownloadTemplate()
+        {
+            ExcelPackage.License.SetNonCommercialPersonal("Chino");
+            using (var package = new OfficeOpenXml.ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Sales Transaction Import Template");
+
+                // Add headers
+                worksheet.Cells[1, 1].Value = "ContractNumber";
+                worksheet.Cells[1, 2].Value = "TypeOfSale";
+                worksheet.Cells[1, 3].Value = "HoldingDate";
+                worksheet.Cells[1, 4].Value = "TransactionType";
+                worksheet.Cells[1, 5].Value = "StatusInGeneral";
+                worksheet.Cells[1, 6].Value = "Milestone";
+                worksheet.Cells[1, 7].Value = "NewColorStatus";
+
+                // Add sample data
+                worksheet.Cells[2, 1].Value = "12345";
+                worksheet.Cells[2, 2].Value = "New Sale";
+                worksheet.Cells[2, 3].Value = "5/21/2024";
+                worksheet.Cells[2, 4].Value = "Regular";
+                worksheet.Cells[2, 5].Value = "Active";
+                worksheet.Cells[2, 6].Value = "Initial";
+                worksheet.Cells[2, 7].Value = "GREEN";
+
+                // Style the header row
+                using (var range = worksheet.Cells[1, 1, 1, 7])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+
+                // Auto-fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Convert to byte array
+                var content = package.GetAsByteArray();
+
+                // Return the file
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "SalesTransactionImportTemplate.xlsx");
+            }
         }
     }
 }
