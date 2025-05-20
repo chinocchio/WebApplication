@@ -6,6 +6,9 @@ using WebApplication2.ViewModels;
 using ExcelDataReader;
 using System.Data;
 using System.Text;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace WebApplication2.Controllers
 {
@@ -460,6 +463,47 @@ namespace WebApplication2.Controllers
             }
 
             return View(model);
+        }
+
+        // GET: Property/DownloadTemplate
+        public IActionResult DownloadTemplate()
+        {
+            ExcelPackage.License.SetNonCommercialPersonal("Chino");
+            using (var package = new OfficeOpenXml.ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Property Import Template");
+
+                // Add headers
+                worksheet.Cells[1, 1].Value = "ContractNumber";
+                worksheet.Cells[1, 2].Value = "PropertyType";
+                worksheet.Cells[1, 3].Value = "ProjectName";
+                worksheet.Cells[1, 4].Value = "BuildingPhase";
+                worksheet.Cells[1, 5].Value = "UnitCode";
+
+                // Add sample data
+                worksheet.Cells[2, 1].Value = "12345";
+                worksheet.Cells[2, 2].Value = "Residential";
+                worksheet.Cells[2, 3].Value = "Green Valley";
+                worksheet.Cells[2, 4].Value = "Phase 1";
+                worksheet.Cells[2, 5].Value = "GV-P1-101";
+
+                // Style the header row
+                using (var range = worksheet.Cells[1, 1, 1, 5])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+
+                // Auto-fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Convert to byte array
+                var content = package.GetAsByteArray();
+
+                // Return the file
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "PropertyImportTemplate.xlsx");
+            }
         }
     }
 }
