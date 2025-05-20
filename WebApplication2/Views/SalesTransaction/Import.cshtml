@@ -13,7 +13,7 @@
     }
 
     .form-card {
-        background: white;
+        background: var(--card-bg);
         border-radius: var(--border-radius);
         box-shadow: var(--card-shadow);
         margin-bottom: 2rem;
@@ -21,11 +21,20 @@
     }
 
     .card-header {
-        background-color: var(--primary-color);
+        background: var(--primary-color);
         color: white;
-        padding: 1.25rem;
+        border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+        padding: 1.5rem;
         font-weight: 600;
         border: none;
+    }
+
+    .card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .card-body {
@@ -35,41 +44,105 @@
     .form-label {
         font-weight: 500;
         color: var(--text-primary);
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
     }
 
-    .form-control {
-        border: 2px solid var(--border-color);
+    .form-control[type="file"] {
+        border: 2px solid var(--input-border);
         border-radius: var(--border-radius);
         padding: 0.75rem 1rem;
-        font-size: 1rem;
+        background: var(--input-bg);
+        color: var(--input-text);
         transition: all var(--transition-speed) ease;
     }
 
-    .form-control:focus {
+    .form-control[type="file"]:hover {
         border-color: var(--primary-light);
+        transform: translateY(-1px);
+    }
+
+    .form-control[type="file"]:focus {
+        border-color: var(--input-focus-border);
         box-shadow: 0 0 0 3px var(--input-focus-shadow);
-        outline: none;
+    }
+
+    .form-text {
+        color: var(--text-muted);
+        margin-top: 0.75rem;
     }
 
     .btn-group {
         display: flex;
         gap: 1rem;
         margin-top: 2rem;
+        flex-wrap: wrap;
     }
 
     .btn-custom {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
         padding: 0.75rem 1.5rem;
-        font-weight: 500;
         border-radius: var(--border-radius);
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(25,92,75,0.08);
+        border: none;
         transition: all var(--transition-speed) ease;
+        min-width: 180px;
+        min-height: 48px;
+        font-size: 1rem;
     }
 
     .btn-custom i {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+    }
+
+    .btn-custom.btn-primary {
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+    .btn-custom.btn-primary:hover {
+        background: var(--primary-dark);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-color);
+    }
+
+    .btn-custom.btn-info {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+    }
+
+    .btn-custom.btn-info:hover {
+        background: var(--primary-color);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-color);
+    }
+
+    .btn-custom.btn-secondary {
+        background: var(--secondary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-custom.btn-secondary:hover {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-color);
+    }
+
+    @@media (max-width: 768px) {
+        .btn-group {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .btn-custom {
+            width: 100%;
+            min-width: unset;
+        }
     }
 
     .instructions-card {
@@ -79,23 +152,59 @@
     }
 
     .instructions-card .card-header {
-        background-color: var(--primary-light);
-        color: var(--primary-dark);
+        background: var(--primary-dark);
+        color: white;
     }
 
     .alert {
         border-radius: var(--border-radius);
         border: none;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
     }
 
     .alert-danger {
-        background-color: #fff5f5;
-        color: #dc3545;
+        background: #fee2e2;
+        color: #dc2626;
     }
 
     .alert-warning {
-        background-color: #fff8e6;
+        background: #fff8e6;
         color: #856404;
+    }
+
+    .sample-table {
+        margin-top: 1.5rem;
+        border-radius: var(--border-radius);
+        width: 100%;
+        min-width: 700px;
+    }
+
+    .table-responsive {
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 4px var(--shadow-color);
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .sample-table th {
+        background: var(--primary-color);
+        color: white;
+        font-weight: 500;
+        padding: 0.75rem;
+        white-space: nowrap;
+        font-size: 0.875rem;
+    }
+
+    .sample-table td {
+        padding: 0.75rem;
+        border-color: var(--border-color);
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+
+    .sample-table tr:nth-child(even) {
+        background: var(--secondary-color);
     }
 </style>
 
@@ -104,9 +213,7 @@
         <h2 class="mb-0">
             <i class="bi bi-file-earmark-arrow-up me-2"></i>Import Sales Transactions
         </h2>
-        <a asp-action="Index" class="btn btn-custom btn-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Back to List
-        </a>
+       
     </div>
 
     <div class="row">
@@ -129,19 +236,46 @@
                                 The file should contain the following columns:<br />
                                 ContractNumber, TypeOfSale, HoldingDate, TransactionType, StatusInGeneral, Milestone, NewColorStatus
                             </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered sample-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ContractNumber</th>
+                                            <th>TypeOfSale</th>
+                                            <th>HoldingDate</th>
+                                            <th>TransactionType</th>
+                                            <th>StatusInGeneral</th>
+                                            <th>Milestone</th>
+                                            <th>NewColorStatus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>12345</td>
+                                            <td>Retail</td>
+                                            <td>5/21/2022</td>
+                                            <td>Installment</td>
+                                            <td>Active</td>
+                                            <td>Reservation</td>
+                                            <td>Green</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div style="font-size:0.85em;color:var(--text-muted);margin-top:0.5rem;">Scroll right to see all columns if needed.</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="btn-group">
                     <button type="submit" class="btn btn-custom btn-primary">
-                        <i class="bi bi-cloud-upload me-2"></i>Upload and Import
+                        <i class="bi bi-cloud-upload me-2"></i>Import Sales Transactions
                     </button>
-                    <a asp-controller="SalesTransaction" asp-action="DownloadTemplate" class="btn btn-info">
-                        <i class="bi bi-cloud-upload me-2"></i> Download Template
+                    <a asp-controller="SalesTransaction" asp-action="DownloadTemplate" class="btn btn-custom btn-info">
+                        <i class="bi bi-download me-2"></i>Download Template
                     </a>
-                    <a asp-action="Index" class="btn btn-secondary">
-                        <i class="bi bi-cloud-upload me-2"></i> Back to List
+                    <a asp-action="SearchResults" class="btn btn-custom btn-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Back to List
                     </a>
                 </div>
             </form>
