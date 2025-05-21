@@ -1,0 +1,442 @@
+@model WebApplication2.ViewModels.CreditReviewImportViewModel
+
+@{
+    ViewData["Title"] = "Import Credit Reviews";
+    Layout = "_Layout";
+}
+
+<style>
+    .import-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .import-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        border: none;
+        transition: all var(--transition-speed) ease;
+    }
+
+    .import-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px var(--shadow-color);
+    }
+
+    .card-header {
+        background: var(--primary-color);
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+        padding: 1.5rem;
+    }
+
+    .card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+    }
+
+    .custom-file-input {
+        border: 2px solid var(--input-border);
+        border-radius: var(--border-radius);
+        padding: 0.75rem 1rem;
+        background: var(--input-bg);
+        color: var(--input-text);
+        transition: all var(--transition-speed) ease;
+    }
+
+    .custom-file-input:hover {
+        border-color: var(--primary-light);
+        transform: translateY(-1px);
+    }
+
+    .custom-file-input:focus {
+        border-color: var(--input-focus-border);
+        box-shadow: 0 0 0 3px var(--input-focus-shadow);
+    }
+
+    .form-text {
+        color: var(--text-muted);
+        margin-top: 0.75rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-custom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(25,92,75,0.08);
+        border: none;
+        transition: all var(--transition-speed) ease;
+        min-width: 180px;
+        min-height: 48px;
+        font-size: 1rem;
+    }
+
+    .btn-custom i {
+        font-size: 1.2rem;
+    }
+
+    .btn-custom.btn-primary {
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+    .btn-custom.btn-primary:hover {
+        background: var(--primary-dark);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-color);
+    }
+
+    .btn-custom.btn-info {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+    }
+
+    .btn-custom.btn-info:hover {
+        background: var(--primary-color);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-color);
+    }
+
+    .btn-custom.btn-secondary {
+        background: var(--secondary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-custom.btn-secondary:hover {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-color);
+    }
+
+    .alert {
+        border-radius: var(--border-radius);
+        border: none;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .alert-success {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .alert-info {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .guidelines-card {
+        height: 100%;
+    }
+
+    .guidelines-card .card-header {
+        background: var(--primary-dark);
+    }
+
+    .guidelines-card ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .guidelines-card li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .guidelines-card li:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .guidelines-card li i {
+        color: var(--primary-color);
+        margin-top: 0.25rem;
+    }
+
+    .sample-table {
+        margin-top: 1.5rem;
+        border-radius: var(--border-radius);
+        width: 100%;
+        min-width: 700px;
+    }
+
+    .sample-table .table {
+        margin-bottom: 0;
+        min-width: 600px;
+    }
+
+    .sample-table th {
+        background: var(--primary-color);
+        color: white;
+        font-weight: 500;
+        padding: 0.75rem;
+        white-space: nowrap;
+        font-size: 0.875rem;
+    }
+
+    .sample-table td {
+        padding: 0.75rem;
+        border-color: var(--border-color);
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+
+    .sample-table tr:nth-child(even) {
+        background: var(--secondary-color);
+    }
+
+    .table-responsive {
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 4px var(--shadow-color);
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: var(--secondary-color);
+        border-radius: 4px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: var(--primary-light);
+        border-radius: 4px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-color);
+    }
+</style>
+
+<div class="import-container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="import-card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-file-earmark-spreadsheet"></i> Import Credit Reviews</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Import" enctype="multipart/form-data" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="File" class="form-label">Select Excel or CSV File</label>
+                            <input asp-for="File" class="form-control custom-file-input" type="file" accept=".xlsx,.xls,.csv" />
+                            <span asp-validation-for="File" class="text-danger"></span>
+                            <div class="form-text">
+                                Supported file types: .xlsx, .xls, .csv
+                            </div>
+                        </div>
+
+                        <h6 class="mt-4 mb-3">Sample Format:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered sample-table">
+                                <thead>
+                                    <tr>
+                                        <th>ContractNumber</th>
+                                        <th>CreditReviewResult</th>
+                                        <th>CMAPResult</th>
+                                        <th>CreditReviewRemarks</th>
+                                        <th>NDIStatus</th>
+                                        <th>IsBankApporvable</th>
+                                        <th>RedTag</th>
+                                        <th>RedTagReason</th>
+                                        <th>CiCompletionDate</th>
+                                        <th>ReasonForPurchase</th>
+                                        <th>FirstHomeInPH</th>
+                                        <th>NumberOfHomesInPH</th>
+                                        <th>WithOtherCPGIUnits</th>
+                                        <th>ProjectOrUnitCodeOfOtherCPGIUnit</th>
+                                        <th>IncomeDeclaredPb</th>
+                                        <th>IncomeDeclaredCb</th>
+                                        <th>TotalIncomeCombined</th>
+                                        <th>TypeOfIncome</th>
+                                        <th>NdiRate</th>
+                                        <th>NetDisposableIncome</th>
+                                        <th>OtherLoans</th>
+                                        <th>NetNdi</th>
+                                        <th>NdiVsBankMaTobAmt</th>
+                                        <th>PercentOfNdiVsMa</th>
+                                        <th>NdiCategory</th>
+                                        <th>MaxTerm</th>
+                                        <th>EstimatedMaxTerm</th>
+                                        <th>PersonaCategory</th>
+                                        <th>ImmigrantOrNonImmigrant</th>
+                                        <th>HighRishk</th>
+                                        <th>HighRiskFactors</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>12345</td>
+                                        <td>Approved</td>
+                                        <td>Pass</td>
+                                        <td>Good credit history</td>
+                                        <td>Active</td>
+                                        <td>Yes</td>
+                                        <td>No</td>
+                                        <td></td>
+                                        <td>2024-03-20</td>
+                                        <td>Primary Residence</td>
+                                        <td>Yes</td>
+                                        <td>1</td>
+                                        <td>No</td>
+                                        <td></td>
+                                        <td>50000</td>
+                                        <td>30000</td>
+                                        <td>80000</td>
+                                        <td>Employment</td>
+                                        <td>40%</td>
+                                        <td>32000</td>
+                                        <td>5000</td>
+                                        <td>27000</td>
+                                        <td>25000</td>
+                                        <td>92.6%</td>
+                                        <td>A</td>
+                                        <td>30</td>
+                                        <td>25</td>
+                                        <td>Regular</td>
+                                        <td>Non-Immigrant</td>
+                                        <td>No</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="font-size:0.85em;color:var(--text-muted);margin-top:0.5rem;">Scroll right to see all columns if needed.</div>
+                        </div>
+
+                        @if (Model.ImportErrors != null && Model.ImportErrors.Any())
+                        {
+                            <div class="alert alert-danger">
+                                <h6 class="mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i>Import Errors:</h6>
+                                <ul class="mb-0">
+                                    @foreach (var error in Model.ImportErrors)
+                                    {
+                                        <li>@error</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
+
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-custom btn-primary">
+                                <i class="bi bi-cloud-upload me-2"></i>Import Credit Reviews
+                            </button>
+                            <a asp-controller="CreditReview" asp-action="DownloadTemplate" class="btn btn-custom btn-info">
+                                <i class="bi bi-download me-2"></i>Download Template
+                            </a>
+                            <a asp-controller="CreditReview" asp-action="Index" class="btn btn-custom btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="import-card guidelines-card">
+                <div class="card-header">
+                    <h5><i class="bi bi-info-circle"></i> Import Guidelines</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="mb-3">Before importing:</h6>
+                    <ul>
+                        <li>
+                            <i class="bi bi-check2-circle"></i>
+                            <div>Ensure all required fields are filled in your Excel/CSV file</div>
+                        </li>
+                        <li>
+                            <i class="bi bi-check2-circle"></i>
+                            <div>Contract Numbers must match existing sales transactions</div>
+                        </li>
+                        <li>
+                            <i class="bi bi-check2-circle"></i>
+                            <div>Dates should be in YYYY-MM-DD format</div>
+                        </li>
+                        <li>
+                            <i class="bi bi-check2-circle"></i>
+                            <div>Numeric values should not include currency symbols or commas</div>
+                        </li>
+                        <li>
+                            <i class="bi bi-check2-circle"></i>
+                            <div>Percentages should be entered as decimal values (e.g., 40% as 40)</div>
+                        </li>
+                    </ul>
+
+                    <div class="alert alert-info mt-4">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        Note: Contract Numbers must exist in the Sales Transactions table for successful linking.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    const fileName = this.files[0]?.name;
+                    if (fileName) {
+                        const label = this.nextElementSibling;
+                        label.textContent = `Selected file: ${fileName}`;
+                    }
+                });
+            }
+        });
+    </script>
+} 

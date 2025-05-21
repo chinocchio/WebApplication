@@ -1,16 +1,31 @@
-﻿namespace WebApplication2.Models
+using System.ComponentModel.DataAnnotations;
+
+namespace WebApplication2.ViewModels
 {
-    public class CreditReview
+    public class CreditReviewImportViewModel
     {
-        public int CreditReviewId { get; set; }
+        [Required(ErrorMessage = "Please select a file")]
+        public IFormFile? File { get; set; }
+
+        public List<string>? ImportErrors { get; set; }
+        public int SuccessCount { get; set; }
+        public int ErrorCount { get; set; }
+    }
+
+    public class CreditReviewImportRow
+    {
+        // Sales Transaction Information
+        public long ContractNumber { get; set; }
+
+        // Credit Review Information
         public string? CreditReviewResult { get; set; }
         public string? CMAPResult { get; set; }
         public string? CreditReviewRemarks { get; set; }
         public string? NDIStatus { get; set; }
-        public string? IsBankApporvable  { get; set; }
+        public string? IsBankApporvable { get; set; }
         public string? RedTag { get; set; }
         public string? RedTagReason { get; set; }
-        public DateOnly? CiCompletionDate { get; set; }
+        public DateOnly CiCompletionDate { get; set; }
         public string? ReasonForPurchase { get; set; }
         public string? FirstHomeInPH { get; set; }
         public int? NumberOfHomesInPH { get; set; }
@@ -33,6 +48,5 @@
         public string? ImmigrantOrNonImmigrant { get; set; }
         public string? HighRishk { get; set; }
         public string? HighRiskFactors { get; set; }
-        public List<SalesTransaction>? SalesTransaction { get; set; }
     }
-}
+} 
