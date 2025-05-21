@@ -164,6 +164,30 @@
         font-size: 0.95em;
         border: none;
     }
+    /* Search highlight styling */
+    mark {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        padding: 0.1em 0.3em;
+        border-radius: 3px;
+        font-weight: 500;
+    }
+
+    body.dark-mode mark {
+        background-color: var(--primary-light) !important;
+        color: var(--primary-color) !important;
+    }
+
+    .badge-orange {
+        background-color: #ff9800 !important;
+        color: #fff !important;
+        border-radius: 8px;
+        padding: 0.25em 0.75em;
+        font-weight: 600;
+        letter-spacing: 1px;
+        font-size: 0.95em;
+        display: inline-block;
+    }
 </style>
 
 @* Add Bootstrap Icons CDN if not already present *@
@@ -254,6 +278,10 @@
                                         <span class="badge bg-danger">RED</span>
                                     } else if (transaction.NewColorStatus?.ToUpper() == "LIGHT GREEN") {
                                         <span class="badge badge-lightgreen">LIGHT GREEN</span>
+                                    }
+                                    else if (transaction.NewColorStatus?.ToUpper() == "ORANGE")
+                                    {
+                                        <span class="badge badge-orange">ORANGE</span>
                                     } else {
                                         <span class="badge bg-secondary">@transaction.NewColorStatus</span>
                                     }

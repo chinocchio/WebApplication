@@ -566,7 +566,7 @@
             }
 
             .guide-content .highlight {
-                background: var(--primary-light);
+                background: var(--primary-color);
                 color: white;
                 padding: 0.2rem 0.5rem;
                 border-radius: 4px;
@@ -1240,16 +1240,30 @@
         html[data-theme="dark"] .table tbody tr:hover {
             background-color: #2d3238 !important;
         }
+
+        .dropdown-menu {
+            border-radius: 12px !important;
+            box-shadow: 0 4px 16px rgba(25,92,75,0.10) !important;
+            border: none !important;
+            padding: 0.5rem 0.25rem !important;
+        }
+        .dropdown-item {
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .dropdown-item:hover, .dropdown-item:focus {
+            background: var(--primary-light) !important;
+            color: var(--primary-dark) !important;
+        }
+        .dropdown-header {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color) !important;
+        }
     </style>
 </head>
 <body>
-    <div class="theme-switch-wrapper">
-        <i class="bi bi-moon-fill slider-icon"></i>
-        <div class="theme-switch">
-            <input type="checkbox" id="checkbox" />
-            <span class="slider"></span>
-        </div>
-    </div>
+  
     <div class="animated-background"></div>
     <div class="content-wrapper">
         <!-- Offcanvas -->
@@ -1276,6 +1290,63 @@
                     <a class="btn btn-custom" asp-area="" asp-controller="SalesTransaction" asp-action="Create">
                         <i class="bi bi-cart-plus me-2"></i>New Sale
                     </a>
+                    <div class="dropdown mt-1">
+                        <button class="btn btn-custom dropdown-toggle w-100 d-flex align-items-center justify-content-center" type="button" id="importDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-upload me-2"></i>
+                            <span>Import Data</span>
+                        </button>
+                        <ul class="dropdown-menu w-100 shadow rounded-3 p-2" aria-labelledby="importDropdown" style="min-width: 220px;">
+                            <li>
+                                <h6 class="dropdown-header text-primary mb-1">Import Options</h6>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-area="" asp-controller="SalesTransaction" asp-action="Import">
+                                    <i class="bi bi-file-earmark-arrow-up text-success"></i>
+                                    <span>
+                                        Sales Transactions<br>
+                                        <small class="text-muted">Import sales data from Excel</small>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-area="" asp-controller="BusinessPartner" asp-action="Import">
+                                    <i class="bi bi-people-fill text-info"></i>
+                                    <span>
+                                        Business Partners<br>
+                                        <small class="text-muted">Import partner data from Excel</small>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-area="" asp-controller="Property" asp-action="Import">
+                                    <i class="bi bi-building text-warning"></i>
+                                    <span>
+                                        Properties<br>
+                                        <small class="text-muted">Import property data from Excel</small>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-area="" asp-controller="CreditReview" asp-action="Import">
+                                    <i class="bi bi-file-earmark-check text-success"></i>
+                                    <span>
+                                        Credit Reviews<br>
+                                        <small class="text-muted">Import credit review data from Excel</small>
+                                    </span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-muted" href="#">
+                                    <i class="bi bi-question-circle"></i>
+                                    <span>
+                                        Help & Guidelines<br>
+                                        <small>View import templates and instructions</small>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1451,43 +1522,56 @@
             <div class="guide-step" data-step="5">
                 <h2 class="guide-title">Sales Transactions</h2>
                 <div class="guide-content">
-                    <p>To create a new sale:</p>
-                    <ol>
-                        <li>Click the "New Sale" button</li>
-                        <li>Select the property</li>
-                        <li>
-                            Enter the sale details:
-                            <ul>
-                                <li>Buyer information</li>
-                                <li>Sale price</li>
-                                <li>Payment terms</li>
-                            </ul>
-                        </li>
-                        <li>Click "Create" to complete the transaction</li>
-                    </ol>
+                    <ul>
+                        <li><b>Create:</b> Click "New Sale"</li>
+                        <li><b>Edit/View:</b> Update or review transaction details</li>
+                        <li><b>Track:</b> Monitor required docs & status</li>
+                        <li><b>Search:</b> By contract, buyer, unit, or proponent</li>
+                    </ul>
                     <div class="guide-illustration">
                         <i class="bi bi-cart-check" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                    <div class="guide-tip">
+                        <i class="bi bi-lightbulb"></i> Tip: Use partial search terms for best results.
                     </div>
                 </div>
             </div>
 
             <div class="guide-step" data-step="6">
-                <h2 class="guide-title">Property Details View</h2>
+                <h2 class="guide-title">Transaction Management</h2>
                 <div class="guide-content">
-                    <p>When viewing a property, you can:</p>
                     <ul>
-                        <li><i class="bi bi-pencil"></i> Edit property information</li>
-                        <li><i class="bi bi-trash"></i> Delete the property</li>
-                        <li><i class="bi bi-eye"></i> View detailed information</li>
+                        <li><b>Edit:</b> Update transaction, buyer, payment, or milestone info</li>
+                        <li><b>View:</b> See history, docs, payments, credit review</li>
+                        <li><b>Track:</b> Monitor payments, due dates, discounts, compliance</li>
                     </ul>
                     <div class="guide-illustration">
-                        <i class="bi bi-info-circle" style="font-size: 4rem; color: var(--primary-color);"></i>
+                        <i class="bi bi-gear-fill" style="font-size: 4rem; color: var(--primary-color);"></i>
                     </div>
-                    <p class="guide-tip"><i class="bi bi-lightbulb"></i> Tip: Use the edit button to update property details anytime.</p>
+                    <div class="guide-tip">
+                        <i class="bi bi-lightbulb"></i> Tip: Review and update details regularly.
+                    </div>
                 </div>
             </div>
 
             <div class="guide-step" data-step="7">
+                <h2 class="guide-title">Property Details View</h2>
+                <div class="guide-content">
+                    <ul>
+                        <li><b>Edit:</b> Update property info, specs, price, or status</li>
+                        <li><b>View:</b> See specs, location, price, history</li>
+                        <li><b>Track:</b> Check availability, reservations, maintenance, docs</li>
+                    </ul>
+                    <div class="guide-illustration">
+                        <i class="bi bi-info-circle" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                    <div class="guide-tip">
+                        <i class="bi bi-lightbulb"></i> Tip: Keep property info current.
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-step" data-step="8">
                 <h2 class="guide-title">Sales Management</h2>
                 <div class="guide-content">
                     <p>In the sales section, you can:</p>
@@ -1502,7 +1586,7 @@
                 </div>
             </div>
 
-            <div class="guide-step" data-step="8">
+            <div class="guide-step" data-step="9">
                 <h2 class="guide-title">System Settings</h2>
                 <div class="guide-content">
                     <p>Customize your experience:</p>

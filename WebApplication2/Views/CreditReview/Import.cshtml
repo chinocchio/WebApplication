@@ -1,7 +1,7 @@
-@model WebApplication2.ViewModels.PropertyImportViewModel
+@model WebApplication2.ViewModels.CreditReviewImportViewModel
 
 @{
-    ViewData["Title"] = "Import Properties";
+    ViewData["Title"] = "Import Credit Reviews";
     Layout = "_Layout";
 }
 
@@ -74,35 +74,6 @@
         margin-top: 0.75rem;
     }
 
-    .required-columns {
-        background: var(--secondary-color);
-        border-radius: var(--border-radius);
-        padding: 1.5rem;
-        margin-top: 1rem;
-    }
-
-    .required-columns ul {
-        list-style: none;
-        padding-left: 0;
-        margin: 0;
-    }
-
-    .required-columns li {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .required-columns li:last-child {
-        border-bottom: none;
-    }
-
-    .required-columns li i {
-        color: var(--primary-color);
-    }
-
     .btn-group {
         display: flex;
         gap: 1rem;
@@ -164,17 +135,6 @@
         color: var(--primary-dark);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px var(--shadow-color);
-    }
-
-    @@media (max-width: 768px) {
-        .btn-group {
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        .btn-custom {
-            width: 100%;
-            min-width: unset;
-        }
     }
 
     .alert {
@@ -295,7 +255,7 @@
         <div class="col-md-8">
             <div class="import-card mb-4">
                 <div class="card-header">
-                    <h5><i class="bi bi-building-add"></i> Import Properties</h5>
+                    <h5><i class="bi bi-file-earmark-spreadsheet"></i> Import Credit Reviews</h5>
                 </div>
                 <div class="card-body">
                     <form asp-action="Import" enctype="multipart/form-data" method="post">
@@ -310,27 +270,77 @@
                             </div>
                         </div>
 
-                      
-
                         <h6 class="mt-4 mb-3">Sample Format:</h6>
                         <div class="table-responsive">
                             <table class="table table-sm table-bordered sample-table">
                                 <thead>
                                     <tr>
                                         <th>ContractNumber</th>
-                                        <th>PropertyType</th>
-                                        <th>ProjectName</th>
-                                        <th>BuildingPhase</th>
-                                        <th>UnitCode</th>
+                                        <th>CreditReviewResult</th>
+                                        <th>CMAPResult</th>
+                                        <th>CreditReviewRemarks</th>
+                                        <th>NDIStatus</th>
+                                        <th>IsBankApporvable</th>
+                                        <th>RedTag</th>
+                                        <th>RedTagReason</th>
+                                        <th>CiCompletionDate</th>
+                                        <th>ReasonForPurchase</th>
+                                        <th>FirstHomeInPH</th>
+                                        <th>NumberOfHomesInPH</th>
+                                        <th>WithOtherCPGIUnits</th>
+                                        <th>ProjectOrUnitCodeOfOtherCPGIUnit</th>
+                                        <th>IncomeDeclaredPb</th>
+                                        <th>IncomeDeclaredCb</th>
+                                        <th>TotalIncomeCombined</th>
+                                        <th>TypeOfIncome</th>
+                                        <th>NdiRate</th>
+                                        <th>NetDisposableIncome</th>
+                                        <th>OtherLoans</th>
+                                        <th>NetNdi</th>
+                                        <th>NdiVsBankMaTobAmt</th>
+                                        <th>PercentOfNdiVsMa</th>
+                                        <th>NdiCategory</th>
+                                        <th>MaxTerm</th>
+                                        <th>EstimatedMaxTerm</th>
+                                        <th>PersonaCategory</th>
+                                        <th>ImmigrantOrNonImmigrant</th>
+                                        <th>HighRishk</th>
+                                        <th>HighRiskFactors</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>12345</td>
-                                        <td>Residential</td>
-                                        <td>Green Valley</td>
-                                        <td>Phase 1</td>
-                                        <td>GV-P1-101</td>
+                                        <td>Approved</td>
+                                        <td>Pass</td>
+                                        <td>Good credit history</td>
+                                        <td>Active</td>
+                                        <td>Yes</td>
+                                        <td>No</td>
+                                        <td></td>
+                                        <td>2024-03-20</td>
+                                        <td>Primary Residence</td>
+                                        <td>Yes</td>
+                                        <td>1</td>
+                                        <td>No</td>
+                                        <td></td>
+                                        <td>50000</td>
+                                        <td>30000</td>
+                                        <td>80000</td>
+                                        <td>Employment</td>
+                                        <td>40%</td>
+                                        <td>32000</td>
+                                        <td>5000</td>
+                                        <td>27000</td>
+                                        <td>25000</td>
+                                        <td>92.6%</td>
+                                        <td>A</td>
+                                        <td>30</td>
+                                        <td>25</td>
+                                        <td>Regular</td>
+                                        <td>Non-Immigrant</td>
+                                        <td>No</td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -360,12 +370,12 @@
 
                         <div class="btn-group">
                             <button type="submit" class="btn btn-custom btn-primary">
-                                <i class="bi bi-cloud-upload me-2"></i>Import Properties
+                                <i class="bi bi-cloud-upload me-2"></i>Import Credit Reviews
                             </button>
-                            <a asp-controller="Property" asp-action="DownloadTemplate" class="btn btn-custom btn-info">
+                            <a asp-controller="CreditReview" asp-action="DownloadTemplate" class="btn btn-custom btn-info">
                                 <i class="bi bi-download me-2"></i>Download Template
                             </a>
-                            <a asp-controller="Property" asp-action="SearchResults" class="btn btn-custom btn-secondary">
+                            <a asp-controller="CreditReview" asp-action="Index" class="btn btn-custom btn-secondary">
                                 <i class="bi bi-arrow-left me-2"></i>Back to List
                             </a>
                         </div>
@@ -392,19 +402,18 @@
                         </li>
                         <li>
                             <i class="bi bi-check2-circle"></i>
-                            <div>Each UnitCode should be unique</div>
+                            <div>Dates should be in YYYY-MM-DD format</div>
                         </li>
                         <li>
                             <i class="bi bi-check2-circle"></i>
-                            <div>PropertyType should match your system's categories</div>
+                            <div>Numeric values should not include currency symbols or commas</div>
                         </li>
                         <li>
                             <i class="bi bi-check2-circle"></i>
-                            <div>ProjectName should be consistent across related units</div>
+                            <div>Percentages should be entered as decimal values (e.g., 40% as 40)</div>
                         </li>
                     </ul>
 
-                   
                     <div class="alert alert-info mt-4">
                         <i class="bi bi-info-circle-fill me-2"></i>
                         Note: Contract Numbers must exist in the Sales Transactions table for successful linking.
@@ -417,9 +426,7 @@
 
 @section Scripts {
     <script>
-        // Add any custom JavaScript here if needed
         document.addEventListener('DOMContentLoaded', function() {
-            // File input styling
             const fileInput = document.querySelector('input[type="file"]');
             if (fileInput) {
                 fileInput.addEventListener('change', function() {
@@ -432,5 +439,4 @@
             }
         });
     </script>
-}
-
+} 
