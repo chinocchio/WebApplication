@@ -132,11 +132,11 @@
 
             <!-- Mga button na pang-mabilisang desisyon, wag ka magdalawang isip! -->
             <div class="btn-group">
-                <button type="submit" class="btn btn-custom" id="submitBtn">
+                <button type="submit" class="btn btn-custom" id="submitBtn" asp-action="SearchResults" asp-controller="SalesTransaction">
                     <span id="spinner" class="spinner-border spinner-border-sm d-none"></span>
                     <i class="bi bi-plus-circle"></i>Create Property
                 </button>
-                <a asp-action="SearchResults" class="btn btn-custom back-btn">
+                <a asp-action="SearchResults" asp-controller="SalesTransaction" class="btn btn-custom back-btn">
                     <i class="bi bi-arrow-left"></i>Cancel
                 </a>
             </div>

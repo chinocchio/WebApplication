@@ -768,5 +768,38 @@ namespace WebApplication2.Controllers
                 return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "SalesTransactionImportTemplate.xlsx");
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddBuyersLedger(BuyerLedger model)
+        {
+            if (ModelState.IsValid)
+            {
+                var salesTransaction = await _context.SalesTransactions
+                    .Include(s => s.Properties)
+                    .Include(s => s.BusinessPartner)
+                    .FirstOrDefaultAsync(s => s.ContractNumber == model.ContractNumber);
+
+                if (salesTransaction == null)
+                {
+                    ModelState.AddModelError("ContractNumber", "Invalid contract number");
+                    TempData["LedgerError"] = "Invalid contract number.";
+                    return RedirectToAction("SearchResults", new { searchTerm = model.ContractNumber });
+                }
+
+                model.UnitCode = salesTransaction.Properties?.UnitCode;
+                model.CustomerCode = salesTransaction.BusinessPartner?.CustomerCode;
+                model.WhenDue = DateOnly.FromDateTime(DateTime.Now);
+                model.PaymentTermSchedule = DateOnly.FromDateTime(DateTime.Now);
+
+                _context.BuyerLedgers.Add(model);
+                await _context.SaveChangesAsync();
+                TempData["LedgerSuccess"] = "Buyer's ledger entry created successfully.";
+                return RedirectToAction("SearchResults", new { searchTerm = model.ContractNumber });
+            }
+            // If validation fails, show error
+            TempData["LedgerError"] = "Validation failed. Please check your input.";
+            return RedirectToAction("SearchResults", new { searchTerm = model.ContractNumber });
+        }
     }
 }

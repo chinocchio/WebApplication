@@ -745,6 +745,61 @@
                                         </div>
 
                                         <div class="tab-pane fade" id="buyerLedgerContent-@transaction.SalesTransactionId" role="tabpanel">
+                                            @* Show success/error messages *@
+                                            @if (TempData["LedgerSuccess"] != null)
+                                            {
+                                                <div class="alert alert-success">@TempData["LedgerSuccess"]</div>
+                                            }
+                                            @if (TempData["LedgerError"] != null)
+                                            {
+                                                <div class="alert alert-danger">@TempData["LedgerError"]</div>
+                                            }
+                                            
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-primary text-white">
+                                                    <strong>Add Buyer's Ledger Entry</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form asp-action="AddBuyersLedger" asp-controller="SalesTransaction" method="post" class="row g-3">
+                                                        <input type="hidden" name="ContractNumber" value="@transaction.ContractNumber" />
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Unit Code</label>
+                                                            <input type="text" class="form-control" name="UnitCode" value="@transaction.Properties?.UnitCode" readonly />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Customer Code</label>
+                                                            <input type="text" class="form-control" name="CustomerCode" value="@transaction.BusinessPartner?.CustomerCode" readonly />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Paid FT</label>
+                                                            <input type="text" class="form-control" name="PaymentNumber" />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Invoice Number</label>
+                                                            <input type="text" class="form-control" name="PaymentReferenceDocNumber" />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Amount Due</label>
+                                                            <input type="number" step="0.01" class="form-control" name="AmountDue" />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Payment Mode</label>
+                                                            <select class="form-select" name="PaymentReferenceDocType">
+                                                                <option value="">-- Select Payment Mode --</option>
+                                                                <option value="Cash">Cash</option>
+                                                                <option value="Check">Check</option>
+                                                                <option value="Bank Transfer">Bank Transfer</option>
+                                                                <option value="Credit Card">Credit Card</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <button type="submit" class="btn btn-success">
+                                                                <i class="bi bi-save me-2"></i>Add Entry
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                             @if (item.BuyerLedgers != null && item.BuyerLedgers.Count > 0)
                                             {
                                                 <div class="card mb-4">

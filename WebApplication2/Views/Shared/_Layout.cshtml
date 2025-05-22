@@ -1277,7 +1277,7 @@
                     <form method="get">
                         <input type="text" name="searchTerm" class="form-control custom-input"
                                value="@ViewBag.SearchTerm" placeholder="Search Contract No, Fullname, or Unit Code" />
-                        <button type="submit" asp-action="SearchResults" class="btn-custom">
+                        <button type="submit" asp-action="SearchResults" asp-controller="SalesTransaction" class="btn-custom">
                             <i class="bi bi-search me-2"></i>Search
                         </button>
                     </form>
@@ -1289,6 +1289,9 @@
                     </a>
                     <a class="btn btn-custom" asp-area="" asp-controller="SalesTransaction" asp-action="Create">
                         <i class="bi bi-cart-plus me-2"></i>New Sale
+                    </a>
+                    <a class="btn btn-custom" asp-area="" asp-controller="BuyersLedger" asp-action="Create">
+                        <i class="bi bi-journal-plus me-2"></i>New Buyers Ledger
                     </a>
                     <div class="dropdown mt-1">
                         <button class="btn btn-custom dropdown-toggle w-100 d-flex align-items-center justify-content-center" type="button" id="importDropdown" data-bs-toggle="dropdown" aria-expanded="false">

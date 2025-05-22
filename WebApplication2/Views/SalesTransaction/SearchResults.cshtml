@@ -164,6 +164,255 @@
         font-size: 0.95em;
         border: none;
     }
+    /* Action Buttons Styling */
+    .btn-group {
+        display: flex;
+        gap: 0.25rem;
+        align-items: center;
+    }
+
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        transition: all 0.2s ease-in-out;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-group .btn i {
+        font-size: 0.875rem;
+        transition: transform 0.2s ease;
+    }
+
+    .btn-group .btn:hover i {
+        transform: scale(1.1);
+    }
+
+    .btn-group .btn-outline-primary {
+        color: #0d6efd;
+        border-color: #0d6efd;
+        background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    .btn-group .btn-outline-primary:hover {
+        color: #fff;
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);
+    }
+
+    .btn-group .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.05);
+    }
+
+    .btn-group .btn-outline-danger:hover {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+        box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+    }
+
+    .btn-group .btn-outline-info {
+        color: #0dcaf0;
+        border-color: #0dcaf0;
+        background-color: rgba(13, 202, 240, 0.05);
+    }
+
+    .btn-group .btn-outline-info:hover {
+        color: #fff;
+        background-color: #0dcaf0;
+        border-color: #0dcaf0;
+        box-shadow: 0 2px 4px rgba(13, 202, 240, 0.2);
+    }
+
+    /* Dark mode button styles */
+    body.dark-mode .btn-group .btn-outline-primary {
+        color: #6ea8fe;
+        border-color: #6ea8fe;
+        background-color: rgba(110, 168, 254, 0.1);
+    }
+
+    body.dark-mode .btn-group .btn-outline-primary:hover {
+        color: #fff;
+        background-color: #6ea8fe;
+        border-color: #6ea8fe;
+    }
+
+    body.dark-mode .btn-group .btn-outline-danger {
+        color: #f87171;
+        border-color: #f87171;
+        background-color: rgba(248, 113, 113, 0.1);
+    }
+
+    body.dark-mode .btn-group .btn-outline-danger:hover {
+        color: #fff;
+        background-color: #f87171;
+        border-color: #f87171;
+    }
+
+    body.dark-mode .btn-group .btn-outline-info {
+        color: #67e8f9;
+        border-color: #67e8f9;
+        background-color: rgba(103, 232, 249, 0.1);
+    }
+
+    body.dark-mode .btn-group .btn-outline-info:hover {
+        color: #fff;
+        background-color: #67e8f9;
+        border-color: #67e8f9;
+    }
+
+    /* Tooltip customization */
+    .tooltip {
+        font-size: 0.875rem;
+    }
+
+    .tooltip .tooltip-inner {
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Toast customization */
+    .toast {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1050;
+        min-width: 300px;
+        background-color: #fff;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .toast.bg-success {
+        background-color: #198754 !important;
+    }
+
+    .toast .toast-body {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        color: #fff;
+    }
+
+    .toast .toast-body i {
+        margin-right: 0.5rem;
+        font-size: 1.25rem;
+    }
+
+    /* Loading spinner enhancement */
+    #spinnerOverlay {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(4px);
+    }
+
+    body.dark-mode #spinnerOverlay {
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.25rem;
+    }
+
+    /* Empty Search Message Styling */
+    .empty-search-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .empty-search-icon {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 1.5rem;
+        color: #6c757d;
+        opacity: 0.7;
+    }
+
+    .empty-search-message {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .empty-search-message h4 {
+        color: #495057;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .empty-search-message p {
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+
+    .search-tips {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1.5rem;
+        max-width: 400px;
+    }
+
+    .search-tips ul {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+    .search-tips li {
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-tips li i {
+        margin-right: 0.5rem;
+        color: #0d6efd;
+    }
+
+    /* Dark mode styles */
+    body.dark-mode .empty-search-message h4 {
+        color: #e9ecef;
+    }
+
+    body.dark-mode .empty-search-message p,
+    body.dark-mode .search-tips li {
+        color: #adb5bd;
+    }
+
+    body.dark-mode .empty-search-icon {
+        color: #adb5bd;
+    }
+
+    body.dark-mode .search-tips {
+        background-color: #2b3035;
+    }
+
+    body.dark-mode .search-tips li i {
+        color: #6ea8fe;
+    }
+
+    .badge-orange {
+        background-color: #ff9800 !important;
+        color: #fff !important;
+        border-radius: 8px;
+        padding: 0.25em 0.75em;
+        font-weight: 600;
+        letter-spacing: 1px;
+        font-size: 0.95em;
+        display: inline-block;
+    }
+
     /* Search highlight styling */
     mark {
         background-color: var(--primary-color) !important;
@@ -178,15 +427,59 @@
         color: var(--primary-color) !important;
     }
 
-    .badge-orange {
-        background-color: #ff9800 !important;
-        color: #fff !important;
-        border-radius: 8px;
-        padding: 0.25em 0.75em;
+    .buyers-ledger-form-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 6px 32px rgba(25,92,75,0.10);
+        margin-bottom: 2rem;
+        border: 2px solid #7ec8a6;
+    }
+    .buyers-ledger-form-card .card-header {
+        background: linear-gradient(90deg, #195c4b 80%, #2196f3 100%);
+        color: #fff;
+        border-radius: 20px 20px 0 0 !important;
+        padding: 1.25rem 1.5rem;
         font-weight: 600;
-        letter-spacing: 1px;
-        font-size: 0.95em;
-        display: inline-block;
+        font-size: 1.1rem;
+        border: none;
+    }
+    .buyers-ledger-form-card .card-body {
+        padding: 1.5rem 1.5rem 1rem 1.5rem;
+    }
+    .buyers-ledger-form-card .form-label {
+        color: #195c4b;
+        font-weight: 500;
+        font-size: 1.05rem;
+        margin-bottom: 0.25rem;
+    }
+    .buyers-ledger-form-card .form-control, .buyers-ledger-form-card .form-select {
+        border-radius: 12px;
+        border: 2px solid #7ec8a6;
+        background: #fff;
+        color: #195c4b;
+        font-size: 1.05rem;
+        padding: 0.7rem 1rem;
+        margin-bottom: 1.1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .buyers-ledger-form-card .form-control:focus, .buyers-ledger-form-card .form-select:focus {
+        border-color: #195c4b;
+        box-shadow: 0 0 0 0.13rem #7ec8a655;
+        background: #e6f4ee;
+    }
+    .buyers-ledger-form-card .btn-success {
+        background: #195c4b;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 0.75rem 2.2rem;
+        font-size: 1.05rem;
+        box-shadow: 0 2px 8px #7ec8a633;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .buyers-ledger-form-card .btn-success:hover, .buyers-ledger-form-card .btn-success:focus {
+        background: #143f34;
+        box-shadow: 0 4px 16px #195c4b22;
     }
 </style>
 
@@ -198,23 +491,43 @@
    
     <h2>Search Results</h2>
     
-    <!-- Alert, parang text ng nanay mo pag late ka na. -->
-    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+    @if (string.IsNullOrWhiteSpace(ViewBag.SearchTerm))
     {
+        <div class="empty-search-container">
+            <svg class="empty-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" 
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="empty-search-message">
+                <h4>Please Enter a Search Term</h4>
+                <p>To find sales transactions, please enter a search term in the search box above.</p>
+                <div class="search-tips">
+                    <p class="mb-2"><strong>Search Tips:</strong></p>
+                    <ul>
+                        <li><i class="bi bi-check-circle-fill"></i>Search by contract number</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Search by buyer's name</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Search by property unit code</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Search by customer code</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    else if (ViewBag.SalesTransactions != null && ViewBag.SalesTransactions.Count > 0)
+    {
+        <!-- Alert, parang text ng nanay mo pag late ka na. -->
         <div class="alert alert-info">
             Showing results for: <strong>@ViewBag.SearchTerm</strong>
         </div>
-    }
 
-    <!-- Result count, parang attendance check sa klase. -->
-    @if (ViewBag.SalesTransactions != null && ViewBag.SalesTransactions.Count > 0)
-    {
+        <!-- Result count, parang attendance check sa klase. -->
         <div class="mb-3">
             <span class="badge bg-success fs-6">
                 @ViewBag.SalesTransactions.Count result@(ViewBag.SalesTransactions.Count == 1 ? "" : "s") found for:
                 <strong>@ViewBag.SearchTerm</strong>
             </span>
         </div>
+
         <!-- Tabs, parang barkadahan na may kanya-kanyang trip. -->
         <ul class="nav nav-tabs mt-4" id="transactionTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -254,6 +567,7 @@
                             <th>Milestone</th>
                             <th>Status Color</th>
                             <th>Status In General</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -265,28 +579,46 @@
                             <tr class="clickable-row table-primary" style="cursor:pointer;" data-bs-target="@targetId">
                                 <td>@Highlight(transaction.ContractNumber?.ToString(), ViewBag.SearchTerm as string)</td>
                                 <td>@transaction.TypeOfSale</td>
-                                <td>@transaction.HoldingDate</td>
+                                <td>@transaction.HoldingDate.ToString("MM/dd/yyyy")</td>
                                 <td>@transaction.PromoDiscount</td>
                                 <td>@transaction.TransactionType</td>
                                 <td>@transaction.Milestone</td>
                                 <td>
                                     @if (transaction.NewColorStatus?.ToUpper() == "GREEN") {
-                                        <span class="badge bg-success">GREEN</span>
+                                        <span class="badge bg-success-subtle text-success fw-bold px-3 py-1">GREEN</span>
                                     } else if (transaction.NewColorStatus?.ToUpper() == "YELLOW") {
-                                        <span class="badge bg-warning text-dark">YELLOW</span>
+                                        <span class="badge bg-warning-subtle text-warning fw-bold px-3 py-1">YELLOW</span>
                                     } else if (transaction.NewColorStatus?.ToUpper() == "RED") {
-                                        <span class="badge bg-danger">RED</span>
+                                        <span class="badge bg-danger-subtle text-danger fw-bold px-3 py-1">RED</span>
                                     } else if (transaction.NewColorStatus?.ToUpper() == "LIGHT GREEN") {
-                                        <span class="badge badge-lightgreen">LIGHT GREEN</span>
-                                    }
-                                    else if (transaction.NewColorStatus?.ToUpper() == "ORANGE")
-                                    {
-                                        <span class="badge badge-orange">ORANGE</span>
+                                        <span class="badge bg-success-subtle text-success fw-bold px-3 py-1">LIGHT GREEN</span>
+                                    } else if (transaction.NewColorStatus?.ToUpper() == "ORANGE") {
+                                        <span class="badge-orange">ORANGE</span>
                                     } else {
                                         <span class="badge bg-secondary">@transaction.NewColorStatus</span>
                                     }
                                 </td>
                                 <td>@transaction.StatusInGeneral</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-controller="SalesTransaction" asp-action="Edit" asp-route-id="@transaction.SalesTransactionId" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           data-bs-toggle="tooltip" 
+                                           data-bs-placement="top" 
+                                           title="Edit Transaction">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                       
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-info" 
+                                                onclick="toggleDetails('@targetId')"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                title="View Transaction Details">
+                                            <i class="bi bi-info-circle-fill"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
 
                             <tr id="@targetId" class="d-none bg-light">
@@ -468,6 +800,61 @@
                                         </div>
 
                                         <div class="tab-pane fade" id="buyerLedgerContent-@transaction.SalesTransactionId" role="tabpanel">
+                                            @* Show success/error messages *@
+                                            @if (TempData["LedgerSuccess"] != null)
+                                            {
+                                                <div class="alert alert-success">@TempData["LedgerSuccess"]</div>
+                                            }
+                                            @if (TempData["LedgerError"] != null)
+                                            {
+                                                <div class="alert alert-danger">@TempData["LedgerError"]</div>
+                                            }
+                                            
+                                            <div class="buyers-ledger-form-card card mb-3">
+                                                <div class="card-header">
+                                                    <strong>Add Buyer's Ledger Entry</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form asp-action="AddBuyersLedger" asp-controller="SalesTransaction" method="post" class="row g-3">
+                                                        <input type="hidden" name="ContractNumber" value="@transaction.ContractNumber" />
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Unit Code</label>
+                                                            <input type="text" class="form-control" name="UnitCode" value="@transaction.Properties?.UnitCode" readonly />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Customer Code</label>
+                                                            <input type="text" class="form-control" name="CustomerCode" value="@transaction.BusinessPartner?.CustomerCode" readonly />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Paid FT</label>
+                                                            <input type="text" class="form-control" name="PaymentNumber" />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Invoice Number</label>
+                                                            <input type="text" class="form-control" name="PaymentReferenceDocNumber" />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Amount Due</label>
+                                                            <input type="number" step="0.01" class="form-control" name="AmountDue" />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Payment Mode</label>
+                                                            <select class="form-select" name="PaymentReferenceDocType">
+                                                                <option value="">-- Select Payment Mode --</option>
+                                                                <option value="Cash">Cash</option>
+                                                                <option value="Check">Check</option>
+                                                                <option value="Bank Transfer">Bank Transfer</option>
+                                                                <option value="Credit Card">Credit Card</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <button type="submit" class="btn btn-success">
+                                                                <i class="bi bi-save me-2"></i>Add Entry
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                             @if (item.BuyerLedgers != null && item.BuyerLedgers.Count > 0)
                                             {
                                                 <div class="card mb-4">
@@ -581,20 +968,50 @@
                         @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
-                            if (transaction.BusinessPartner?.OtherBuyers != null)
+                            var processedCustomerCodes = new HashSet<string>();
+
+                            if (transaction.BusinessPartner != null)
                             {
-                                foreach (var buyer in transaction.BusinessPartner.OtherBuyers)
+                                // Display Principal Buyer first
+                                var principalBuyer = transaction.BusinessPartner;
+                                if (!string.IsNullOrEmpty(principalBuyer.CustomerCode) && 
+                                    !processedCustomerCodes.Contains($"{transaction.ContractNumber}-{principalBuyer.CustomerCode}-{principalBuyer.Role}"))
                                 {
-                                    <tr>
-                                        <td>@buyer.Fullname</td>
-                                        <td>@buyer.Role</td>
-                                        <td>@buyer.CustomerCode</td>
-                                        <td>@buyer.ClientBase</td>
-                                        <td>@buyer.ContactNumber</td>
-                                        <td>@buyer.EmailAddress</td>
-                                        <td>@buyer.IdSubmitted</td>
-                                        <td>@buyer.IdDateSubmitted</td>
+                                    <tr class="table-primary">
+                                        <td>@principalBuyer.Fullname</td>
+                                        <td>@principalBuyer.Role</td>
+                                        <td>@principalBuyer.CustomerCode</td>
+                                        <td>@principalBuyer.ClientBase</td>
+                                        <td>@principalBuyer.ContactNumber</td>
+                                        <td>@principalBuyer.EmailAddress</td>
+                                        <td>@principalBuyer.IdSubmitted</td>
+                                        <td>@(principalBuyer.IdDateSubmitted?.ToString("MM/dd/yyyy"))</td>
                                     </tr>
+                                    processedCustomerCodes.Add($"{transaction.ContractNumber}-{principalBuyer.CustomerCode}-{principalBuyer.Role}");
+                                }
+
+                                // Display other buyers (Co-Buyer, Spouse) if they exist and haven't been processed
+                                if (transaction.BusinessPartner.OtherBuyers != null)
+                                {
+                                    var otherBuyers = transaction.BusinessPartner.OtherBuyers;
+                                    foreach (var buyer in otherBuyers)
+                                    {
+                                        if (buyer.Role != "Principal Buyer" && 
+                                            !processedCustomerCodes.Contains($"{transaction.ContractNumber}-{buyer.CustomerCode}-{buyer.Role}"))
+                                        {
+                                            <tr>
+                                                <td>@buyer.Fullname</td>
+                                                <td>@buyer.Role</td>
+                                                <td>@buyer.CustomerCode</td>
+                                                <td>@buyer.ClientBase</td>
+                                                <td>@buyer.ContactNumber</td>
+                                                <td>@buyer.EmailAddress</td>
+                                                <td>@buyer.IdSubmitted</td>
+                                                <td>@(buyer.IdDateSubmitted?.ToString("MM/dd/yyyy"))</td>
+                                            </tr>
+                                            processedCustomerCodes.Add($"{transaction.ContractNumber}-{buyer.CustomerCode}-{buyer.Role}");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -726,6 +1143,7 @@
                             <th>Project Name</th>
                             <th>Building/Phase</th>
                             <th>Unit Code</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -737,6 +1155,14 @@
                                 <td>@transaction.Properties?.ProjectName</td>
                                 <td>@transaction.Properties?.BuildingPhase</td>
                                 <td>@transaction.Properties?.UnitCode</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-controller="Property" asp-action="Edit" asp-route-id="@transaction.Properties?.PropertyId" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                      
+                                    </div>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -797,32 +1223,23 @@
     }
     else
     {
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 40vh;">
-            <div aria-live="polite" aria-atomic="true" class="position-relative">
-                <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
-                    <div id="noResultToast" class="toast align-items-center text-bg-warning border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                <strong>No results found for your search.</strong>
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Friendly SVG illustration -->
-            <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-3">
-                <ellipse cx="90" cy="150" rx="70" ry="15" fill="#E0F2F1"/>
-                <rect x="50" y="60" width="80" height="50" rx="10" fill="#C8E6C9"/>
-                <rect x="60" y="70" width="60" height="30" rx="5" fill="#A5D6A7"/>
-                <circle cx="90" cy="85" r="8" fill="#388E3C"/>
-                <rect x="80" y="100" width="20" height="5" rx="2.5" fill="#388E3C"/>
-                <rect x="70" y="110" width="40" height="8" rx="4" fill="#81C784"/>
+        <div class="empty-search-container">
+            <svg class="empty-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <div class="text-center">
-                <h4 class="text-success mb-2">No Results Found</h4>
-                <p class="text-muted mb-1">We couldn't find any matches for your search.</p>
-                <p class="text-muted">Try a different search term or check for typos.</p>
+            <div class="empty-search-message">
+                <h4>No Results Found</h4>
+                <p>We couldn't find any matches for your search term: <strong>@ViewBag.SearchTerm</strong></p>
+                <div class="search-tips">
+                    <p class="mb-2"><strong>Suggestions:</strong></p>
+                    <ul>
+                        <li><i class="bi bi-lightbulb-fill"></i>Check for spelling errors</li>
+                        <li><i class="bi bi-lightbulb-fill"></i>Try different keywords</li>
+                        <li><i class="bi bi-lightbulb-fill"></i>Use more general terms</li>
+                        <li><i class="bi bi-lightbulb-fill"></i>Verify the search term format</li>
+                    </ul>
+                </div>
             </div>
         </div>
     }
@@ -863,7 +1280,250 @@
             // Initialize Bootstrap tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-                new bootstrap.Tooltip(tooltipTriggerEl);
+                new bootstrap.Tooltip(tooltipTriggerEl, {
+                    trigger: 'hover',
+                    animation: true,
+                    delay: { show: 100, hide: 100 }
+                });
+            });
+
+            // Delete Property Confirmation
+            document.querySelectorAll('.delete-property').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const name = this.dataset.name;
+                    if (confirm(`Are you sure you want to delete property ${name}? This action cannot be undone.`)) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = `/Property/Delete/${id}`;
+                        
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                        const tokenInput = document.createElement('input');
+                        tokenInput.type = 'hidden';
+                        tokenInput.name = '__RequestVerificationToken';
+                        tokenInput.value = token;
+                        
+                        form.appendChild(tokenInput);
+                        document.body.appendChild(form);
+                        
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form),
+                            headers: {
+                                'RequestVerificationToken': token
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert(data.message);
+                                location.reload();
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            alert('An error occurred while deleting the property.');
+                            console.error('Error:', error);
+                        })
+                        .finally(() => {
+                            document.body.removeChild(form);
+                        });
+                    }
+                });
+            });
+
+            // Delete Business Partner Confirmation
+            document.querySelectorAll('.delete-partner').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const name = this.dataset.name;
+                    if (confirm(`Are you sure you want to delete business partner ${name}? This action cannot be undone.`)) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = `/BusinessPartner/Delete/${id}`;
+                        
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                        const tokenInput = document.createElement('input');
+                        tokenInput.type = 'hidden';
+                        tokenInput.name = '__RequestVerificationToken';
+                        tokenInput.value = token;
+                        
+                        form.appendChild(tokenInput);
+                        document.body.appendChild(form);
+                        
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form),
+                            headers: {
+                                'RequestVerificationToken': token
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert(data.message);
+                                location.reload();
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            alert('An error occurred while deleting the business partner.');
+                            console.error('Error:', error);
+                        })
+                        .finally(() => {
+                            document.body.removeChild(form);
+                        });
+                    }
+                });
+            });
+
+            // Delete Sales Transaction with enhanced UI
+            document.querySelectorAll('.delete-transaction').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    const name = this.dataset.name;
+                    
+                    // Create and show custom confirmation dialog
+                    const confirmDialog = document.createElement('div');
+                    confirmDialog.className = 'modal fade';
+                    confirmDialog.innerHTML = `
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                        Confirm Deletion
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="mb-0">Are you sure you want to delete sales transaction <strong>${name}</strong>?</p>
+                                    <div class="alert alert-warning mt-3">
+                                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                        This will delete:
+                                        <ul class="mb-0 mt-2">
+                                            <li>The sales transaction</li>
+                                            <li>Associated payment terms</li>
+                                            <li>Credit review information</li>
+                                            <li>Sales documents</li>
+                                        </ul>
+                                    </div>
+                                    <p class="text-danger mb-0"><i class="bi bi-info-circle-fill me-2"></i>This action cannot be undone.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle me-2"></i>Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-danger" id="confirmDelete">
+                                        <i class="bi bi-trash-fill me-2"></i>Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(confirmDialog);
+                    const modal = new bootstrap.Modal(confirmDialog);
+                    modal.show();
+
+                    // Handle delete confirmation
+                    confirmDialog.querySelector('#confirmDelete').addEventListener('click', function() {
+                        modal.hide();
+                        document.getElementById('spinnerOverlay').style.display = 'flex';
+                        
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = `/SalesTransaction/Delete/${id}`;
+                        
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                        const tokenInput = document.createElement('input');
+                        tokenInput.type = 'hidden';
+                        tokenInput.name = '__RequestVerificationToken';
+                        tokenInput.value = token;
+                        
+                        form.appendChild(tokenInput);
+                        document.body.appendChild(form);
+                        
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form),
+                            headers: {
+                                'RequestVerificationToken': token
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Show success toast with animation
+                                const toast = new bootstrap.Toast(document.createElement('div'));
+                                toast._element.classList.add('toast', 'bg-success', 'text-white');
+                                toast._element.innerHTML = `
+                                    <div class="toast-body">
+                                        <i class="bi bi-check-circle-fill me-2"></i>
+                                        ${data.message}
+                                    </div>`;
+                                document.body.appendChild(toast._element);
+                                toast.show();
+                                
+                                // Animate row removal
+                                const row = button.closest('tr');
+                                const detailsRow = document.getElementById(row.dataset.bsTarget);
+                                row.style.transition = 'all 0.3s ease-out';
+                                row.style.opacity = '0';
+                                row.style.transform = 'translateX(20px)';
+                                if (detailsRow) {
+                                    detailsRow.style.transition = 'all 0.3s ease-out';
+                                    detailsRow.style.opacity = '0';
+                                    detailsRow.style.transform = 'translateX(20px)';
+                                }
+                                
+                                setTimeout(() => {
+                                    if (detailsRow) detailsRow.remove();
+                                    row.remove();
+                                    document.getElementById('spinnerOverlay').style.display = 'none';
+                                }, 300);
+                            } else {
+                                // Show error toast
+                                const toast = new bootstrap.Toast(document.createElement('div'));
+                                toast._element.classList.add('toast', 'bg-danger', 'text-white');
+                                toast._element.innerHTML = `
+                                    <div class="toast-body">
+                                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                        ${data.message}
+                                    </div>`;
+                                document.body.appendChild(toast._element);
+                                toast.show();
+                                document.getElementById('spinnerOverlay').style.display = 'none';
+                            }
+                        })
+                        .catch(error => {
+                            // Show error toast
+                            const toast = new bootstrap.Toast(document.createElement('div'));
+                            toast._element.classList.add('toast', 'bg-danger', 'text-white');
+                            toast._element.innerHTML = `
+                                <div class="toast-body">
+                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                    An error occurred while deleting the sales transaction.
+                                </div>`;
+                            document.body.appendChild(toast._element);
+                            toast.show();
+                            console.error('Error:', error);
+                            document.getElementById('spinnerOverlay').style.display = 'none';
+                        })
+                        .finally(() => {
+                            document.body.removeChild(form);
+                            confirmDialog.remove();
+                        });
+                    });
+
+                    // Clean up modal on hide
+                    confirmDialog.addEventListener('hidden.bs.modal', function() {
+                        confirmDialog.remove();
+                    });
+                });
             });
         });
     </script>

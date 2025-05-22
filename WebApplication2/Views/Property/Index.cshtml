@@ -270,7 +270,7 @@
                value="@(Model?.SearchTerm ?? "")"
                placeholder="Search Contract No, Fullname, or Unit Code"
                aria-label="Search input" />
-        <button type="submit" asp-action="SearchResults" class="search-button" aria-label="Search">
+        <button type="submit" asp-action="SearchResults" asp-controller="SalesTransaction" class="search-button" aria-label="Search">
             <i class="bi bi-search"></i>
             <span>Search</span>
         </button>

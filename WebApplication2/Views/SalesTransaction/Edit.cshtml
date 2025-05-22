@@ -294,10 +294,10 @@
         </div>
 
         <div class="btn-group">
-            <a asp-action="Index" class="btn btn-secondary">
+            <a asp-action="SearchResults" asp-controller="SalesTransaction" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i>Back to List
             </a>
-            <button type="submit" class="btn btn-primary" id="submitBtn">
+            <button type="submit" class="btn btn-primary" id="submitBtn" asp-action="SearchResults" asp-controller="SalesTransaction">
                 <span id="spinner" class="spinner-border spinner-border-sm d-none"></span>
                 <i class="bi bi-save"></i>Save Changes
             </button>
