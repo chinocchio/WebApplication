@@ -493,7 +493,7 @@ namespace WebApplication2.Controllers
 
             var result = salesTransactions.Select(st => {
                 var submittedForThis = submittedDocuments
-                    .Where(doc => doc.ContractNumber == st.ContractNumber)
+                    .Where(doc => doc.ContractNumber.HasValue && doc.ContractNumber.Value == st.ContractNumber)
                     .ToList();
 
                 var submittedDocCodes = submittedForThis.Select(doc => doc.DocumentCode).ToHashSet();
@@ -504,7 +504,7 @@ namespace WebApplication2.Controllers
 
                 var matchingLedgers = _context.BuyerLedgers
                    .AsNoTracking()
-                   .Where(bl => bl.ContractNumber == st.ContractNumber)
+                   .Where(bl => bl.ContractNumber.HasValue && bl.ContractNumber.Value == st.ContractNumber)
                    .ToList();
 
                 // Get the initial proponent

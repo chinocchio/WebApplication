@@ -426,6 +426,28 @@
         background-color: var(--primary-light) !important;
         color: var(--primary-color) !important;
     }
+
+    /* Update modal styles */
+    .modal-backdrop {
+        background-color: transparent !important;
+    }
+    .modal-backdrop.show {
+        opacity: 0 !important;
+    }
+    .modal {
+        background: transparent !important;
+    }
+    .modal-dialog {
+        margin: 1.75rem auto;
+        max-width: 500px;
+    }
+    .modal-content {
+        position: relative;
+        background-color: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 0.3rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
 </style>
 
 @* Add Bootstrap Icons CDN if not already present *@
@@ -619,7 +641,7 @@
                                                                         <td>@doc.DocumentCode</td>
                                                                         <td>@doc.DocumentName</td>
                                                                         <td>@doc.CustomerCode</td>
-                                                                        <td>@doc.DateSubmitted</td>
+                                                                        <td>@(doc.DateSubmitted?.ToString("MM/dd/yyyy"))</td>
                                                                     </tr>
                                                                 }
                                                             </tbody>
@@ -654,6 +676,7 @@
                                                                     <th>Location</th>
                                                                     <th>Source of Income</th>
                                                                     <th>Group</th>
+                                                                    <th>Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -666,6 +689,90 @@
                                                                         <td>@reqDoc.DocumentLocation</td>
                                                                         <td>@reqDoc.DocumentSourceOfIncome</td>
                                                                         <td>@reqDoc.DocumentGroup</td>
+                                                                        <td>
+                                                                            <button type="button" 
+                                                                                    class="btn btn-sm btn-success mark-submitted" 
+                                                                                    onclick="toggleDocumentForm('@reqDoc.DocumentCode', '@reqDoc.DocumentName', '@transaction.ContractNumber', '@transaction.BusinessPartner?.CustomerCode', '@transaction.Properties?.UnitCode')">
+                                                                                <i class="bi bi-check-circle"></i> Mark as Submitted
+                                                                            </button>
+                                                                            <div id="documentForm_@reqDoc.DocumentCode" class="d-none mt-3">
+                                                                                <div class="card border-0 shadow-sm">
+                                                                                    <div class="card-header bg-light border-0 py-3">
+                                                                                        <h6 class="mb-0 text-primary">
+                                                                                            <i class="bi bi-file-earmark-text me-2"></i>Document Submission Details
+                                                                                        </h6>
+                                                                                    </div>
+                                                                                    <div class="card-body">
+                                                                                        <form id="submitDocumentForm_@reqDoc.DocumentCode" class="row g-3">
+                                                                                            @Html.AntiForgeryToken()
+                                                                                            <input type="hidden" name="documentCode" value="@reqDoc.DocumentCode">
+                                                                                            <input type="hidden" name="documentName" value="@reqDoc.DocumentName">
+                                                                                            <input type="hidden" name="contractNumber" value="@transaction.ContractNumber">
+                                                                                            <input type="hidden" name="customerCode" value="@transaction.BusinessPartner?.CustomerCode">
+                                                                                            <input type="hidden" name="unitCode" value="@transaction.Properties?.UnitCode">
+                                                                                            
+                                                                                            <div class="col-12">
+                                                                                                <div class="alert alert-light border">
+                                                                                                    <div class="row g-2">
+                                                                                                        <div class="col-md-6">
+                                                                                                            <div class="d-flex align-items-center mb-2">
+                                                                                                                <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                                                                                                                <strong class="me-2">Document:</strong>
+                                                                                                                <span class="text-muted">@reqDoc.DocumentName</span>
+                                                                                                            </div>
+                                                                                                            <div class="d-flex align-items-center mb-2">
+                                                                                                                <i class="bi bi-upc text-primary me-2"></i>
+                                                                                                                <strong class="me-2">Code:</strong>
+                                                                                                                <span class="text-muted">@reqDoc.DocumentCode</span>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-6">
+                                                                                                            <div class="d-flex align-items-center mb-2">
+                                                                                                                <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                                                                                                                <strong class="me-2">Contract:</strong>
+                                                                                                                <span class="text-muted">@transaction.ContractNumber</span>
+                                                                                                            </div>
+                                                                                                            <div class="d-flex align-items-center mb-2">
+                                                                                                                <i class="bi bi-person text-primary me-2"></i>
+                                                                                                                <strong class="me-2">Customer:</strong>
+                                                                                                                <span class="text-muted">@transaction.BusinessPartner?.CustomerCode</span>
+                                                                                                            </div>
+                                                                                                            <div class="d-flex align-items-center">
+                                                                                                                <i class="bi bi-building text-primary me-2"></i>
+                                                                                                                <strong class="me-2">Unit:</strong>
+                                                                                                                <span class="text-muted">@transaction.Properties?.UnitCode</span>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            
+                                                                                            <div class="col-md-6">
+                                                                                                <label class="form-label">
+                                                                                                    <i class="bi bi-calendar-date text-primary me-1"></i>
+                                                                                                    Date Submitted
+                                                                                                </label>
+                                                                                                <input type="date" class="form-control" name="dateSubmitted" required 
+                                                                                                       onchange="this.value = this.value.split('T')[0]"
+                                                                                                       onkeydown="return false"
+                                                                                                       max="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                                                                            </div>
+                                                                                            
+                                                                                            <div class="col-12 mt-4">
+                                                                                                <div class="d-flex gap-2">
+                                                                                                    <button type="button" class="btn btn-light" onclick="toggleDocumentForm('@reqDoc.DocumentCode', '@reqDoc.DocumentName', '@transaction.ContractNumber', '@transaction.BusinessPartner?.CustomerCode', '@transaction.Properties?.UnitCode')">
+                                                                                                        <i class="bi bi-x-circle me-1"></i>Cancel
+                                                                                                    </button>
+                                                                                                    <button type="button" class="btn btn-primary" onclick="handleSubmit('@reqDoc.DocumentCode')">
+                                                                                                        <i class="bi bi-check-circle me-1"></i>Submit
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                 }
                                                             </tbody>
@@ -1205,6 +1312,7 @@
             // Hide spinner when page loads
             document.getElementById('spinnerOverlay').style.display = 'none';
 
+            // Handle clickable rows
             document.querySelectorAll(".clickable-row").forEach(row => {
                 row.addEventListener("click", function () {
                     const targetId = this.getAttribute("data-bs-target");
@@ -1214,13 +1322,6 @@
                     }
                 });
             });
-
-            // Show toast if it exists
-            var toastEl = document.getElementById('noResultToast');
-            if (toastEl) {
-                var toast = new bootstrap.Toast(toastEl, { delay: 4000 });
-                toast.show();
-            }
 
             // Initialize Bootstrap tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -1232,244 +1333,102 @@
                 });
             });
 
-            // Delete Property Confirmation
-            document.querySelectorAll('.delete-property').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    if (confirm(`Are you sure you want to delete property ${name}? This action cannot be undone.`)) {
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = `/Property/Delete/${id}`;
-                        
-                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                        const tokenInput = document.createElement('input');
-                        tokenInput.type = 'hidden';
-                        tokenInput.name = '__RequestVerificationToken';
-                        tokenInput.value = token;
-                        
-                        form.appendChild(tokenInput);
-                        document.body.appendChild(form);
-                        
-                        fetch(form.action, {
-                            method: 'POST',
-                            body: new FormData(form),
-                            headers: {
-                                'RequestVerificationToken': token
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert(data.message);
-                                location.reload();
-                            } else {
-                                alert(data.message);
-                            }
-                        })
-                        .catch(error => {
-                            alert('An error occurred while deleting the property.');
-                            console.error('Error:', error);
-                        })
-                        .finally(() => {
-                            document.body.removeChild(form);
+            // Initialize all tabs
+            document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('data-bs-target');
+                    const tabContent = document.querySelector(target);
+                    if (tabContent) {
+                        // Hide all tab contents
+                        document.querySelectorAll('.tab-pane').forEach(pane => {
+                            pane.classList.remove('show', 'active');
                         });
+                        // Show selected tab content
+                        tabContent.classList.add('show', 'active');
+                        // Update active tab
+                        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(t => {
+                            t.classList.remove('active');
+                        });
+                        this.classList.add('active');
                     }
-                });
-            });
-
-            // Delete Business Partner Confirmation
-            document.querySelectorAll('.delete-partner').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    if (confirm(`Are you sure you want to delete business partner ${name}? This action cannot be undone.`)) {
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = `/BusinessPartner/Delete/${id}`;
-                        
-                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                        const tokenInput = document.createElement('input');
-                        tokenInput.type = 'hidden';
-                        tokenInput.name = '__RequestVerificationToken';
-                        tokenInput.value = token;
-                        
-                        form.appendChild(tokenInput);
-                        document.body.appendChild(form);
-                        
-                        fetch(form.action, {
-                            method: 'POST',
-                            body: new FormData(form),
-                            headers: {
-                                'RequestVerificationToken': token
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert(data.message);
-                                location.reload();
-                            } else {
-                                alert(data.message);
-                            }
-                        })
-                        .catch(error => {
-                            alert('An error occurred while deleting the business partner.');
-                            console.error('Error:', error);
-                        })
-                        .finally(() => {
-                            document.body.removeChild(form);
-                        });
-                    }
-                });
-            });
-
-            // Delete Sales Transaction with enhanced UI
-            document.querySelectorAll('.delete-transaction').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    
-                    // Create and show custom confirmation dialog
-                    const confirmDialog = document.createElement('div');
-                    confirmDialog.className = 'modal fade';
-                    confirmDialog.innerHTML = `
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-danger text-white">
-                                    <h5 class="modal-title">
-                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                        Confirm Deletion
-                                    </h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p class="mb-0">Are you sure you want to delete sales transaction <strong>${name}</strong>?</p>
-                                    <div class="alert alert-warning mt-3">
-                                        <i class="bi bi-exclamation-circle-fill me-2"></i>
-                                        This will delete:
-                                        <ul class="mb-0 mt-2">
-                                            <li>The sales transaction</li>
-                                            <li>Associated payment terms</li>
-                                            <li>Credit review information</li>
-                                            <li>Sales documents</li>
-                                        </ul>
-                                    </div>
-                                    <p class="text-danger mb-0"><i class="bi bi-info-circle-fill me-2"></i>This action cannot be undone.</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        <i class="bi bi-x-circle me-2"></i>Cancel
-                                    </button>
-                                    <button type="button" class="btn btn-danger" id="confirmDelete">
-                                        <i class="bi bi-trash-fill me-2"></i>Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.body.appendChild(confirmDialog);
-                    const modal = new bootstrap.Modal(confirmDialog);
-                    modal.show();
-
-                    // Handle delete confirmation
-                    confirmDialog.querySelector('#confirmDelete').addEventListener('click', function() {
-                        modal.hide();
-                        document.getElementById('spinnerOverlay').style.display = 'flex';
-                        
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = `/SalesTransaction/Delete/${id}`;
-                        
-                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                        const tokenInput = document.createElement('input');
-                        tokenInput.type = 'hidden';
-                        tokenInput.name = '__RequestVerificationToken';
-                        tokenInput.value = token;
-                        
-                        form.appendChild(tokenInput);
-                        document.body.appendChild(form);
-                        
-                        fetch(form.action, {
-                            method: 'POST',
-                            body: new FormData(form),
-                            headers: {
-                                'RequestVerificationToken': token
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Show success toast with animation
-                                const toast = new bootstrap.Toast(document.createElement('div'));
-                                toast._element.classList.add('toast', 'bg-success', 'text-white');
-                                toast._element.innerHTML = `
-                                    <div class="toast-body">
-                                        <i class="bi bi-check-circle-fill me-2"></i>
-                                        ${data.message}
-                                    </div>`;
-                                document.body.appendChild(toast._element);
-                                toast.show();
-                                
-                                // Animate row removal
-                                const row = button.closest('tr');
-                                const detailsRow = document.getElementById(row.dataset.bsTarget);
-                                row.style.transition = 'all 0.3s ease-out';
-                                row.style.opacity = '0';
-                                row.style.transform = 'translateX(20px)';
-                                if (detailsRow) {
-                                    detailsRow.style.transition = 'all 0.3s ease-out';
-                                    detailsRow.style.opacity = '0';
-                                    detailsRow.style.transform = 'translateX(20px)';
-                                }
-                                
-                                setTimeout(() => {
-                                    if (detailsRow) detailsRow.remove();
-                                    row.remove();
-                                    document.getElementById('spinnerOverlay').style.display = 'none';
-                                }, 300);
-                            } else {
-                                // Show error toast
-                                const toast = new bootstrap.Toast(document.createElement('div'));
-                                toast._element.classList.add('toast', 'bg-danger', 'text-white');
-                                toast._element.innerHTML = `
-                                    <div class="toast-body">
-                                        <i class="bi bi-exclamation-circle-fill me-2"></i>
-                                        ${data.message}
-                                    </div>`;
-                                document.body.appendChild(toast._element);
-                                toast.show();
-                                document.getElementById('spinnerOverlay').style.display = 'none';
-                            }
-                        })
-                        .catch(error => {
-                            // Show error toast
-                            const toast = new bootstrap.Toast(document.createElement('div'));
-                            toast._element.classList.add('toast', 'bg-danger', 'text-white');
-                            toast._element.innerHTML = `
-                                <div class="toast-body">
-                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
-                                    An error occurred while deleting the sales transaction.
-                                </div>`;
-                            document.body.appendChild(toast._element);
-                            toast.show();
-                            console.error('Error:', error);
-                            document.getElementById('spinnerOverlay').style.display = 'none';
-                        })
-                        .finally(() => {
-                            document.body.removeChild(form);
-                            confirmDialog.remove();
-                        });
-                    });
-
-                    // Clean up modal on hide
-                    confirmDialog.addEventListener('hidden.bs.modal', function() {
-                        confirmDialog.remove();
-                    });
                 });
             });
         });
+
+        // Function to toggle document form visibility
+        function toggleDocumentForm(documentCode, documentName, contractNumber, customerCode, unitCode) {
+            const formDiv = document.getElementById(`documentForm_${documentCode}`);
+            formDiv.classList.toggle('d-none');
+            
+            if (!formDiv.classList.contains('d-none')) {
+                // Set today's date as default when showing the form
+                const today = new Date().toISOString().split('T')[0];
+                formDiv.querySelector('input[name="dateSubmitted"]').value = today;
+            }
+        }
+
+        // Function to handle form submission
+        function handleSubmit(documentCode) {
+            const form = document.getElementById(`submitDocumentForm_${documentCode}`);
+            const formData = new FormData(form);
+            
+            // Show spinner
+            document.getElementById('spinnerOverlay').style.display = 'flex';
+            
+            fetch('/Property/SubmitDocument', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success toast
+                    const toast = new bootstrap.Toast(document.createElement('div'));
+                    toast._element.classList.add('toast', 'bg-success', 'text-white');
+                    toast._element.innerHTML = `
+                        <div class="toast-body">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            ${data.message}
+                        </div>`;
+                    document.body.appendChild(toast._element);
+                    toast.show();
+                    
+                    // Hide the form and refresh page
+                    document.getElementById(`documentForm_${documentCode}`).classList.add('d-none');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    // Show error toast
+                    const toast = new bootstrap.Toast(document.createElement('div'));
+                    toast._element.classList.add('toast', 'bg-danger', 'text-white');
+                    toast._element.innerHTML = `
+                        <div class="toast-body">
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>
+                            ${data.message}
+                        </div>`;
+                    document.body.appendChild(toast._element);
+                    toast.show();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Show error toast
+                const toast = new bootstrap.Toast(document.createElement('div'));
+                toast._element.classList.add('toast', 'bg-danger', 'text-white');
+                toast._element.innerHTML = `
+                    <div class="toast-body">
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        An error occurred while submitting the document.
+                    </div>`;
+                document.body.appendChild(toast._element);
+                toast.show();
+            })
+            .finally(() => {
+                document.getElementById('spinnerOverlay').style.display = 'none';
+            });
+        }
     </script>
 } 

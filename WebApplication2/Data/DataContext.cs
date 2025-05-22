@@ -16,7 +16,7 @@ namespace WebApplication2.Data
         public DbSet<SalesDocument> SalesDocuments { get; set; }
         public DbSet<DocumentRegistry> DocumentRegistries { get; set; }
         public DbSet<DocumentForSubmission> DocumentForSubmissions { get; set; }
-        public DbSet<DocumentSubmitted> SubmittedDocuments { get; set; }
+        public DbSet<SubmittedDocument> SubmittedDocuments { get; set; }
         public DbSet<BuyerLedger> BuyerLedgers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

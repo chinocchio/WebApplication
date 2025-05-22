@@ -44,12 +44,15 @@ namespace WebApplication2.Controllers
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 searchTerm = searchTerm.ToLower();
+                var searchContractNumber = 0L;
+                var isContractNumber = long.TryParse(searchTerm, out searchContractNumber);
+
                 query = query.Where(st =>
-                    st.ContractNumber.ToString().Contains(searchTerm) ||
                     (st.BusinessPartner != null && st.BusinessPartner.Fullname != null && st.BusinessPartner.Fullname.ToLower().Contains(searchTerm)) ||
-                    (st.BusinessPartner != null && st.BusinessPartner.CustomerCode != null && st.BusinessPartner.CustomerCode.Contains(searchTerm)) ||
+                    (st.BusinessPartner != null && st.BusinessPartner.CustomerCode != null && st.BusinessPartner.CustomerCode.ToLower().Contains(searchTerm)) ||
                     (st.Properties != null && st.Properties.UnitCode != null && st.Properties.UnitCode.ToLower().Contains(searchTerm)) ||
-                    (st.ProponentBpNumber != null && st.ProponentBpNumber.ToString().Contains(searchTerm))
+                    (st.ProponentBpNumber.HasValue && st.ProponentBpNumber.Value.ToString().Contains(searchTerm)) ||
+                    (isContractNumber && st.ContractNumber == searchContractNumber)
                 );
             }
 
@@ -77,9 +80,24 @@ namespace WebApplication2.Controllers
                 .AsNoTracking()
                 .ToDictionaryAsync(sp => sp.ProponentBpNumber);
 
+            var allBuyerLedgers = await _context.BuyerLedgers
+                .AsNoTracking()
+                .Select(bl => new {
+                    bl.Id,
+                    ContractNumber = bl.ContractNumber.HasValue ? bl.ContractNumber.Value : 0,
+                    bl.CustomerCode,
+                    bl.UnitCode,
+                    bl.PaymentNumber,
+                    bl.AmountDue,
+                    bl.WhenDue,
+                    bl.PaymentReferenceDocNumber,
+                    bl.PaymentReferenceDocType
+                })
+                .ToListAsync();
+
             var result = salesTransactions.Select(st => {
                 var submittedForThis = submittedDocuments
-                    .Where(doc => doc.ContractNumber == st.ContractNumber)
+                    .Where(doc => doc.ContractNumber.HasValue && doc.ContractNumber.Value == st.ContractNumber)
                     .ToList();
 
                 var submittedDocCodes = submittedForThis.Select(doc => doc.DocumentCode).ToHashSet();
@@ -88,13 +106,24 @@ namespace WebApplication2.Controllers
                     .Where(doc =>!submittedDocCodes.Contains(doc.DocumentCode))
                     .ToList();
 
-                var matchingLedgers = _context.BuyerLedgers
-                   .AsNoTracking()
-                   .Where(bl => bl.ContractNumber == st.ContractNumber)
-                   .ToList();
+                var matchingLedgers = allBuyerLedgers
+                    .Where(bl => bl.ContractNumber == st.ContractNumber)
+                    .Select(bl => new BuyerLedger {
+                        Id = bl.Id,
+                        ContractNumber = bl.ContractNumber,
+                        CustomerCode = bl.CustomerCode?.ToString(),
+                        UnitCode = bl.UnitCode,
+                        PaymentNumber = bl.PaymentNumber,
+                        AmountDue = bl.AmountDue,
+                        WhenDue = bl.WhenDue,
+                        PaymentReferenceDocNumber = bl.PaymentReferenceDocNumber,
+                        PaymentReferenceDocType = bl.PaymentReferenceDocType
+                    })
+                    .ToList();
 
                 // Get the initial proponent
-                allSalesProponents.TryGetValue(st.ProponentBpNumber ?? 0, out var initialProponent);
+                var proponentBpNumber = st.ProponentBpNumber?.ToString() ?? "0";
+                allSalesProponents.TryGetValue(long.Parse(proponentBpNumber), out var initialProponent);
 
                 // Build the reporting hierarchy
                 var proponentHierarchy = new List<SalesProponent>();
@@ -139,7 +168,7 @@ namespace WebApplication2.Controllers
                 if (transaction.BusinessPartner?.CustomerCode != null)
                 {
                     transaction.BusinessPartner.OtherBuyers = await _context.BusinessPartners
-                        .Where(bp => bp.CustomerCode == transaction.BusinessPartner.CustomerCode)
+                        .Where(bp => bp.CustomerCode != null && bp.CustomerCode.Equals(transaction.BusinessPartner.CustomerCode))
                         .ToListAsync();
                 }
             }
@@ -503,6 +532,45 @@ namespace WebApplication2.Controllers
 
                 // Return the file
                 return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "PropertyImportTemplate.xlsx");
+            }
+        }
+
+        // POST: Property/SubmitDocument
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitDocument(string? documentCode, string? contractNumber, string? customerCode, string? unitCode, string? documentName, DateTime? dateSubmitted)
+        {
+            try
+            {
+                // Parse contract number to long
+                long? parsedContractNumber = null;
+                if (!string.IsNullOrEmpty(contractNumber))
+                {
+                    if (long.TryParse(contractNumber, out long result))
+                    {
+                        parsedContractNumber = result;
+                    }
+                }
+
+                // Create new submitted document
+                var submittedDocument = new SubmittedDocument
+                {
+                    DocumentCode = documentCode,
+                    ContractNumber = parsedContractNumber,
+                    CustomerCode = customerCode,
+                    UnitCode = unitCode,
+                    DocumentName = documentName,
+                    DateSubmitted = dateSubmitted
+                };
+
+                _context.SubmittedDocuments.Add(submittedDocument);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Document marked as submitted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error submitting document: {ex.Message}" });
             }
         }
     }

@@ -85,7 +85,6 @@ namespace WebApplication2.Controllers
                                 }
 
                                 // Parse ID submission date if present
-                                DateTime? idDateSubmitted = null;
                                 DateOnly? idDateSubmittedOnly = null;
                                 var idDateStr = row["IdDateSubmitted"]?.ToString();
                                 if (!string.IsNullOrEmpty(idDateStr))
