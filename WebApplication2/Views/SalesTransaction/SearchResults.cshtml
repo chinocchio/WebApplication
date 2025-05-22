@@ -863,7 +863,7 @@
                                             }
                                             
                                             <div class="card mb-3">
-                                                <div class="card-header bg-primary text-white">
+                                                <div class="card-header bg-success text-white">
                                                     <strong>Add Buyer's Ledger Entry</strong>
                                                 </div>
                                                 <div class="card-body">
@@ -1043,7 +1043,7 @@
                                 }
 
                                 // Display other buyers (Co-Buyer, Spouse) if they exist and haven't been processed
-                                if (transaction.BusinessPartner.OtherBuyers != null)
+                                if (transaction.BusinessPartner.OtherBuyers != null && transaction.BusinessPartner.OtherBuyers.Count > 0)
                                 {
                                     var otherBuyers = transaction.BusinessPartner.OtherBuyers;
                                     foreach (var buyer in otherBuyers)
@@ -1073,14 +1073,133 @@
                 <!-- Credit Review Tabs -->
                 <ul class="nav nav-tabs" id="creditReviewTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="credit-tab" data-bs-toggle="tab" data-bs-target="#credit" type="button" role="tab">
+                        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">
+                            Personal Info
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="credit-tab" data-bs-toggle="tab" data-bs-target="#credit" type="button" role="tab">
                             Credit Review
                         </button>
                     </li>
                 </ul>
 
                 <div class="tab-content border p-3" id="creditReviewTabsContent">
-                    <div class="tab-pane fade show active" id="credit" role="tabpanel">
+                    <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                        @foreach (var item in ViewBag.SalesTransactions)
+                        {
+                            var transaction = item.SalesTransaction;
+                            if (transaction.BusinessPartner != null)
+                            {
+                                <div class="card mb-4 shadow-sm border-0">
+                                    <div class="card-header bg-success text-white d-flex align-items-center">
+                                        <i class="bi bi-person-circle me-2"></i>
+                                        <strong>Principal Buyer</strong>
+                                        <span class="badge bg-success ms-2">@transaction.BusinessPartner.Role</span>
+                                    </div>
+                                    <div class="card-body bg-light">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-4"><i class="bi bi-person-fill text-primary me-1"></i>Full Name:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.Fullname</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-upc text-primary me-1"></i>Customer Code:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.CustomerCode</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-people-fill text-primary me-1"></i>Client Base:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.ClientBase</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-telephone-fill text-primary me-1"></i>Contact Number:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.ContactNumber</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-envelope-fill text-primary me-1"></i>Email Address:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.EmailAddress</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-card-heading text-primary me-1"></i>ID Submitted:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.IdSubmitted</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-calendar-date text-primary me-1"></i>ID Date Submitted:</dt>
+                                            <dd class="col-sm-8">@(transaction.BusinessPartner.IdDateSubmitted?.ToString("MM/dd/yyyy"))</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-flag text-primary me-1"></i>Citizenship:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.Citizenship</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-globe text-primary me-1"></i>Nationality:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.Nationality</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-briefcase-fill text-primary me-1"></i>Job Title:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.JobTitle</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-people text-primary me-1"></i>Demographic By Market:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.DemographicByMarket</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-diagram-3-fill text-primary me-1"></i>Employment Category:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.EmploymentCategory</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-building text-primary me-1"></i>Company Name:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.CompanyName</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-bar-chart-fill text-primary me-1"></i>Industry Type:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.IndustryType</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-geo-alt-fill text-primary me-1"></i>Employment Country:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.EmploymentCountry</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-geo-fill text-primary me-1"></i>Employment State:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.EmploymentState</dd>
+                                            <dt class="col-sm-4"><i class="bi bi-geo text-primary me-1"></i>Employment Region:</dt>
+                                            <dd class="col-sm-8">@transaction.BusinessPartner.EmploymentRegion</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                                @if (transaction.BusinessPartner.OtherBuyers != null && transaction.BusinessPartner.OtherBuyers.Count > 0)
+                                {
+                                    <div class="card mb-4 shadow-sm border-0">
+                                        <div class="card-header bg-success text-white d-flex align-items-center">
+                                            <i class="bi bi-people-fill me-2"></i>
+                                            <strong>Other Buyers</strong>
+                                        </div>
+                                        <div class="card-body bg-light">
+                                            @foreach (var buyer in transaction.BusinessPartner.OtherBuyers)
+                                            {
+                                                <div class="mb-4 border-bottom pb-3">
+                                                    <h6 class="text-primary mb-2 d-flex align-items-center">
+                                                        <i class="bi bi-person-badge me-2"></i>@buyer.Role
+                                                        <span class="badge bg-secondary ms-2">@buyer.Role</span>
+                                                    </h6>
+                                                    <dl class="row mb-0">
+                                                        <dt class="col-sm-4"><i class="bi bi-person-fill text-primary me-1"></i>Full Name:</dt>
+                                                        <dd class="col-sm-8">@buyer.Fullname</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-upc text-primary me-1"></i>Customer Code:</dt>
+                                                        <dd class="col-sm-8">@buyer.CustomerCode</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-people-fill text-primary me-1"></i>Client Base:</dt>
+                                                        <dd class="col-sm-8">@buyer.ClientBase</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-telephone-fill text-primary me-1"></i>Contact Number:</dt>
+                                                        <dd class="col-sm-8">@buyer.ContactNumber</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-envelope-fill text-primary me-1"></i>Email Address:</dt>
+                                                        <dd class="col-sm-8">@buyer.EmailAddress</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-card-heading text-primary me-1"></i>ID Submitted:</dt>
+                                                        <dd class="col-sm-8">@buyer.IdSubmitted</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-calendar-date text-primary me-1"></i>ID Date Submitted:</dt>
+                                                        <dd class="col-sm-8">@(buyer.IdDateSubmitted?.ToString("MM/dd/yyyy"))</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-flag text-primary me-1"></i>Citizenship:</dt>
+                                                        <dd class="col-sm-8">@buyer.Citizenship</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-globe text-primary me-1"></i>Nationality:</dt>
+                                                        <dd class="col-sm-8">@buyer.Nationality</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-briefcase-fill text-primary me-1"></i>Job Title:</dt>
+                                                        <dd class="col-sm-8">@buyer.JobTitle</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-people text-primary me-1"></i>Demographic By Market:</dt>
+                                                        <dd class="col-sm-8">@buyer.DemographicByMarket</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-diagram-3-fill text-primary me-1"></i>Employment Category:</dt>
+                                                        <dd class="col-sm-8">@buyer.EmploymentCategory</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-building text-primary me-1"></i>Company Name:</dt>
+                                                        <dd class="col-sm-8">@buyer.CompanyName</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-bar-chart-fill text-primary me-1"></i>Industry Type:</dt>
+                                                        <dd class="col-sm-8">@buyer.IndustryType</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-geo-alt-fill text-primary me-1"></i>Employment Country:</dt>
+                                                        <dd class="col-sm-8">@buyer.EmploymentCountry</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-geo-fill text-primary me-1"></i>Employment State:</dt>
+                                                        <dd class="col-sm-8">@buyer.EmploymentState</dd>
+                                                        <dt class="col-sm-4"><i class="bi bi-geo text-primary me-1"></i>Employment Region:</dt>
+                                                        <dd class="col-sm-8">@buyer.EmploymentRegion</dd>
+                                                    </dl>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No personal information available for this transaction.</p>
+                            }
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="credit" role="tabpanel">
                         @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
@@ -1334,8 +1453,8 @@
             // Robust tab handler for all tab groups
             document.querySelectorAll('.nav-tabs').forEach(function(tabGroup) {
                 tabGroup.querySelectorAll('[data-bs-toggle="tab"]').forEach(function(tab) {
-                    tab.addEventListener('click', function(e) {
-                        e.preventDefault();
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
                         // Find the parent tab group and its content
                         const tabList = tab.closest('.nav-tabs');
                         const tabContentId = tab.getAttribute('href') || tab.getAttribute('data-bs-target');
@@ -1351,14 +1470,14 @@
                         const tabContentParent = tabContent.closest('.tab-content');
                         if (tabContentParent) {
                             tabContentParent.querySelectorAll('.tab-pane').forEach(function(pane) {
-                                pane.classList.remove('show', 'active');
-                            });
+                            pane.classList.remove('show', 'active');
+                        });
                         }
                         // Activate clicked tab and its pane
                         tab.classList.add('active');
                         tab.setAttribute('aria-selected', 'true');
                         tabContent.classList.add('show', 'active');
-                    });
+                        });
                 });
             });
         });

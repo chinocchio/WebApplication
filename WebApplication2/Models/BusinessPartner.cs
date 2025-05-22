@@ -17,5 +17,16 @@ namespace WebApplication2.Models
         
         [NotMapped] // Prevent EF from mapping to DB
         public List<BusinessPartner>? OtherBuyers { get; set; }
+
+        public string? Citizenship { get; set; }
+        public string? Nationality { get; set; }
+        public string? JobTitle { get; set; }
+        public string? DemographicByMarket { get; set; }
+        public string? EmploymentCategory { get; set; }
+        public string? CompanyName { get; set; }
+        public string? IndustryType { get; set; }
+        public string? EmploymentCountry { get; set; }
+        public string? EmploymentState { get; set; }
+        public string? EmploymentRegion { get; set; }
     }
 }
