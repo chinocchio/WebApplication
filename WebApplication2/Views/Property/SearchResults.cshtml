@@ -1308,8 +1308,6 @@
                     document.getElementById('spinnerOverlay').style.display = 'flex';
                 });
             });
-
-            // Hide spinner when page loads
             document.getElementById('spinnerOverlay').style.display = 'none';
 
             // Handle clickable rows
@@ -1333,25 +1331,34 @@
                 });
             });
 
-            // Initialize all tabs
-            document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
-                tab.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = this.getAttribute('data-bs-target');
-                    const tabContent = document.querySelector(target);
-                    if (tabContent) {
-                        // Hide all tab contents
-                        document.querySelectorAll('.tab-pane').forEach(pane => {
-                            pane.classList.remove('show', 'active');
-                        });
-                        // Show selected tab content
-                        tabContent.classList.add('show', 'active');
-                        // Update active tab
-                        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(t => {
+            // Robust tab handler for all tab groups
+            document.querySelectorAll('.nav-tabs').forEach(function(tabGroup) {
+                tabGroup.querySelectorAll('[data-bs-toggle="tab"]').forEach(function(tab) {
+                    tab.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        // Find the parent tab group and its content
+                        const tabList = tab.closest('.nav-tabs');
+                        const tabContentId = tab.getAttribute('href') || tab.getAttribute('data-bs-target');
+                        if (!tabContentId) return;
+                        const tabContent = document.querySelector(tabContentId);
+                        if (!tabContent) return;
+                        // Deactivate all tabs in this group
+                        tabList.querySelectorAll('.nav-link, .nav-item .nav-link, .nav-link.active').forEach(function(t) {
                             t.classList.remove('active');
+                            t.setAttribute('aria-selected', 'false');
                         });
-                        this.classList.add('active');
-                    }
+                        // Deactivate all tab panes in this group
+                        const tabContentParent = tabContent.closest('.tab-content');
+                        if (tabContentParent) {
+                            tabContentParent.querySelectorAll('.tab-pane').forEach(function(pane) {
+                                pane.classList.remove('show', 'active');
+                            });
+                        }
+                        // Activate clicked tab and its pane
+                        tab.classList.add('active');
+                        tab.setAttribute('aria-selected', 'true');
+                        tabContent.classList.add('show', 'active');
+                    });
                 });
             });
         });
