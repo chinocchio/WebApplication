@@ -1250,12 +1250,22 @@
                             <th>BP Number</th>
                             <th>Full Name</th>
                             <th>Reports To</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in ViewBag.SalesTransactions)
                         {
                             var transaction = item.SalesTransaction;
+                            <tr>
+                                <td colspan="6">
+                                    <div class="d-flex justify-content-end mb-3">
+                                        <a asp-controller="SalesProponent" asp-action="Manage" asp-route-contractNumber="@transaction.ContractNumber" class="btn btn-primary">
+                                            <i class="bi bi-people me-2"></i>Manage Proponents
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
                             for (var i = 0; i < item.ProponentHierarchy.Count; i++)
                             {
                                 var proponent = item.ProponentHierarchy[i];
@@ -1276,17 +1286,18 @@
                                             @proponent?.ReportingTo
                                         }
                                     </td>
+                                    <td></td>
                                 </tr>
                             }
                             @if (item.ProponentHierarchy.Count == 0)
                             {
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">
+                                    <td colspan="6" class="text-center text-muted">
                                         <em>No proponent information available</em>
                                     </td>
                                 </tr>
                             }
-                            <tr><td colspan="5" class="border-bottom"></td></tr>
+                            <tr><td colspan="6" class="border-bottom"></td></tr>
                         }
                     </tbody>
                 </table>

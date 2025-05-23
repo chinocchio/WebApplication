@@ -1,0 +1,259 @@
+@model WebApplication2.ViewModels.SalesProponentViewModel
+
+@{
+    ViewData["Title"] = "Manage Sales Proponents";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="bi bi-people me-2"></i>Manage Sales Proponents
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Contract Number</label>
+                                <input type="text" class="form-control" value="@Model.ContractNumber" readonly />
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="AddProponent" method="post">
+                        <input type="hidden" name="ContractNumber" value="@Model.ContractNumber" />
+                        
+                        <!-- Marketing Director -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Marketing Director</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">BP Number</label>
+                                    <input type="number" name="mdBpNumber" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="mdFullname" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Deputy Marketing Director -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Deputy Marketing Director</h5>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">BP Number</label>
+                                    <input type="number" name="dmdBpNumber" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="dmdFullname" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Reports To (MD BP Number)</label>
+                                    <input type="number" name="dmdReportingTo" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Marketing Manager -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Marketing Manager</h5>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">BP Number</label>
+                                    <input type="number" name="mmBpNumber" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="mmFullname" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Reports To (DMD BP Number)</label>
+                                    <input type="number" name="mmReportingTo" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Marketing Officer -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Marketing Officer</h5>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">BP Number</label>
+                                    <input type="number" name="moBpNumber" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="moFullname" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Reports To (MM BP Number)</label>
+                                    <input type="number" name="moReportingTo" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PS/QC/ISM -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">PS/QC/ISM</h5>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">BP Number</label>
+                                    <input type="number" name="psBpNumber" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="psFullname" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Reports To (MO BP Number)</label>
+                                    <input type="number" name="psReportingTo" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Broker -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Broker</h5>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">BP Number</label>
+                                    <input type="number" name="brokerBpNumber" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="brokerFullname" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Reports To (PS/QC/ISM BP Number)</label>
+                                    <input type="number" name="brokerReportingTo" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-plus-circle me-2"></i>Add Proponents
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr class="my-4" />
+
+                    <h5 class="mb-3">Current Proponents</h5>
+                    @if (Model.CurrentProponents != null && Model.CurrentProponents.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Role</th>
+                                        <th>BP Number</th>
+                                        <th>Full Name</th>
+                                        <th>Reports To</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var proponent in Model.CurrentProponents)
+                                    {
+                                        <tr>
+                                            <td>@proponent.Roles</td>
+                                            <td>@proponent.ProponentBpNumber</td>
+                                            <td>@proponent.Fullname</td>
+                                            <td>
+                                                @if (string.IsNullOrEmpty(proponent.ReportingTo))
+                                                {
+                                                    <span class="badge bg-success">Top Level</span>
+                                                }
+                                                else
+                                                {
+                                                    @proponent.ReportingTo
+                                                }
+                                            </td>
+                                            <td>
+                                                <form asp-action="RemoveProponent" method="post" class="d-inline">
+                                                    <input type="hidden" name="ContractNumber" value="@Model.ContractNumber" />
+                                                    <input type="hidden" name="ProponentBpNumber" value="@proponent.ProponentBpNumber" />
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this proponent?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>No proponents have been added yet.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Hide reporting to field when Marketing Director is selected
+            $('#SelectedRole').change(function() {
+                if ($(this).val() === 'Marketing Director') {
+                    $('.reporting-to-field').hide();
+                    $('#NewReportingTo').val('');
+                } else {
+                    $('.reporting-to-field').show();
+                }
+            });
+
+            // Trigger change on page load
+            $('#SelectedRole').trigger('change');
+        });
+    </script>
+} 
