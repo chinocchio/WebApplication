@@ -99,6 +99,17 @@ namespace WebApplication2.Controllers
                                     }
                                 }
 
+                                var citizenship = row["citizenship"]?.ToString();
+                                var nationality = row["nationality"]?.ToString();
+                                var jobTitle = row["job_title"]?.ToString();
+                                var demographicByMarket = row["demographic_by_market"]?.ToString();
+                                var employmentCategory = row["employment_category"]?.ToString();
+                                var companyName = row["company_name"]?.ToString();
+                                var industryType = row["industry_type"]?.ToString();
+                                var employmentCountry = row["employment_country"]?.ToString();
+                                var employmentState = row["employment_state"]?.ToString();
+                                var employmentRegion = row["employment_region"]?.ToString();
+
                                 var businessPartner = new BusinessPartner
                                 {
                                     CustomerCode = row["CustomerCode"]?.ToString(),
@@ -108,7 +119,17 @@ namespace WebApplication2.Controllers
                                     IdSubmitted = row["IdSubmitted"]?.ToString(),
                                     IdDateSubmitted = idDateSubmittedOnly,
                                     EmailAddress = row["EmailAddress"]?.ToString(),
-                                    ContactNumber = row["ContactNumber"]?.ToString()
+                                    ContactNumber = row["ContactNumber"]?.ToString(),
+                                    Citizenship = citizenship,
+                                    Nationality = nationality,
+                                    JobTitle = jobTitle,
+                                    DemographicByMarket = demographicByMarket,
+                                    EmploymentCategory = employmentCategory,
+                                    CompanyName = companyName,
+                                    IndustryType = industryType,
+                                    EmploymentCountry = employmentCountry,
+                                    EmploymentState = employmentState,
+                                    EmploymentRegion = employmentRegion
                                 };
 
                                 businessPartners.Add(businessPartner);
@@ -210,6 +231,16 @@ namespace WebApplication2.Controllers
                 worksheet.Cells[1, 7].Value = "IdDateSubmitted";
                 worksheet.Cells[1, 8].Value = "EmailAddress";
                 worksheet.Cells[1, 9].Value = "ContactNumber";
+                worksheet.Cells[1, 10].Value = "citizenship";
+                worksheet.Cells[1, 11].Value = "nationality";
+                worksheet.Cells[1, 12].Value = "job_title";
+                worksheet.Cells[1, 13].Value = "demographic_by_market";
+                worksheet.Cells[1, 14].Value = "employment_category";
+                worksheet.Cells[1, 15].Value = "company_name";
+                worksheet.Cells[1, 16].Value = "industry_type";
+                worksheet.Cells[1, 17].Value = "employment_country";
+                worksheet.Cells[1, 18].Value = "employment_state";
+                worksheet.Cells[1, 19].Value = "employment_region";
 
                 // Add sample data
                 worksheet.Cells[2, 1].Value = "12345";
@@ -221,9 +252,19 @@ namespace WebApplication2.Controllers
                 worksheet.Cells[2, 7].Value = "5/21/2024";
                 worksheet.Cells[2, 8].Value = "john.doe@email.com";
                 worksheet.Cells[2, 9].Value = "09123456789";
+                worksheet.Cells[2, 10].Value = "Filipino";
+                worksheet.Cells[2, 11].Value = "Philippines";
+                worksheet.Cells[2, 12].Value = "Engineer";
+                worksheet.Cells[2, 13].Value = "Urban";
+                worksheet.Cells[2, 14].Value = "Employed";
+                worksheet.Cells[2, 15].Value = "ABC Corp";
+                worksheet.Cells[2, 16].Value = "IT";
+                worksheet.Cells[2, 17].Value = "Philippines";
+                worksheet.Cells[2, 18].Value = "NCR";
+                worksheet.Cells[2, 19].Value = "Metro Manila";
 
                 // Style the header row
-                using (var range = worksheet.Cells[1, 1, 1, 9])
+                using (var range = worksheet.Cells[1, 1, 1, 19])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;

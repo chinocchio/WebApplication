@@ -1612,8 +1612,33 @@
                 </div>
             </div>
 
+            <div class="guide-step" data-step="10">
+                <h2 class="guide-title">Adding Buyer's Ledger Entries</h2>
+                <div class="guide-content">
+                    <p>To add a Buyer's Ledger entry:</p>
+                    <ol>
+                        <li>Go to the <b>Buyer's Ledger</b> tab within a sales transaction.</li>
+                        <li>Click the <b>Add Buyer's Ledger Entry</b> button.</li>
+                        <li>Fill in the required fields in the modal form (Paid FT, Invoice Number, Amount Due, Payment Mode).</li>
+                        <li>Click <b>Submit</b>. The system will immediately validate your entry and show a success or error message as a toast notification.</li>
+                    </ol>
+                    <ul>
+                        <li>The system now checks the contract number and all fields before saving.</li>
+                        <li>If there is an error (e.g., invalid contract number), you will see a clear error message and the entry will not be saved.</li>
+                        <li>All feedback is provided instantly, and the page will refresh automatically after a successful entry.</li>
+                    </ul>
+                    <div class="guide-illustration">
+                        <i class="bi bi-journal-plus" style="font-size: 4rem; color: var(--primary-color);"></i>
+                    </div>
+                    <div class="guide-tip">
+                        <i class="bi bi-lightbulb"></i> Tip: Make sure the contract number is correct. If you see an error, check your input and try again.
+                    </div>
+                </div>
+            </div>
+
             <div class="guide-progress" id="guideProgress">
                 <span class="progress-dot active"></span>
+                <span class="progress-dot"></span>
                 <span class="progress-dot"></span>
                 <span class="progress-dot"></span>
                 <span class="progress-dot"></span>
