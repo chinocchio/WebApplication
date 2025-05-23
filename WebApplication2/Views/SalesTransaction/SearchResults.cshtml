@@ -429,17 +429,22 @@
 
     /* Update modal styles */
     .modal-backdrop {
-        background-color: transparent !important;
+        display: none !important;
     }
     .modal-backdrop.show {
-        opacity: 0 !important;
+        display: none !important;
     }
     .modal {
+        z-index: 1050 !important;
+        pointer-events: none !important;
         background: transparent !important;
     }
     .modal-dialog {
         margin: 1.75rem auto;
         max-width: 500px;
+        position: relative;
+        z-index: 1051 !important;
+        pointer-events: auto !important;
     }
     .modal-content {
         position: relative;
@@ -447,6 +452,10 @@
         border: 1px solid rgba(0, 0, 0, 0.2);
         border-radius: 0.3rem;
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        pointer-events: auto !important;
+    }
+    .modal-content * {
+        pointer-events: auto !important;
     }
 </style>
 
@@ -692,86 +701,15 @@
                                                                         <td>
                                                                             <button type="button" 
                                                                                     class="btn btn-sm btn-success mark-submitted" 
-                                                                                    onclick="toggleDocumentForm('@reqDoc.DocumentCode', '@reqDoc.DocumentName', '@transaction.ContractNumber', '@transaction.BusinessPartner?.CustomerCode', '@transaction.Properties?.UnitCode')">
+                                                                                    data-bs-toggle="modal" 
+                                                                                    data-bs-target="#markSubmittedModal"
+                                                                                    data-document-code="@reqDoc.DocumentCode"
+                                                                                    data-document-name="@reqDoc.DocumentName"
+                                                                                    data-contract-number="@transaction.ContractNumber"
+                                                                                    data-customer-code="@transaction.BusinessPartner?.CustomerCode"
+                                                                                    data-unit-code="@transaction.Properties?.UnitCode">
                                                                                 <i class="bi bi-check-circle"></i> Mark as Submitted
                                                                             </button>
-                                                                            <div id="documentForm_@reqDoc.DocumentCode" class="d-none mt-3">
-                                                                                <div class="card border-0 shadow-sm">
-                                                                                    <div class="card-header bg-light border-0 py-3">
-                                                                                        <h6 class="mb-0 text-primary">
-                                                                                            <i class="bi bi-file-earmark-text me-2"></i>Document Submission Details
-                                                                                        </h6>
-                                                                                    </div>
-                                                                                    <div class="card-body">
-                                                                                        <form id="submitDocumentForm_@reqDoc.DocumentCode" class="row g-3">
-                                                                                            @Html.AntiForgeryToken()
-                                                                                            <input type="hidden" name="documentCode" value="@reqDoc.DocumentCode">
-                                                                                            <input type="hidden" name="documentName" value="@reqDoc.DocumentName">
-                                                                                            <input type="hidden" name="contractNumber" value="@transaction.ContractNumber">
-                                                                                            <input type="hidden" name="customerCode" value="@transaction.BusinessPartner?.CustomerCode">
-                                                                                            <input type="hidden" name="unitCode" value="@transaction.Properties?.UnitCode">
-                                                                                            
-                                                                                            <div class="col-12">
-                                                                                                <div class="alert alert-light border">
-                                                                                                    <div class="row g-2">
-                                                                                                        <div class="col-md-6">
-                                                                                                            <div class="d-flex align-items-center mb-2">
-                                                                                                                <i class="bi bi-file-earmark-text text-primary me-2"></i>
-                                                                                                                <strong class="me-2">Document:</strong>
-                                                                                                                <span class="text-muted">@reqDoc.DocumentName</span>
-                                                                                                            </div>
-                                                                                                            <div class="d-flex align-items-center mb-2">
-                                                                                                                <i class="bi bi-upc text-primary me-2"></i>
-                                                                                                                <strong class="me-2">Code:</strong>
-                                                                                                                <span class="text-muted">@reqDoc.DocumentCode</span>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                        <div class="col-md-6">
-                                                                                                            <div class="d-flex align-items-center mb-2">
-                                                                                                                <i class="bi bi-file-earmark-text text-primary me-2"></i>
-                                                                                                                <strong class="me-2">Contract:</strong>
-                                                                                                                <span class="text-muted">@transaction.ContractNumber</span>
-                                                                                                            </div>
-                                                                                                            <div class="d-flex align-items-center mb-2">
-                                                                                                                <i class="bi bi-person text-primary me-2"></i>
-                                                                                                                <strong class="me-2">Customer:</strong>
-                                                                                                                <span class="text-muted">@transaction.BusinessPartner?.CustomerCode</span>
-                                                                                                            </div>
-                                                                                                            <div class="d-flex align-items-center">
-                                                                                                                <i class="bi bi-building text-primary me-2"></i>
-                                                                                                                <strong class="me-2">Unit:</strong>
-                                                                                                                <span class="text-muted">@transaction.Properties?.UnitCode</span>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            
-                                                                                            <div class="col-md-6">
-                                                                                                <label class="form-label">
-                                                                                                    <i class="bi bi-calendar-date text-primary me-1"></i>
-                                                                                                    Date Submitted
-                                                                                                </label>
-                                                                                                <input type="date" class="form-control" name="dateSubmitted" required 
-                                                                                                       onchange="this.value = this.value.split('T')[0]"
-                                                                                                       onkeydown="return false"
-                                                                                                       max="@DateTime.Now.ToString("yyyy-MM-dd")">
-                                                                                            </div>
-                                                                                            
-                                                                                            <div class="col-12 mt-4">
-                                                                                                <div class="d-flex gap-2">
-                                                                                                    <button type="button" class="btn btn-light" onclick="toggleDocumentForm('@reqDoc.DocumentCode', '@reqDoc.DocumentName', '@transaction.ContractNumber', '@transaction.BusinessPartner?.CustomerCode', '@transaction.Properties?.UnitCode')">
-                                                                                                        <i class="bi bi-x-circle me-1"></i>Cancel
-                                                                                                    </button>
-                                                                                                    <button type="button" class="btn btn-primary" onclick="handleSubmit('@reqDoc.DocumentCode')">
-                                                                                                        <i class="bi bi-check-circle me-1"></i>Submit
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </form>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
                                                                         </td>
                                                                     </tr>
                                                                 }
@@ -1418,6 +1356,82 @@
   
 </div>
 
+<!-- Modal for Mark as Submitted -->
+<div class="modal fade" id="markSubmittedModal" tabindex="-1" aria-labelledby="markSubmittedModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="markSubmittedModalLabel">
+          <i class="bi bi-file-earmark-text me-2"></i>Mark Document as Submitted
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="markSubmittedForm" class="row g-3">
+          @Html.AntiForgeryToken()
+          <input type="hidden" name="documentCode" id="modalDocumentCode">
+          <input type="hidden" name="documentName" id="modalDocumentName">
+          <input type="hidden" name="contractNumber" id="modalContractNumber">
+          <input type="hidden" name="customerCode" id="modalCustomerCode">
+          <input type="hidden" name="unitCode" id="modalUnitCode">
+          <div class="col-12">
+            <div class="alert alert-light border mb-3">
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-file-earmark-text text-success me-2"></i>
+                    <strong class="me-2">Document:</strong>
+                    <span class="text-muted" id="modalDocumentNameDisplay"></span>
+                  </div>
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-upc text-success me-2"></i>
+                    <strong class="me-2">Code:</strong>
+                    <span class="text-muted" id="modalDocumentCodeDisplay"></span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-file-earmark-text text-success me-2"></i>
+                    <strong class="me-2">Contract:</strong>
+                    <span class="text-muted" id="modalContractNumberDisplay"></span>
+                  </div>
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-person text-success me-2"></i>
+                    <strong class="me-2">Customer:</strong>
+                    <span class="text-muted" id="modalCustomerCodeDisplay"></span>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-building text-success me-2"></i>
+                    <strong class="me-2">Unit:</strong>
+                    <span class="text-muted" id="modalUnitCodeDisplay"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">
+              <i class="bi bi-calendar-date text-success me-1"></i>
+              Date Submitted
+            </label>
+            <input type="date" class="form-control" name="dateSubmitted" id="modalDateSubmitted" required max="@DateTime.Now.ToString("yyyy-MM-dd")">
+          </div>
+          <div class="col-12 mt-4">
+            <div class="d-flex gap-2 justify-content-end">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                <i class="bi bi-x-circle me-1"></i>Cancel
+              </button>
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle me-1"></i>Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -1480,81 +1494,141 @@
                         });
                 });
             });
-        });
 
-        // Function to toggle document form visibility
-        function toggleDocumentForm(documentCode, documentName, contractNumber, customerCode, unitCode) {
-            const formDiv = document.getElementById(`documentForm_${documentCode}`);
-            formDiv.classList.toggle('d-none');
-            
-            if (!formDiv.classList.contains('d-none')) {
-                // Set today's date as default when showing the form
-                const today = new Date().toISOString().split('T')[0];
-                formDiv.querySelector('input[name="dateSubmitted"]').value = today;
-            }
-        }
+            // Improved modal handling
+            const markSubmittedModal = document.getElementById('markSubmittedModal');
+            if (markSubmittedModal) {
+                // Initialize modal with updated options
+                const modal = new bootstrap.Modal(markSubmittedModal, {
+                    backdrop: false, // Remove backdrop
+                    keyboard: true,
+                    focus: true
+                });
 
-        // Function to handle form submission
-        function handleSubmit(documentCode) {
-            const form = document.getElementById(`submitDocumentForm_${documentCode}`);
-            const formData = new FormData(form);
-            
-            // Show spinner
-            document.getElementById('spinnerOverlay').style.display = 'flex';
-            
-            fetch('/Property/SubmitDocument', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Show success toast
-                    const toast = new bootstrap.Toast(document.createElement('div'));
-                    toast._element.classList.add('toast', 'bg-success', 'text-white');
-                    toast._element.innerHTML = `
-                        <div class="toast-body">
-                            <i class="bi bi-check-circle-fill me-2"></i>
-                            ${data.message}
-                        </div>`;
-                    document.body.appendChild(toast._element);
-                    toast.show();
+                // Ensure modal is properly initialized
+                markSubmittedModal.addEventListener('shown.bs.modal', function () {
+                    // Focus the first input when modal is shown
+                    const firstInput = markSubmittedModal.querySelector('input:not([type="hidden"])');
+                    if (firstInput) {
+                        firstInput.focus();
+                    }
+                });
+
+                // Handle modal show event
+                markSubmittedModal.addEventListener('show.bs.modal', function (event) {
+                    // Prevent event bubbling
+                    event.stopPropagation();
                     
-                    // Hide the form and refresh page
-                    document.getElementById(`documentForm_${documentCode}`).classList.add('d-none');
-                    setTimeout(() => location.reload(), 1000);
-                } else {
-                    // Show error toast
-                    const toast = new bootstrap.Toast(document.createElement('div'));
-                    toast._element.classList.add('toast', 'bg-danger', 'text-white');
-                    toast._element.innerHTML = `
-                        <div class="toast-body">
-                            <i class="bi bi-exclamation-circle-fill me-2"></i>
-                            ${data.message}
-                        </div>`;
-                    document.body.appendChild(toast._element);
-                    toast.show();
+                    const button = event.relatedTarget;
+                    if (!button) return;
+
+                    // Populate modal fields
+                    const documentCode = button.getAttribute('data-document-code');
+                    const documentName = button.getAttribute('data-document-name');
+                    const contractNumber = button.getAttribute('data-contract-number');
+                    const customerCode = button.getAttribute('data-customer-code');
+                    const unitCode = button.getAttribute('data-unit-code');
+
+                    // Set hidden fields
+                    document.getElementById('modalDocumentCode').value = documentCode;
+                    document.getElementById('modalDocumentName').value = documentName;
+                    document.getElementById('modalContractNumber').value = contractNumber;
+                    document.getElementById('modalCustomerCode').value = customerCode;
+                    document.getElementById('modalUnitCode').value = unitCode;
+
+                    // Set display fields
+                    document.getElementById('modalDocumentNameDisplay').textContent = documentName;
+                    document.getElementById('modalDocumentCodeDisplay').textContent = documentCode;
+                    document.getElementById('modalContractNumberDisplay').textContent = contractNumber;
+                    document.getElementById('modalCustomerCodeDisplay').textContent = customerCode;
+                    document.getElementById('modalUnitCodeDisplay').textContent = unitCode;
+
+                    // Set today's date as default
+                    document.getElementById('modalDateSubmitted').value = new Date().toISOString().split('T')[0];
+                });
+
+                // Handle modal form submit with improved event handling
+                const markSubmittedForm = document.getElementById('markSubmittedForm');
+                if (markSubmittedForm) {
+                    markSubmittedForm.addEventListener('submit', async function (e) {
+                        // Prevent event bubbling
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Disable submit button to prevent double submission
+                        const submitButton = this.querySelector('button[type="submit"]');
+                        if (submitButton) {
+                            submitButton.disabled = true;
+                        }
+
+                        try {
+                            document.getElementById('spinnerOverlay').style.display = 'flex';
+                            
+                            const formData = new FormData(this);
+                            const response = await fetch('/Property/SubmitDocument', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                                }
+                            });
+
+                            const data = await response.json();
+                            
+                            // Create and show toast
+                            const toast = document.createElement('div');
+                            toast.className = `toast ${data.success ? 'bg-success' : 'bg-danger'} text-white`;
+                            toast.style.zIndex = '1060';
+                            toast.innerHTML = `
+                                <div class="toast-body">
+                                    <i class="bi ${data.success ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'} me-2"></i>
+                                    ${data.message}
+                                </div>
+                            `;
+                            document.body.appendChild(toast);
+                            
+                            const bsToast = new bootstrap.Toast(toast, {
+                                autohide: true,
+                                delay: 3000
+                            });
+                            bsToast.show();
+
+                            if (data.success) {
+                                // Hide modal and refresh after success
+                                modal.hide();
+                                setTimeout(() => location.reload(), 1000);
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            const toast = document.createElement('div');
+                            toast.className = 'toast bg-danger text-white';
+                            toast.style.zIndex = '1060';
+                            toast.innerHTML = `
+                                <div class="toast-body">
+                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                    An error occurred while submitting the document.
+                                </div>
+                            `;
+                            document.body.appendChild(toast);
+                            new bootstrap.Toast(toast, {
+                                autohide: true,
+                                delay: 3000
+                            }).show();
+                        } finally {
+                            document.getElementById('spinnerOverlay').style.display = 'none';
+                            // Re-enable submit button
+                            if (submitButton) {
+                                submitButton.disabled = false;
+                            }
+                        }
+                    });
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Show error toast
-                const toast = new bootstrap.Toast(document.createElement('div'));
-                toast._element.classList.add('toast', 'bg-danger', 'text-white');
-                toast._element.innerHTML = `
-                    <div class="toast-body">
-                        <i class="bi bi-exclamation-circle-fill me-2"></i>
-                        An error occurred while submitting the document.
-                    </div>`;
-                document.body.appendChild(toast._element);
-                toast.show();
-            })
-            .finally(() => {
-                document.getElementById('spinnerOverlay').style.display = 'none';
-            });
-        }
+
+                // Add click event listener to modal content to prevent event bubbling
+                markSubmittedModal.querySelector('.modal-content').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+        });
     </script>
 } 
