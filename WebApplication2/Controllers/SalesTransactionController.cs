@@ -455,7 +455,7 @@ namespace WebApplication2.Controllers
                         .Include(st => st.SalesDocument)
                         .AsQueryable();
 
-            if (!string.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 searchTerm = searchTerm.ToLower();
                 query = query.Where(st =>
@@ -466,6 +466,7 @@ namespace WebApplication2.Controllers
                     (st.ProponentBpNumber != null && st.ProponentBpNumber.ToString().Contains(searchTerm))
                 );
             }
+            // If searchTerm is null or empty, query returns all records
 
             query = query.OrderByDescending(st => st.HoldingDate);
 

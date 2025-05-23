@@ -41,7 +41,7 @@ namespace WebApplication2.Controllers
                         .Include(st => st.SalesDocument)
                         .AsQueryable();
 
-            if (!string.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 searchTerm = searchTerm.ToLower();
                 var searchContractNumber = 0L;
