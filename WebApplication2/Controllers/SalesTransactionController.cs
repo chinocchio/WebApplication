@@ -782,9 +782,8 @@ namespace WebApplication2.Controllers
 
                 if (salesTransaction == null)
                 {
-                    ModelState.AddModelError("ContractNumber", "Invalid contract number");
-                    TempData["LedgerError"] = "Invalid contract number.";
-                    return RedirectToAction("SearchResults", new { searchTerm = model.ContractNumber });
+                    // Return JSON error instead of redirect
+                    return Json(new { success = false, message = "Invalid contract number." });
                 }
 
                 model.UnitCode = salesTransaction.Properties?.UnitCode;
@@ -794,12 +793,14 @@ namespace WebApplication2.Controllers
 
                 _context.BuyerLedgers.Add(model);
                 await _context.SaveChangesAsync();
-                TempData["LedgerSuccess"] = "Buyer's ledger entry created successfully.";
-                return RedirectToAction("SearchResults", new { searchTerm = model.ContractNumber });
+
+                // Return JSON success
+                return Json(new { success = true, message = "Buyer's ledger entry created successfully." });
             }
-            // If validation fails, show error
-            TempData["LedgerError"] = "Validation failed. Please check your input.";
-            return RedirectToAction("SearchResults", new { searchTerm = model.ContractNumber });
+
+            // Return JSON validation error
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return Json(new { success = false, message = "Validation failed. Please check your input.", errors });
         }
     }
 }

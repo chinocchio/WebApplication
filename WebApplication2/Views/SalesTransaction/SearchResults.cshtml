@@ -800,51 +800,18 @@
                                                 <div class="alert alert-danger">@TempData["LedgerError"]</div>
                                             }
                                             
-                                            <div class="card mb-3">
-                                                <div class="card-header bg-success text-white">
-                                                    <strong>Add Buyer's Ledger Entry</strong>
-                                                </div>
-                                                <div class="card-body">
-                                                    <form asp-action="AddBuyersLedger" asp-controller="SalesTransaction" method="post" class="row g-3">
-                                                        <input type="hidden" name="ContractNumber" value="@transaction.ContractNumber" />
-                                                        <div class="col-md-4">
-                                                            <label class="form-label">Unit Code</label>
-                                                            <input type="text" class="form-control" name="UnitCode" value="@transaction.Properties?.UnitCode" readonly />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label class="form-label">Customer Code</label>
-                                                            <input type="text" class="form-control" name="CustomerCode" value="@transaction.BusinessPartner?.CustomerCode" readonly />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label class="form-label">Paid FT</label>
-                                                            <input type="text" class="form-control" name="PaymentNumber" />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label class="form-label">Invoice Number</label>
-                                                            <input type="text" class="form-control" name="PaymentReferenceDocNumber" />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label class="form-label">Amount Due</label>
-                                                            <input type="number" step="0.01" class="form-control" name="AmountDue" />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label class="form-label">Payment Mode</label>
-                                                            <select class="form-select" name="PaymentReferenceDocType">
-                                                                <option value="">-- Select Payment Mode --</option>
-                                                                <option value="Cash">Cash</option>
-                                                                <option value="Check">Check</option>
-                                                                <option value="Bank Transfer">Bank Transfer</option>
-                                                                <option value="Credit Card">Credit Card</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <button type="submit" class="btn btn-success">
-                                                                <i class="bi bi-save me-2"></i>Add Entry
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                            <div class="d-flex justify-content-end mb-3">
+                                                <button type="button" 
+                                                        class="btn btn-success" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#addLedgerModal"
+                                                        data-contract-number="@transaction.ContractNumber"
+                                                        data-unit-code="@transaction.Properties?.UnitCode"
+                                                        data-customer-code="@transaction.BusinessPartner?.CustomerCode">
+                                                    <i class="bi bi-plus-circle me-2"></i>Add Buyer's Ledger Entry
+                                                </button>
                                             </div>
+
                                             @if (item.BuyerLedgers != null && item.BuyerLedgers.Count > 0)
                                             {
                                                 <div class="card mb-4">
@@ -860,7 +827,6 @@
                                                         <table class="table table-bordered table-striped table-sm text-center align-middle">
                                                             <thead class="table-light">
                                                                 <tr>
-
                                                                     <th>Customer Code</th>
                                                                     <th>Unit Code</th>
                                                                     <th>Paid FT</th>
@@ -874,7 +840,6 @@
                                                                 @foreach (var ledger in item.BuyerLedgers)
                                                                 {
                                                                     <tr>
-
                                                                         <td>@ledger.CustomerCode</td>
                                                                         <td>@ledger.UnitCode</td>
                                                                         <td>@ledger.PaymentNumber</td>
@@ -882,7 +847,6 @@
                                                                         <td>@ledger.AmountDue.ToString("N2")</td>
                                                                         <td>@ledger.PaymentReferenceDocType</td>
                                                                         <td>@ledger.WhenDue</td>
-
                                                                     </tr>
                                                                 }
                                                                 <tr class="table-secondary fw-bold">
@@ -896,7 +860,6 @@
                                                                             }
                                                                         }
                                                                         @totalAmountDue.ToString("N2")
-
                                                                     </td>
                                                                     <td colspan="2"></td>
                                                                 </tr>
@@ -1432,6 +1395,97 @@
   </div>
 </div>
 
+<!-- Add Buyer's Ledger Modal -->
+<div class="modal fade" id="addLedgerModal" tabindex="-1" aria-labelledby="addLedgerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="addLedgerModalLabel">
+                    <i class="bi bi-plus-circle me-2"></i>Add Buyer's Ledger Entry
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addLedgerForm" class="row g-3">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="ContractNumber" id="modalContractNumber">
+                    <input type="hidden" name="UnitCode" id="modalUnitCode">
+                    <input type="hidden" name="CustomerCode" id="modalCustomerCode">
+                    
+                    <div class="col-12">
+                        <div class="alert alert-light border mb-3">
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-file-earmark-text text-success me-2"></i>
+                                        <strong class="me-2">Contract:</strong>
+                                        <span class="text-muted" id="modalContractNumberDisplay"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-person text-success me-2"></i>
+                                        <strong class="me-2">Customer:</strong>
+                                        <span class="text-muted" id="modalCustomerCodeDisplay"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-building text-success me-2"></i>
+                                        <strong class="me-2">Unit:</strong>
+                                        <span class="text-muted" id="modalUnitCodeDisplay"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="bi bi-upc text-success me-1"></i>Paid FT
+                        </label>
+                        <input type="text" class="form-control" name="PaymentNumber" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="bi bi-receipt text-success me-1"></i>Invoice Number
+                        </label>
+                        <input type="text" class="form-control" name="PaymentReferenceDocNumber" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="bi bi-currency-dollar text-success me-1"></i>Amount Due
+                        </label>
+                        <input type="number" step="0.01" class="form-control" name="AmountDue" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="bi bi-credit-card text-success me-1"></i>Payment Mode
+                        </label>
+                        <select class="form-select" name="PaymentReferenceDocType" required>
+                            <option value="">-- Select Payment Mode --</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Check">Check</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Credit Card">Credit Card</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-1"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle me-1"></i>Submit
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -1626,6 +1680,125 @@
 
                 // Add click event listener to modal content to prevent event bubbling
                 markSubmittedModal.querySelector('.modal-content').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+
+            // Add Buyer's Ledger Modal handling
+            const addLedgerModal = document.getElementById('addLedgerModal');
+            if (addLedgerModal) {
+                // Initialize modal
+                const ledgerModal = new bootstrap.Modal(addLedgerModal, {
+                    backdrop: false,
+                    keyboard: true,
+                    focus: true
+                });
+
+                // Handle modal show event
+                addLedgerModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    if (!button) return;
+
+                    // Get data from button
+                    const contractNumber = button.getAttribute('data-contract-number');
+                    const unitCode = button.getAttribute('data-unit-code');
+                    const customerCode = button.getAttribute('data-customer-code');
+
+                    // Set hidden fields
+                    document.getElementById('modalContractNumber').value = contractNumber;
+                    document.getElementById('modalUnitCode').value = unitCode;
+                    document.getElementById('modalCustomerCode').value = customerCode;
+
+                    // Set display fields
+                    document.getElementById('modalContractNumberDisplay').textContent = contractNumber;
+                    document.getElementById('modalUnitCodeDisplay').textContent = unitCode;
+                    document.getElementById('modalCustomerCodeDisplay').textContent = customerCode;
+                });
+
+                // Handle form submission
+                const addLedgerForm = document.getElementById('addLedgerForm');
+                if (addLedgerForm) {
+                    addLedgerForm.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const submitButton = this.querySelector('button[type="submit"]');
+                        if (submitButton) {
+                            submitButton.disabled = true;
+                        }
+
+                        try {
+                            document.getElementById('spinnerOverlay').style.display = 'flex';
+
+                            // Get the contract number and ensure it's a number
+                            const contractNumber = parseInt(document.getElementById('modalContractNumber').value);
+                            if (isNaN(contractNumber)) {
+                                throw new Error('Invalid contract number format');
+                            }
+
+                            const formData = new FormData(this);
+                            // Update the contract number in the form data to be a number
+                            formData.set('ContractNumber', contractNumber.toString());
+
+                            const response = await fetch('/SalesTransaction/AddBuyersLedger', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                                }
+                            });
+
+                            const data = await response.json();
+
+                            // Create and show toast
+                            const toast = document.createElement('div');
+                            toast.className = `toast ${data.success ? 'bg-success' : 'bg-danger'} text-white`;
+                            toast.style.zIndex = '1060';
+                            toast.innerHTML = `
+                                <div class="toast-body">
+                                    <i class="bi ${data.success ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'} me-2"></i>
+                                    ${data.message || (data.success ? 'Ledger entry added successfully' : 'Failed to add ledger entry')}
+                                </div>
+                            `;
+                            document.body.appendChild(toast);
+
+                            const bsToast = new bootstrap.Toast(toast, {
+                                autohide: true,
+                                delay: 3000
+                            });
+                            bsToast.show();
+
+                            if (data.success) {
+                                ledgerModal.hide();
+                                setTimeout(() => location.reload(), 1000);
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            const toast = document.createElement('div');
+                            toast.className = 'toast bg-danger text-white';
+                            toast.style.zIndex = '1060';
+                            toast.innerHTML = `
+                                <div class="toast-body">
+                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                    ${error.message || 'An error occurred while adding the ledger entry.'}
+                                </div>
+                            `;
+                            document.body.appendChild(toast);
+                            new bootstrap.Toast(toast, {
+                                autohide: true,
+                                delay: 3000
+                            }).show();
+                        } finally {
+                            document.getElementById('spinnerOverlay').style.display = 'none';
+                            if (submitButton) {
+                                submitButton.disabled = false;
+                            }
+                        }
+                    });
+                }
+
+                // Add click event listener to modal content
+                addLedgerModal.querySelector('.modal-content').addEventListener('click', function(e) {
                     e.stopPropagation();
                 });
             }
