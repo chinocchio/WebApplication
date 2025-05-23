@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set EPPlus license
+ExcelPackage.License.SetNonCommercialPersonal("Chino");
 
 // Add services to the container.
 

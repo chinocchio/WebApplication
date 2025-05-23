@@ -1,0 +1,98 @@
+@model WebApplication2.ViewModels.PaymentTermImportViewModel
+@{
+    ViewData["Title"] = "Import Payment Terms";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-cash-coin text-primary me-2"></i>
+                        Import Payment Terms
+                    </h3>
+                    <a asp-action="DownloadTemplate" class="btn btn-custom">
+                        <i class="bi bi-download me-2"></i>Download Template
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.ImportErrors.Any())
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <h5 class="alert-heading">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                Import Errors
+                            </h5>
+                            <ul class="mb-0">
+                                @foreach (var error in Model.ImportErrors)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (Model.SuccessCount > 0)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <h5 class="alert-heading">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                Import Summary
+                            </h5>
+                            <p class="mb-0">Successfully imported @Model.SuccessCount records.</p>
+                            @if (Model.ErrorCount > 0)
+                            {
+                                <p class="mb-0">Failed to import @Model.ErrorCount records.</p>
+                            }
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <form asp-action="Import" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                                        <div class="text-center mb-4">
+                                            <i class="bi bi-file-earmark-excel text-primary" style="font-size: 3rem;"></i>
+                                            <h4 class="mt-3">Upload Payment Terms Excel File</h4>
+                                            <p class="text-muted">Select an Excel file containing payment term data to import</p>
+                                        </div>
+
+                                        <div class="form-group mb-4">
+                                            <div class="input-group">
+                                                <input asp-for="File" class="form-control custom-input" accept=".xlsx,.xls" required />
+                                                <button type="submit" class="btn btn-custom">
+                                                    <i class="bi bi-upload me-2"></i>Import
+                                                </button>
+                                            </div>
+                                            <span asp-validation-for="File" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="alert alert-info">
+                                            <h6 class="alert-heading">
+                                                <i class="bi bi-info-circle-fill me-2"></i>
+                                                Import Guidelines
+                                            </h6>
+                                            <ul class="mb-0">
+                                                <li>File must be in Excel format (.xlsx or .xls)</li>
+                                                <li>First row should contain column headers</li>
+                                                <li>Contract Number is required for each record</li>
+                                                <li>Download the template for the correct format</li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
