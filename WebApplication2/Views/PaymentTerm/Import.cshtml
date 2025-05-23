@@ -4,18 +4,96 @@
     Layout = "_Layout";
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title mb-0">
-                        <i class="bi bi-cash-coin text-primary me-2"></i>
+<style>
+    .import-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    .import-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        border: none;
+        transition: all var(--transition-speed) ease;
+    }
+    .import-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px var(--shadow-color);
+    }
+    .card-header {
+        background: var(--primary-color);
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .card-header h5, .card-header h3 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .btn-custom {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: var(--border-radius);
+        font-weight: 500;
+        transition: all var(--transition-speed) ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .btn-custom:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .custom-input:focus {
+        animation: pulse 0.5s ease-in-out;
+    }
+    .custom-input:hover {
+        border-color: var(--primary-light) !important;
+        transform: translateY(-2px);
+    }
+    .alert {
+        border-radius: var(--border-radius);
+        border: none;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .alert-danger {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+    .alert-success {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+    .alert-info {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+</style>
+
+<div class="import-container">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="import-card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-cash-coin me-2"></i>
                         Import Payment Terms
                     </h3>
-                    <a asp-action="DownloadTemplate" class="btn btn-custom">
-                        <i class="bi bi-download me-2"></i>Download Template
-                    </a>
                 </div>
                 <div class="card-body">
                     @if (Model.ImportErrors.Any())
@@ -34,7 +112,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     }
-
                     @if (Model.SuccessCount > 0)
                     {
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -50,44 +127,110 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     }
-
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-body p-4">
-                                    <form asp-action="Import" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-                                        <div class="text-center mb-4">
-                                            <i class="bi bi-file-earmark-excel text-primary" style="font-size: 3rem;"></i>
-                                            <h4 class="mt-3">Upload Payment Terms Excel File</h4>
-                                            <p class="text-muted">Select an Excel file containing payment term data to import</p>
-                                        </div>
-
-                                        <div class="form-group mb-4">
-                                            <div class="input-group">
-                                                <input asp-for="File" class="form-control custom-input" accept=".xlsx,.xls" required />
-                                                <button type="submit" class="btn btn-custom">
-                                                    <i class="bi bi-upload me-2"></i>Import
-                                                </button>
-                                            </div>
-                                            <span asp-validation-for="File" class="text-danger"></span>
-                                        </div>
-
-                                        <div class="alert alert-info">
-                                            <h6 class="alert-heading">
-                                                <i class="bi bi-info-circle-fill me-2"></i>
-                                                Import Guidelines
-                                            </h6>
-                                            <ul class="mb-0">
-                                                <li>File must be in Excel format (.xlsx or .xls)</li>
-                                                <li>First row should contain column headers</li>
-                                                <li>Contract Number is required for each record</li>
-                                                <li>Download the template for the correct format</li>
-                                            </ul>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                    <form asp-action="Import" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <label class="form-label">Select Excel or CSV File</label>
+                        <div class="mb-3">
+                            <input asp-for="File" class="form-control custom-input" accept=".xlsx,.xls,.csv" required />
+                            <div class="form-text">Supported file types: .xlsx, .xls, .csv</div>
+                            <span asp-validation-for="File" class="text-danger"></span>
                         </div>
+                        <h6 class="mt-4 mb-3">Sample Format:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered sample-table">
+                                <thead>
+                                    <tr>
+                                        <th>ContractNumber</th>
+                                        <th>RfDatePaid</th>
+                                        <th>RfAmountPaidToUnit</th>
+                                        <th>RfAmountPaidToGMTOE</th>
+                                        <th>RfAmountGMTOE_Unit</th>
+                                        <th>RfDateCredited</th>
+                                        <th>RfOrNumber</th>
+                                        <th>Paymentterm</th>
+                                        <th>PercentTOB</th>
+                                        <th>TOBModeOfPayment</th>
+                                        <th>TOB</th>
+                                        <th>EstimatedBankMAFor7Point5Percent</th>
+                                        <th>StartDate1stMA</th>
+                                        <th>UnitParking</th>
+                                        <th>TFee</th>
+                                        <th>AmountPaidToUnit</th>
+                                        <th>AmountPaidToTF</th>
+                                        <th>DatePaid</th>
+                                        <th>FirstMAOrNumber</th>
+                                        <th>PaymentDueDate</th>
+                                        <th>Unit</th>
+                                        <th>TransferFee</th>
+                                        <th>Total</th>
+                                        <th>PercentPayment</th>
+                                        <th>PaymentCategory</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>12345</td>
+                                        <td>2024-03-20</td>
+                                        <td>1000.00</td>
+                                        <td>500.00</td>
+                                        <td>1500.00</td>
+                                        <td>2024-03-21</td>
+                                        <td>OR123456</td>
+                                        <td>Monthly</td>
+                                        <td>20%</td>
+                                        <td>Bank Transfer</td>
+                                        <td>50000.00</td>
+                                        <td>3750.00</td>
+                                        <td>2024-04-01</td>
+                                        <td>250000.00</td>
+                                        <td>5000.00</td>
+                                        <td>245000.00</td>
+                                        <td>5000.00</td>
+                                        <td>2024-03-20</td>
+                                        <td>MA123456</td>
+                                        <td>1</td>
+                                        <td>250000.00</td>
+                                        <td>5000.00</td>
+                                        <td>255000.00</td>
+                                        <td>100%</td>
+                                        <td>Full Payment</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="font-size:0.85em;color:var(--text-muted);margin-top:0.5rem;">Scroll right to see all columns if needed.</div>
+                        </div>
+                        <div class="btn-group mt-4 w-100">
+                            <button type="submit" class="btn btn-custom btn-primary flex-fill">
+                                <i class="bi bi-cloud-upload me-2"></i>Import Payment Terms
+                            </button>
+                            <a asp-action="DownloadTemplate" class="btn btn-custom btn-info flex-fill">
+                                <i class="bi bi-download me-2"></i>Download Template
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <a asp-controller="SalesTransaction" asp-action="SearchResults" class="btn btn-custom btn-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="import-card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="bi bi-info-circle me-2"></i>Import Guidelines</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Ensure all required fields are filled in your Excel/CSV file</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Contract Numbers must match existing sales transactions</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Dates should be in YYYY-MM-DD format</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Numeric values should not include currency symbols or commas</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Percentages should be entered as decimal values (e.g., 40% as 40)</li>
+                    </ul>
+                    <div class="alert alert-info mt-3">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <b>Note:</b> Contract Numbers must exist in the Sales Transactions table for successful linking.
                     </div>
                 </div>
             </div>
