@@ -23,157 +23,199 @@
                         </div>
                     </div>
 
+                    <!-- Team 1 Form -->
                     <form asp-action="AddProponent" method="post">
                         <input type="hidden" name="ContractNumber" value="@Model.ContractNumber" />
-                        
+                        <input type="hidden" name="team" value="team1" />
+                        <!-- Team 1 fields -->
                         <!-- Marketing Director -->
                         <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="border-bottom pb-2">Marketing Director</h5>
+                            <div class="col-12"><h5 class="border-bottom pb-2">Marketing Director</h5></div>
+                            <div class="col-md-4">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="mdBpNumber" class="form-control" />
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">BP Number</label>
-                                    <input type="number" name="mdBpNumber" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" name="mdFullname" class="form-control" />
-                                </div>
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="mdFullname" class="form-control" />
                             </div>
                         </div>
-
                         <!-- Deputy Marketing Director -->
                         <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="border-bottom pb-2">Deputy Marketing Director</h5>
+                            <div class="col-12"><h5 class="border-bottom pb-2">Deputy Marketing Director</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="dmdBpNumber" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">BP Number</label>
-                                    <input type="number" name="dmdBpNumber" class="form-control" />
-                                </div>
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="dmdFullname" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" name="dmdFullname" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Reports To (MD BP Number)</label>
-                                    <input type="number" name="dmdReportingTo" class="form-control" />
-                                </div>
+                                <label class="form-label">Reports To (MD BP Number)</label>
+                                <input type="number" name="dmdReportingTo" class="form-control" />
                             </div>
                         </div>
-
                         <!-- Marketing Manager -->
                         <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="border-bottom pb-2">Marketing Manager</h5>
+                            <div class="col-12"><h5 class="border-bottom pb-2">Marketing Manager</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="mmBpNumber" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">BP Number</label>
-                                    <input type="number" name="mmBpNumber" class="form-control" />
-                                </div>
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="mmFullname" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" name="mmFullname" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Reports To (DMD BP Number)</label>
-                                    <input type="number" name="mmReportingTo" class="form-control" />
-                                </div>
+                                <label class="form-label">Reports To (DMD BP Number)</label>
+                                <input type="number" name="mmReportingTo" class="form-control" />
                             </div>
                         </div>
-
                         <!-- Marketing Officer -->
                         <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="border-bottom pb-2">Marketing Officer</h5>
+                            <div class="col-12"><h5 class="border-bottom pb-2">Marketing Officer</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="moBpNumber" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">BP Number</label>
-                                    <input type="number" name="moBpNumber" class="form-control" />
-                                </div>
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="moFullname" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" name="moFullname" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Reports To (MM BP Number)</label>
-                                    <input type="number" name="moReportingTo" class="form-control" />
-                                </div>
+                                <label class="form-label">Reports To (MM BP Number)</label>
+                                <input type="number" name="moReportingTo" class="form-control" />
                             </div>
                         </div>
-
                         <!-- PS/QC/ISM -->
                         <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="border-bottom pb-2">PS/QC/ISM</h5>
+                            <div class="col-12"><h5 class="border-bottom pb-2">PS/QC/ISM</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="psBpNumber" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">BP Number</label>
-                                    <input type="number" name="psBpNumber" class="form-control" />
-                                </div>
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="psFullname" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" name="psFullname" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Reports To (MO BP Number)</label>
-                                    <input type="number" name="psReportingTo" class="form-control" />
-                                </div>
+                                <label class="form-label">Reports To (MO BP Number)</label>
+                                <input type="number" name="psReportingTo" class="form-control" />
                             </div>
                         </div>
-
                         <!-- Broker -->
                         <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="border-bottom pb-2">Broker</h5>
+                            <div class="col-12"><h5 class="border-bottom pb-2">Broker</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="brokerBpNumber" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">BP Number</label>
-                                    <input type="number" name="brokerBpNumber" class="form-control" />
-                                </div>
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="brokerFullname" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" name="brokerFullname" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Reports To (PS/QC/ISM BP Number)</label>
-                                    <input type="number" name="brokerReportingTo" class="form-control" />
-                                </div>
+                                <label class="form-label">Reports To (PS/QC/ISM BP Number)</label>
+                                <input type="number" name="brokerReportingTo" class="form-control" />
                             </div>
                         </div>
-
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="bi bi-plus-circle me-2"></i>Add Proponents
+                                    <i class="bi bi-plus-circle me-2"></i>Add/Update Team 1
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr class="my-4" />
+
+                    <!-- Team 2 Form -->
+                    <form asp-action="AddProponent" method="post">
+                        <input type="hidden" name="ContractNumber" value="@Model.ContractNumber" />
+                        <input type="hidden" name="team" value="team2" />
+                        <h4>Team 2: Marketing Partner, Agent, Sales Manager, Broker, Director</h4>
+                        <!-- Director -->
+                        <div class="row mb-3">
+                            <div class="col-12"><h5>Director</h5></div>
+                            <div class="col-md-4">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="dirBpNumber2" class="form-control" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="dirFullname2" class="form-control" />
+                            </div>
+                        </div>
+                        <!-- Broker -->
+                        <div class="row mb-3">
+                            <div class="col-12"><h5>Broker</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="brokerBpNumber2" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="brokerFullname2" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Reports To (Director BP Number)</label>
+                                <input type="number" name="brokerReportingTo2" class="form-control" />
+                            </div>
+                        </div>
+                        <!-- Sales Manager -->
+                        <div class="row mb-3">
+                            <div class="col-12"><h5>Sales Manager</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="smBpNumber2" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="smFullname2" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Reports To (Broker BP Number)</label>
+                                <input type="number" name="smReportingTo2" class="form-control" />
+                            </div>
+                        </div>
+                        <!-- Agent -->
+                        <div class="row mb-3">
+                            <div class="col-12"><h5>Agent</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="agentBpNumber2" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="agentFullname2" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Reports To (Sales Manager BP Number)</label>
+                                <input type="number" name="agentReportingTo2" class="form-control" />
+                            </div>
+                        </div>
+                        <!-- Marketing Partner -->
+                        <div class="row mb-3">
+                            <div class="col-12"><h5>Marketing Partner</h5></div>
+                            <div class="col-md-3">
+                                <label class="form-label">BP Number</label>
+                                <input type="number" name="mpBpNumber2" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="mpFullname2" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Reports To (Agent BP Number)</label>
+                                <input type="number" name="mpReportingTo2" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-secondary w-100">
+                                    <i class="bi bi-plus-circle me-2"></i>Add/Update Team 2
                                 </button>
                             </div>
                         </div>
@@ -256,4 +298,5 @@
             $('#SelectedRole').trigger('change');
         });
     </script>
+} 
 } 

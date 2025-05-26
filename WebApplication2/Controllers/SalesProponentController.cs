@@ -60,12 +60,20 @@ namespace WebApplication2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProponent(
             long contractNumber,
+            string team,
+            // Team 1
             long? mdBpNumber, string? mdFullname,
             long? dmdBpNumber, string? dmdFullname, long? dmdReportingTo,
             long? mmBpNumber, string? mmFullname, long? mmReportingTo,
             long? moBpNumber, string? moFullname, long? moReportingTo,
             long? psBpNumber, string? psFullname, long? psReportingTo,
-            long? brokerBpNumber, string? brokerFullname, long? brokerReportingTo)
+            long? brokerBpNumber, string? brokerFullname, long? brokerReportingTo,
+            // Team 2
+            long? dirBpNumber2, string? dirFullname2,
+            long? brokerBpNumber2, string? brokerFullname2, long? brokerReportingTo2,
+            long? smBpNumber2, string? smFullname2, long? smReportingTo2,
+            long? agentBpNumber2, string? agentFullname2, long? agentReportingTo2,
+            long? mpBpNumber2, string? mpFullname2, long? mpReportingTo2)
         {
             var salesTransaction = await _context.SalesTransactions
                 .FirstOrDefaultAsync(st => st.ContractNumber == contractNumber);
@@ -75,7 +83,6 @@ namespace WebApplication2.Controllers
                 return NotFound();
             }
 
-            // Helper function to add or update proponent
             async Task AddOrUpdateProponent(string role, long? bpNumber, string? fullName, long? reportingTo)
             {
                 if (bpNumber.HasValue && !string.IsNullOrEmpty(fullName))
@@ -84,7 +91,6 @@ namespace WebApplication2.Controllers
                         .FirstOrDefaultAsync(sp => sp.ProponentBpNumber == bpNumber.Value);
                     if (existingProponent != null)
                     {
-                        // Optionally update ReportingTo if provided
                         if (reportingTo.HasValue)
                         {
                             existingProponent.ReportingTo = reportingTo.Value.ToString();
@@ -112,39 +118,70 @@ namespace WebApplication2.Controllers
                 }
             }
 
-            await AddOrUpdateProponent("Marketing Director", mdBpNumber, mdFullname, null);
-            await AddOrUpdateProponent("Deputy Marketing Director", dmdBpNumber, dmdFullname, dmdReportingTo);
-            await AddOrUpdateProponent("Marketing Manager", mmBpNumber, mmFullname, mmReportingTo);
-            await AddOrUpdateProponent("Marketing Officer", moBpNumber, moFullname, moReportingTo);
-            await AddOrUpdateProponent("PS/QC/ISM", psBpNumber, psFullname, psReportingTo);
-            await AddOrUpdateProponent("Broker", brokerBpNumber, brokerFullname, brokerReportingTo);
-
-            await _context.SaveChangesAsync();
-
-            // Set the lowest-level proponent's BP Number in SalesTransaction
-            if (brokerBpNumber.HasValue && !string.IsNullOrEmpty(brokerFullname))
+            if (team == "team1")
             {
-                salesTransaction.ProponentBpNumber = brokerBpNumber.Value;
+                await AddOrUpdateProponent("Marketing Director", mdBpNumber, mdFullname, null);
+                await AddOrUpdateProponent("Deputy Marketing Director", dmdBpNumber, dmdFullname, dmdReportingTo);
+                await AddOrUpdateProponent("Marketing Manager", mmBpNumber, mmFullname, mmReportingTo);
+                await AddOrUpdateProponent("Marketing Officer", moBpNumber, moFullname, moReportingTo);
+                await AddOrUpdateProponent("PS/QC/ISM", psBpNumber, psFullname, psReportingTo);
+                await AddOrUpdateProponent("Broker", brokerBpNumber, brokerFullname, brokerReportingTo);
+                await _context.SaveChangesAsync();
+                // Set the lowest-level proponent's BP Number in SalesTransaction for Team 1
+                if (brokerBpNumber.HasValue && !string.IsNullOrEmpty(brokerFullname))
+                {
+                    salesTransaction.ProponentBpNumber = brokerBpNumber.Value;
+                }
+                else if (psBpNumber.HasValue && !string.IsNullOrEmpty(psFullname))
+                {
+                    salesTransaction.ProponentBpNumber = psBpNumber.Value;
+                }
+                else if (moBpNumber.HasValue && !string.IsNullOrEmpty(moFullname))
+                {
+                    salesTransaction.ProponentBpNumber = moBpNumber.Value;
+                }
+                else if (mmBpNumber.HasValue && !string.IsNullOrEmpty(mmFullname))
+                {
+                    salesTransaction.ProponentBpNumber = mmBpNumber.Value;
+                }
+                else if (dmdBpNumber.HasValue && !string.IsNullOrEmpty(dmdFullname))
+                {
+                    salesTransaction.ProponentBpNumber = dmdBpNumber.Value;
+                }
+                else if (mdBpNumber.HasValue && !string.IsNullOrEmpty(mdFullname))
+                {
+                    salesTransaction.ProponentBpNumber = mdBpNumber.Value;
+                }
             }
-            else if (psBpNumber.HasValue && !string.IsNullOrEmpty(psFullname))
+            else if (team == "team2")
             {
-                salesTransaction.ProponentBpNumber = psBpNumber.Value;
-            }
-            else if (moBpNumber.HasValue && !string.IsNullOrEmpty(moFullname))
-            {
-                salesTransaction.ProponentBpNumber = moBpNumber.Value;
-            }
-            else if (mmBpNumber.HasValue && !string.IsNullOrEmpty(mmFullname))
-            {
-                salesTransaction.ProponentBpNumber = mmBpNumber.Value;
-            }
-            else if (dmdBpNumber.HasValue && !string.IsNullOrEmpty(dmdFullname))
-            {
-                salesTransaction.ProponentBpNumber = dmdBpNumber.Value;
-            }
-            else if (mdBpNumber.HasValue && !string.IsNullOrEmpty(mdFullname))
-            {
-                salesTransaction.ProponentBpNumber = mdBpNumber.Value;
+                await AddOrUpdateProponent("Director", dirBpNumber2, dirFullname2, null);
+                await AddOrUpdateProponent("Broker", brokerBpNumber2, brokerFullname2, brokerReportingTo2);
+                await AddOrUpdateProponent("Sales Manager", smBpNumber2, smFullname2, smReportingTo2);
+                await AddOrUpdateProponent("Agent", agentBpNumber2, agentFullname2, agentReportingTo2);
+                await AddOrUpdateProponent("Marketing Partner", mpBpNumber2, mpFullname2, mpReportingTo2);
+                await _context.SaveChangesAsync();
+                // Set the lowest-level proponent's BP Number in SalesTransaction for Team 2
+                if (mpBpNumber2.HasValue && !string.IsNullOrEmpty(mpFullname2))
+                {
+                    salesTransaction.ProponentBpNumber = mpBpNumber2.Value;
+                }
+                else if (agentBpNumber2.HasValue && !string.IsNullOrEmpty(agentFullname2))
+                {
+                    salesTransaction.ProponentBpNumber = agentBpNumber2.Value;
+                }
+                else if (smBpNumber2.HasValue && !string.IsNullOrEmpty(smFullname2))
+                {
+                    salesTransaction.ProponentBpNumber = smBpNumber2.Value;
+                }
+                else if (brokerBpNumber2.HasValue && !string.IsNullOrEmpty(brokerFullname2))
+                {
+                    salesTransaction.ProponentBpNumber = brokerBpNumber2.Value;
+                }
+                else if (dirBpNumber2.HasValue && !string.IsNullOrEmpty(dirFullname2))
+                {
+                    salesTransaction.ProponentBpNumber = dirBpNumber2.Value;
+                }
             }
 
             await _context.SaveChangesAsync();
