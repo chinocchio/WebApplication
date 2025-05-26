@@ -26,7 +26,7 @@ namespace WebApplication2.Controllers
         // Para sa listahan ng mga benta, boss. Dito mo makikita lahat ng transaksyon!
         public IActionResult Index()
         {
-            return RedirectToAction("SearchResults", "Property");
+            return RedirectToAction("SearchResults", "SalesTransaction");
         }
 
         // GET: SalesTransaction/Create
@@ -657,20 +657,24 @@ namespace WebApplication2.Controllers
                                 // Parse holding date with specific format M/d/yy
                                 var dateString = row["HoldingDate"]?.ToString();
                                 System.Diagnostics.Debug.WriteLine($"Parsing Date: {dateString}");
-                                DateOnly holdingDate;
-                                if (DateTime.TryParseExact(dateString, 
-                                    new[] { "M/d/yy", "MM/dd/yy", "M/d/yyyy", "MM/dd/yyyy" }, 
-                                    System.Globalization.CultureInfo.InvariantCulture,
-                                    System.Globalization.DateTimeStyles.None, 
-                                    out DateTime parsedDate))
+                                DateOnly holdingDate = DateOnly.FromDateTime(DateTime.Now); // Default to current date
+                                
+                                if (!string.IsNullOrWhiteSpace(dateString))
                                 {
-                                    holdingDate = DateOnly.FromDateTime(parsedDate);
-                                }
-                                else
-                                {
-                                    model.ImportErrors.Add($"Row {i + 2}: Invalid Holding Date format. Use format like 5/21/22. Got: {dateString}");
-                                    model.ErrorCount++;
-                                    continue;
+                                    if (DateTime.TryParseExact(dateString, 
+                                        new[] { "M/d/yy", "MM/dd/yy", "M/d/yyyy", "MM/dd/yyyy" }, 
+                                        System.Globalization.CultureInfo.InvariantCulture,
+                                        System.Globalization.DateTimeStyles.None, 
+                                        out DateTime parsedDate))
+                                    {
+                                        holdingDate = DateOnly.FromDateTime(parsedDate);
+                                    }
+                                    else
+                                    {
+                                        model.ImportErrors.Add($"Row {i + 2}: Invalid Holding Date format. Use format like 5/21/22. Got: {dateString}");
+                                        model.ErrorCount++;
+                                        continue;
+                                    }
                                 }
 
                                 var transaction = new SalesTransaction
