@@ -80,7 +80,7 @@ namespace WebApplication2.Controllers
 
             if (salesTransaction == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Invalid contract number." });
             }
 
             async Task AddOrUpdateProponent(string role, long? bpNumber, string? fullName, long? reportingTo)
@@ -185,7 +185,7 @@ namespace WebApplication2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Manage), new { contractNumber });
+            return Json(new { success = true, message = "Proponents added/updated successfully." });
         }
 
         [HttpPost]
