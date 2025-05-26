@@ -5,277 +5,732 @@
     Layout = "_Layout";
 }
 
+<style>
+    .form-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    .form-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .form-card .card-header {
+        border-bottom: 2px solid #e9ecef;
+        background: #f8f9fa;
+    }
+    .form-card .card-body {
+        padding: 1.5rem;
+    }
+    .role-header {
+        color: #198754;
+        font-weight: 600;
+        padding: 0.5rem 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s ease;
+    }
+    .form-control:focus {
+        border-color: #198754;
+        box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+    }
+    .input-group-text {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        color: #6c757d;
+    }
+    .btn-success {
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-width: auto;
+    }
+    .btn-success:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(25, 135, 84, 0.2);
+    }
+    .btn-danger {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.85rem;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+    .btn-danger:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+    }
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    .submit-button-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .table {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .table thead th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+        color: #495057;
+        font-weight: 600;
+    }
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        border-radius: 6px;
+    }
+    .team-divider {
+        border-top: 2px dashed #e9ecef;
+        margin: 2rem 0;
+        position: relative;
+    }
+    .team-divider::after {
+        content: "Team 2";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        padding: 0 1rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+    .alert {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .alert i {
+        font-size: 1.1rem;
+    }
+
+    /* Success Modal Styles */
+    #successModal .modal-content {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    #successModal .modal-body {
+        padding: 2rem;
+    }
+
+    #successModal .bi-check-circle-fill {
+        color: #198754;
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    #successModal h4 {
+        color: #198754;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    #successModal p {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #successModal .btn-success {
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    #successModal .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(25, 135, 84, 0.2);
+    }
+
+    @@keyframes scaleIn {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+</style>
+
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="mb-0">
-                        <i class="bi bi-people me-2"></i>Manage Sales Proponents
-                    </h4>
+            <div class="card form-card mb-4">
+                <div class="card-header bg-success text-white d-flex align-items-center">
+                    <i class="bi bi-people-fill me-2"></i>
+                    <h4 class="mb-0">Manage Sales Proponents</h4>
                 </div>
                 <div class="card-body">
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">Contract Number</label>
-                                <input type="text" class="form-control" value="@Model.ContractNumber" readonly />
+                                <label class="form-label d-flex align-items-center">
+                                    <i class="bi bi-file-earmark-text text-success me-2"></i>
+                                    Contract Number
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-upc"></i>
+                                    </span>
+                                    <input type="text" class="form-control" value="@Model.ContractNumber" readonly />
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Team 1 Form -->
-                    <form asp-action="AddProponent" method="post">
+                    <form asp-action="AddProponent" method="post" class="mb-4">
                         <input type="hidden" name="ContractNumber" value="@Model.ContractNumber" />
                         <input type="hidden" name="team" value="team1" />
-                        <!-- Team 1 fields -->
-                        <!-- Marketing Director -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5 class="border-bottom pb-2">Marketing Director</h5></div>
-                            <div class="col-md-4">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="mdBpNumber" class="form-control" />
+                        
+                        <div class="card form-card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0 d-flex align-items-center">
+                                    <i class="bi bi-diagram-3-fill text-success me-2"></i>
+                                    Team 1: Marketing Hierarchy
+                                </h5>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="mdFullname" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- Deputy Marketing Director -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5 class="border-bottom pb-2">Deputy Marketing Director</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="dmdBpNumber" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="dmdFullname" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (MD BP Number)</label>
-                                <input type="number" name="dmdReportingTo" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- Marketing Manager -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5 class="border-bottom pb-2">Marketing Manager</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="mmBpNumber" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="mmFullname" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (DMD BP Number)</label>
-                                <input type="number" name="mmReportingTo" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- Marketing Officer -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5 class="border-bottom pb-2">Marketing Officer</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="moBpNumber" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="moFullname" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (MM BP Number)</label>
-                                <input type="number" name="moReportingTo" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- PS/QC/ISM -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5 class="border-bottom pb-2">PS/QC/ISM</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="psBpNumber" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="psFullname" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (MO BP Number)</label>
-                                <input type="number" name="psReportingTo" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- Broker -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5 class="border-bottom pb-2">Broker</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="brokerBpNumber" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="brokerFullname" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (PS/QC/ISM BP Number)</label>
-                                <input type="number" name="brokerReportingTo" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="bi bi-plus-circle me-2"></i>Add/Update Team 1
-                                </button>
+                            <div class="card-body">
+                                <!-- Marketing Director -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Marketing Director
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="mdBpNumber" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="mdFullname" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Deputy Marketing Director -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Deputy Marketing Director
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="dmdBpNumber" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="dmdFullname" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Reports To (MD BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="dmdReportingTo" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Marketing Manager -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Marketing Manager
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="mmBpNumber" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="mmFullname" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Reports To (DMD BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="mmReportingTo" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Marketing Officer -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Marketing Officer
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="moBpNumber" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="moFullname" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Reports To (MM BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="moReportingTo" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- PS/QC/ISM -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    PS/QC/ISM
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="psBpNumber" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="psFullname" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Reports To (MO BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="psReportingTo" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Broker -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Broker
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="brokerBpNumber" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="brokerFullname" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Reports To (PS/QC/ISM BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="brokerReportingTo" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="submit-button-container">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="bi bi-plus-circle"></i>
+                                                Add Team 1
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
 
-                    <hr class="my-4" />
+                    <div class="team-divider"></div>
 
                     <!-- Team 2 Form -->
-                    <form asp-action="AddProponent" method="post">
+                    <form asp-action="AddProponent" method="post" class="mb-4">
                         <input type="hidden" name="ContractNumber" value="@Model.ContractNumber" />
                         <input type="hidden" name="team" value="team2" />
-                        <h4>Team 2: Marketing Partner, Agent, Sales Manager, Broker, Director</h4>
-                        <!-- Director -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5>Director</h5></div>
-                            <div class="col-md-4">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="dirBpNumber2" class="form-control" />
+                        
+                        <div class="card form-card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0 d-flex align-items-center">
+                                    <i class="bi bi-diagram-2-fill text-success me-2"></i>
+                                    Team 2: Marketing Partner Structure
+                                </h5>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="dirFullname2" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- Broker -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5>Broker</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="brokerBpNumber2" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="brokerFullname2" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (Director BP Number)</label>
-                                <input type="number" name="brokerReportingTo2" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- Sales Manager -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5>Sales Manager</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="smBpNumber2" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="smFullname2" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (Broker BP Number)</label>
-                                <input type="number" name="smReportingTo2" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- Agent -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5>Agent</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="agentBpNumber2" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="agentFullname2" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (Sales Manager BP Number)</label>
-                                <input type="number" name="agentReportingTo2" class="form-control" />
-                            </div>
-                        </div>
-                        <!-- Marketing Partner -->
-                        <div class="row mb-3">
-                            <div class="col-12"><h5>Marketing Partner</h5></div>
-                            <div class="col-md-3">
-                                <label class="form-label">BP Number</label>
-                                <input type="number" name="mpBpNumber2" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="mpFullname2" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Reports To (Agent BP Number)</label>
-                                <input type="number" name="mpReportingTo2" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-secondary w-100">
-                                    <i class="bi bi-plus-circle me-2"></i>Add/Update Team 2
-                                </button>
+                            <div class="card-body">
+                                <!-- Director -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Director
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="dirBpNumber2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="dirFullname2" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Broker -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Broker
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="brokerBpNumber2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="brokerFullname2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Reports To (Director BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="brokerReportingTo2" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sales Manager -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Sales Manager
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="smBpNumber2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="smFullname2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Reports To (Broker BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="smReportingTo2" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Agent -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Agent
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="agentBpNumber2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="agentFullname2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Reports To (Sales Manager BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="agentReportingTo2" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Marketing Partner -->
+                                <div class="role-header d-flex align-items-center">
+                                    <i class="bi bi-person-badge-fill me-2"></i>
+                                    Marketing Partner
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BP Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-upc"></i>
+                                            </span>
+                                            <input type="number" name="mpBpNumber2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                            <input type="text" name="mpFullname2" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Reports To (Agent BP Number)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </span>
+                                            <input type="number" name="mpReportingTo2" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="submit-button-container">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="bi bi-plus-circle"></i>
+                                                Add Team 2
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
 
-                    <hr class="my-4" />
+                    <!-- Current Proponents Section -->
+                    <div class="card form-card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0 d-flex align-items-center">
+                                <i class="bi bi-people-fill text-success me-2"></i>
+                                Current Proponents
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.CurrentProponents != null && Model.CurrentProponents.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Role</th>
+                                                <th>BP Number</th>
+                                                <th>Full Name</th>
+                                                <th>Reports To</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var proponent in Model.CurrentProponents)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <span class="badge bg-light text-dark">
+                                                            <i class="bi bi-person-badge me-1"></i>
+                                                            @proponent.Roles
+                                                        </span>
+                                                    </td>
+                                                    <td>@proponent.ProponentBpNumber</td>
+                                                    <td>@proponent.Fullname</td>
+                                                    <td>
+                                                        @if (string.IsNullOrEmpty(proponent.ReportingTo))
+                                                        {
+                                                            <span class="badge bg-success">
+                                                                <i class="bi bi-arrow-up-circle me-1"></i>
+                                                                Top Level
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-light text-dark">
+                                                                <i class="bi bi-arrow-up-circle me-1"></i>
+                                                                @proponent.ReportingTo
+                                                            </span>
+                                                        }
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="action-buttons">
+                                                            <form asp-action="RemoveProponent" method="post" class="d-inline">
+                                                                <input type="hidden" name="ContractNumber" value="@Model.ContractNumber" />
+                                                                <input type="hidden" name="ProponentBpNumber" value="@proponent.ProponentBpNumber" />
+                                                                <button type="submit" class="btn btn-danger" 
+                                                                        onclick="return confirm('Are you sure you want to remove this proponent?')"
+                                                                        data-bs-toggle="tooltip" 
+                                                                        title="Remove Proponent">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info d-flex align-items-center">
+                                    <i class="bi bi-info-circle-fill me-2"></i>
+                                    <div>No proponents have been added yet.</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                    <h5 class="mb-3">Current Proponents</h5>
-                    @if (Model.CurrentProponents != null && Model.CurrentProponents.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Role</th>
-                                        <th>BP Number</th>
-                                        <th>Full Name</th>
-                                        <th>Reports To</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var proponent in Model.CurrentProponents)
-                                    {
-                                        <tr>
-                                            <td>@proponent.Roles</td>
-                                            <td>@proponent.ProponentBpNumber</td>
-                                            <td>@proponent.Fullname</td>
-                                            <td>
-                                                @if (string.IsNullOrEmpty(proponent.ReportingTo))
-                                                {
-                                                    <span class="badge bg-success">Top Level</span>
-                                                }
-                                                else
-                                                {
-                                                    @proponent.ReportingTo
-                                                }
-                                            </td>
-                                            <td>
-                                                <form asp-action="RemoveProponent" method="post" class="d-inline">
-                                                    <input type="hidden" name="ContractNumber" value="@Model.ContractNumber" />
-                                                    <input type="hidden" name="ProponentBpNumber" value="@proponent.ProponentBpNumber" />
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this proponent?')">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle me-2"></i>No proponents have been added yet.
-                        </div>
-                    }
+<!-- Add Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-4">
+                <div class="mb-4">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                </div>
+                <h4 class="mb-3">Success!</h4>
+                <p class="mb-4" id="successModalMessage">Operation completed successfully.</p>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-arrow-right-circle me-2"></i>Continue
+                    </button>
                 </div>
             </div>
         </div>
@@ -285,6 +740,147 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Initialize success modal
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                keyboard: false,
+                backdrop: 'static'
+            });
+
+            // Function to show success modal and redirect
+            function showSuccessAndRedirect(message, redirectUrl) {
+                $('#successModalMessage').text(message);
+                successModal.show();
+                
+                // Handle modal hidden event
+                $('#successModal').on('hidden.bs.modal', function () {
+                    window.location.href = redirectUrl;
+                });
+            }
+
+            // Handle form submissions
+            $('form[asp-action="AddProponent"]').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                const submitBtn = form.find('button[type="submit"]');
+                submitBtn.prop('disabled', true);
+
+                // Show spinner
+                $('#spinnerOverlay').show();
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            // Store contract number for highlighting
+                            const contractNumber = form.find('input[name="ContractNumber"]').val();
+                            localStorage.setItem('highlightContract', contractNumber);
+
+                            // Show success modal and prepare redirect
+                            const redirectUrl = '@Url.Action("SearchResults", "SalesTransaction")?searchTerm=' + 
+                                encodeURIComponent(contractNumber);
+                            showSuccessAndRedirect(
+                                response.message || 'Proponents added successfully!',
+                                redirectUrl
+                            );
+                        } else {
+                            // Show error toast
+                            const toast = $('<div class="toast bg-danger text-white" style="position: fixed; top: 1rem; right: 1rem; z-index: 1060;">')
+                                .html(`
+                                    <div class="toast-body">
+                                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                        ${response.message || 'Failed to add proponents'}
+                                    </div>
+                                `);
+                            $('body').append(toast);
+                            new bootstrap.Toast(toast, { autohide: true, delay: 3000 }).show();
+                        }
+                    },
+                    error: function() {
+                        // Show error toast
+                        const toast = $('<div class="toast bg-danger text-white" style="position: fixed; top: 1rem; right: 1rem; z-index: 1060;">')
+                            .html(`
+                                <div class="toast-body">
+                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                    An error occurred while adding proponents
+                                </div>
+                            `);
+                        $('body').append(toast);
+                        new bootstrap.Toast(toast, { autohide: true, delay: 3000 }).show();
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false);
+                        $('#spinnerOverlay').hide();
+                    }
+                });
+            });
+
+            // Handle remove proponent form submissions
+            $('form[asp-action="RemoveProponent"]').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                const submitBtn = form.find('button[type="submit"]');
+                submitBtn.prop('disabled', true);
+
+                // Show spinner
+                $('#spinnerOverlay').show();
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            // Store contract number for highlighting
+                            const contractNumber = form.find('input[name="ContractNumber"]').val();
+                            localStorage.setItem('highlightContract', contractNumber);
+
+                            // Show success modal and prepare redirect
+                            const redirectUrl = '@Url.Action("SearchResults", "SalesTransaction")?searchTerm=' + 
+                                encodeURIComponent(contractNumber);
+                            showSuccessAndRedirect(
+                                response.message || 'Proponent removed successfully!',
+                                redirectUrl
+                            );
+                        } else {
+                            // Show error toast
+                            const toast = $('<div class="toast bg-danger text-white" style="position: fixed; top: 1rem; right: 1rem; z-index: 1060;">')
+                                .html(`
+                                    <div class="toast-body">
+                                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                        ${response.message || 'Failed to remove proponent'}
+                                    </div>
+                                `);
+                            $('body').append(toast);
+                            new bootstrap.Toast(toast, { autohide: true, delay: 3000 }).show();
+                        }
+                    },
+                    error: function() {
+                        // Show error toast
+                        const toast = $('<div class="toast bg-danger text-white" style="position: fixed; top: 1rem; right: 1rem; z-index: 1060;">')
+                            .html(`
+                                <div class="toast-body">
+                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                    An error occurred while removing the proponent
+                                </div>
+                            `);
+                        $('body').append(toast);
+                        new bootstrap.Toast(toast, { autohide: true, delay: 3000 }).show();
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false);
+                        $('#spinnerOverlay').hide();
+                    }
+                });
+            });
+
             // Hide reporting to field when Marketing Director is selected
             $('#SelectedRole').change(function() {
                 if ($(this).val() === 'Marketing Director') {
@@ -297,7 +893,18 @@
 
             // Trigger change on page load
             $('#SelectedRole').trigger('change');
+
+            // Add smooth scrolling for form sections
+            $('.role-header').click(function() {
+                $(this).next('.row').slideToggle(200);
+            });
         });
     </script>
-} 
-} 
+}
+
+<!-- Add spinner overlay if not already present -->
+<div id="spinnerOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(255,255,255,0.7); z-index:2000; align-items:center; justify-content:center;">
+    <div class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div> 

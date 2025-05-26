@@ -1247,9 +1247,9 @@
 
             <div class="tab-pane fade" id="proponent" role="tabpanel">
                 <div class="d-flex justify-content-end mb-3">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#manageProponentsModal" data-contract-number="@ViewBag.SalesTransactions[0]?.SalesTransaction?.ContractNumber">
-                        <i class="bi bi-people me-2"></i>Manage Proponents
-                    </button>
+                    <a href="@Url.Action("Manage", "SalesProponent", new { contractNumber = ViewBag.SalesTransactions[0]?.SalesTransaction?.ContractNumber })" class="btn btn-success">
+                        <i class="bi bi-plus-circle me-2"></i>Add Sales Props
+                    </a>
                 </div>
                 <table class="table mt-3">
                     <thead>

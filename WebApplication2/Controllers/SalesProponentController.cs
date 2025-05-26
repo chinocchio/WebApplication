@@ -80,7 +80,11 @@ namespace WebApplication2.Controllers
 
             if (salesTransaction == null)
             {
-                return Json(new { success = false, message = "Invalid contract number." });
+                // For AJAX, return JSON; for normal, redirect with error
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    return Json(new { success = false, message = "Invalid contract number." });
+                TempData["ErrorMessage"] = "Invalid contract number.";
+                return RedirectToAction("Manage", new { contractNumber });
             }
 
             async Task AddOrUpdateProponent(string role, long? bpNumber, string? fullName, long? reportingTo)
@@ -185,7 +189,17 @@ namespace WebApplication2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Json(new { success = true, message = "Proponents added/updated successfully." });
+
+            // Controller-based redirect for non-AJAX requests
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Json(new { success = true, message = "Proponents added/updated successfully." });
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Proponents added/updated successfully.";
+                return RedirectToAction("SearchResults", "SalesTransaction", new { searchTerm = contractNumber });
+            }
         }
 
         [HttpPost]
